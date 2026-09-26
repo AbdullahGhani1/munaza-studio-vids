@@ -13,3 +13,16 @@ Format: 1920x1080, 30 seconds.
 | 23.4 - 29.8 | Particle Logo | "Munaza Physio: move freely, feel like yourself again." | Particles fly in to form "Munaza Physio", solid logo wipes in, URL pill springs up, presenter waves goodbye |
 
 Scene transitions: pink ring bursts at 7.9s, 14.9s and 22.9s.
+
+## Urdu caption track
+
+Same timings as above. Please have a native speaker review before publishing.
+
+| Time | Urdu caption |
+|------|--------------|
+| 0.3 - 3.9 | ہیلو! کیا آپ ایسی فزیوتھراپی چاہتی ہیں جو خواتین کو واقعی سمجھے؟ |
+| 4.1 - 7.9 | ملیے ڈاکٹر منزہ غنی سے: ماہر فزیوتھراپی، صرف خواتین کے لیے۔ |
+| 8.2 - 14.9 | وہ کمر درد، فروزن شولڈر اور گردن کے درد میں مدد کرتی ہیں۔ |
+| 15.2 - 19.0 | munazaphysio.studio پر ان کی سروسز دیکھیں اور ڈاکٹر منزہ کو جانیں۔ |
+| 19.1 - 22.9 | پھر چند کلکس میں اپنا سیشن بک کریں۔ |
+| 23.4 - 29.8 | منزہ فزیو: آزادانہ حرکت کریں، اور پھر سے خود کو بہتر محسوس کریں۔ |

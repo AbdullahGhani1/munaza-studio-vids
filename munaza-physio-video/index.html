@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=1920, height=1080">
 <title>Munaza Physio - 30s Promo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@900&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <style>
 :root{--teal:#1fa89a;--teal-d:#0f6f67;--pink:#f08cab;--pink-l:#fde4ec;--ink:#1d3336;--cream:#fffafb}
@@ -63,6 +63,8 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:var(--cream)}
 .captions{position:absolute;left:690px;right:70px;bottom:50px;height:110px}
 .cap{position:absolute;left:0;right:0;bottom:0;margin:0 auto;width:fit-content;max-width:1160px;padding:22px 40px;border-radius:26px;background:rgba(18,44,47,.86);color:#fff;font-size:36px;font-weight:500;line-height:1.3;text-align:center;visibility:hidden;opacity:0}
 .cap b{color:#ffb3c9;font-weight:700}
+/* Urdu caption track */
+html[data-lang="ur"] .cap{font-family:"Noto Nastaliq Urdu","Poppins",serif;direction:rtl;font-size:34px;line-height:1.9;padding:14px 40px}
 </style>
 </head>
 <body>
@@ -150,12 +152,12 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:var(--cream)}
 
   <!-- Captions -->
   <div class="captions clip" id="captions" data-start="0" data-duration="30" data-track-index="5">
-    <div class="cap">Hi! Looking for physiotherapy that <b>truly understands women?</b></div>
-    <div class="cap">Meet <b>Dr. Munaza Ghani</b>: expert physiotherapy, for females only.</div>
-    <div class="cap">She helps with <b>back pain</b>, <b>frozen shoulder</b> and <b>neck pain</b>.</div>
-    <div class="cap">On <b>munazaphysio.studio</b>, browse her services and get to know Dr. Munaza.</div>
-    <div class="cap">Then <b>book your session</b> in just a few clicks.</div>
-    <div class="cap"><b>Munaza Physio</b>: move freely, feel like yourself again.</div>
+    <div class="cap" data-ur="ہیلو! کیا آپ ایسی فزیوتھراپی چاہتی ہیں جو <b>خواتین کو واقعی سمجھے؟</b>">Hi! Looking for physiotherapy that <b>truly understands women?</b></div>
+    <div class="cap" data-ur="ملیے <b>ڈاکٹر منزہ غنی</b> سے: ماہر فزیوتھراپی، صرف خواتین کے لیے۔">Meet <b>Dr. Munaza Ghani</b>: expert physiotherapy, for females only.</div>
+    <div class="cap" data-ur="وہ <b>کمر درد</b>، <b>فروزن شولڈر</b> اور <b>گردن کے درد</b> میں مدد کرتی ہیں۔">She helps with <b>back pain</b>, <b>frozen shoulder</b> and <b>neck pain</b>.</div>
+    <div class="cap" data-ur="<b>munazaphysio.studio</b> پر ان کی سروسز دیکھیں اور ڈاکٹر منزہ کو جانیں۔">On <b>munazaphysio.studio</b>, browse her services and get to know Dr. Munaza.</div>
+    <div class="cap" data-ur="پھر چند کلکس میں <b>اپنا سیشن بک کریں</b>۔">Then <b>book your session</b> in just a few clicks.</div>
+    <div class="cap" data-ur="<b>منزہ فزیو</b>: آزادانہ حرکت کریں، اور پھر سے خود کو بہتر محسوس کریں۔"><b>Munaza Physio</b>: move freely, feel like yourself again.</div>
   </div>
 </div>
 
@@ -180,6 +182,17 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:var(--cream)}
       }).join('') + '</span>';
     }).join(' ');
   });
+
+  // ---- Caption language: <html data-lang="ur"> or ?lang=ur ----
+  var LANG = document.documentElement.getAttribute('data-lang') ||
+    new URLSearchParams(window.location.search).get('lang') || 'en';
+  if (LANG === 'ur') {
+    document.documentElement.setAttribute('data-lang', 'ur');
+    document.documentElement.setAttribute('lang', 'ur');
+    document.querySelectorAll('.cap[data-ur]').forEach(function (c) {
+      c.innerHTML = c.getAttribute('data-ur');
+    });
+  }
 
   // ---- Build Particle Logo targets from canvas text ----
   var CW = 1100, CH = 200, LOGO_TOP = 220, TEXT = 'Munaza Physio';

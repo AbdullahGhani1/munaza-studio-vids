@@ -23,6 +23,17 @@ npm run render    # npx hyperframes render --output renders/munaza-physio-30s.mp
 
 If your HyperFrames version uses different CLI flags, check the HyperFrames README and adjust `package.json`. You can also open `index.html` in a browser and scrub with `window.__timelines['munaza-physio'].seek(12)` in the console.
 
+## Urdu caption version
+
+Captions have an Urdu track (Noto Nastaliq Urdu, right-to-left). Everything else stays the same.
+
+```bash
+npm run preview:ur   # builds ur/index.html, then previews it
+npm run render:ur    # renders renders/munaza-physio-30s-ur.mp4
+```
+
+In a browser you can also open `index.html?lang=ur`. Edit the Urdu text in the `data-ur` attributes on the `.cap` elements.
+
 ## Adding a voiceover
 
 No audio is included. Record or generate a voiceover from `script.md`, then add it as an audio clip in `index.html` following the HyperFrames audio docs.

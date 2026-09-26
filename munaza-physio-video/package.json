@@ -2,9 +2,12 @@
   "name": "munaza-physio-promo",
   "version": "1.0.0",
   "private": true,
-  "description": "30-second HyperFrames motion graphics promo for munazaphysio.studio",
+  "description": "30-second HyperFrames motion graphics promo for munazaphysio.studio (English + Urdu captions)",
   "scripts": {
     "preview": "npx hyperframes preview",
-    "render": "npx hyperframes render --output renders/munaza-physio-30s.mp4"
+    "render": "npx hyperframes render --output renders/munaza-physio-30s.mp4",
+    "build:ur": "node scripts/make-urdu.js",
+    "preview:ur": "npm run build:ur && cd ur && npx hyperframes preview",
+    "render:ur": "npm run build:ur && cd ur && npx hyperframes render --output ../renders/munaza-physio-30s-ur.mp4"
   }
 }
