@@ -1,0 +1,10 @@
+{
+  "name": "munaza-physio-promo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "30-second HyperFrames motion graphics promo for munazaphysio.studio",
+  "scripts": {
+    "preview": "npx hyperframes preview",
+    "render": "npx hyperframes render --output renders/munaza-physio-30s.mp4"
+  }
+}
