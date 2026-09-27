@@ -9,6 +9,7 @@
     "build:ur": "node scripts/make-urdu.js",
     "preview:ur": "npm run build:ur && cd ur && npx hyperframes preview",
     "render:ur": "npm run build:ur && cd ur && npx hyperframes render --output ../renders/munaza-physio-30s-ur.mp4",
-    "render:back": "npx hyperframes render . -c series/01-back-pain/index.html --quality delivery --output renders/01-back-pain.mp4"
+    "render:back": "npx hyperframes render . -c series/01-back-pain/index.html --quality delivery --output renders/01-back-pain.mp4",
+    "render:complete": "npx hyperframes render . -c series/complete/index.html --quality delivery --output renders/munaza-physio-177s.mp4"
   }
 }

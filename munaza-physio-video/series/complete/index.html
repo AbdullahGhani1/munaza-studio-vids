@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Munaza Physio Studio - A Space to Heal (2:57)</title>
+<script src="vendor/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Poppins";src:url("assets/fonts/poppins-400.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Poppins";src:url("assets/fonts/poppins-500.woff2") format("woff2");font-weight:500;font-display:block}
+@font-face{font-family:"Poppins";src:url("assets/fonts/poppins-600.woff2") format("woff2");font-weight:600;font-display:block}
+@font-face{font-family:"Poppins";src:url("assets/fonts/poppins-700.woff2") format("woff2");font-weight:700;font-display:block}
+@font-face{font-family:"Poppins";src:url("assets/fonts/poppins-800.woff2") format("woff2");font-weight:800;font-display:block}
+@font-face{font-family:"Caveat";src:url("assets/fonts/caveat-700.woff2") format("woff2");font-weight:400 700;font-display:block}
+:root{--red:#E7212B;--dark-red:#C80710;--black:#101010;--charcoal:#151515;--white:#FFFFFF;--soft:#FFF3F3;--off:#FAFAFA;--grey:#474747;--line:#E9DCDC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--off)}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:var(--off);font-family:"Poppins",Arial,sans-serif;color:var(--black)}
+.scene{position:absolute;inset:0;opacity:0;overflow:hidden}
+.bg-off{background:var(--off)}.bg-soft{background:var(--soft)}.bg-black{background:var(--black);color:#fff}.bg-red{background:var(--red);color:#fff}
+.abs{position:absolute}
+.l{display:inline-block;transform-origin:50% 100%}
+.mask{overflow:hidden;display:block;padding-bottom:.04em}
+.mask>span{display:block}
+.hand{font-family:"Caveat",cursive;font-weight:700}
+.kicker{font-weight:600;font-size:22px;letter-spacing:.22em;text-transform:uppercase;color:var(--red)}
+.kicker:before{content:"";display:inline-block;width:40px;height:3px;background:var(--red);vertical-align:middle;margin-right:14px}
+.h-xl{font-weight:800;font-size:132px;line-height:1.0;letter-spacing:-.02em}
+.h-l{font-weight:800;font-size:92px;line-height:1.02;letter-spacing:-.015em}
+.h-m{font-weight:700;font-size:56px;line-height:1.08}
+.red{color:var(--red)}
+.o0{opacity:0}
+svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{vector-effect:non-scaling-stroke}
+
+/* Browser frame (real site screenshots) */
+.browser{position:absolute;border-radius:18px;background:#fff;box-shadow:0 30px 80px rgba(16,16,16,.22),0 0 0 1px rgba(16,16,16,.06);overflow:hidden}
+.browser .bar{height:44px;display:flex;align-items:center;gap:9px;padding:0 18px;background:#F1ECEC;border-bottom:1px solid #E5DADA}
+.browser .dot{width:12px;height:12px;border-radius:50%;background:#D9CACA}
+.browser .dot:first-child{background:var(--red)}
+.browser .url{margin-left:16px;flex:1;max-width:560px;height:28px;border-radius:999px;background:#fff;display:flex;align-items:center;padding:0 16px;font-size:15px;font-weight:500;color:#444;white-space:nowrap;overflow:hidden}
+.browser .url b{color:var(--red);font-weight:600}
+.browser .view{position:absolute;left:0;right:0;top:44px;bottom:0;overflow:hidden;background:#fff}
+.browser .view img{position:absolute;left:0;top:0;width:100%;height:auto;opacity:0;transform-origin:50% 30%}
+.phone{position:absolute;border-radius:54px;background:var(--black);padding:14px;box-shadow:0 30px 80px rgba(16,16,16,.3)}
+.phone .scr{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;background:#fff}
+.phone .scr img{position:absolute;left:0;top:0;width:100%;height:auto}
+.cursor{position:absolute;left:0;top:0;width:34px;height:34px;opacity:0;z-index:30;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3))}
+.ripple{position:absolute;left:832px;top:532px;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:4px solid var(--red);opacity:0;z-index:29}
+
+/* Chrome */
+#brand{position:absolute;left:56px;top:34px;width:128px;height:80px;object-fit:contain;opacity:0;z-index:40}
+#chap{position:absolute;right:60px;top:44px;z-index:40;display:flex;align-items:center;gap:14px;font-weight:600;font-size:18px;letter-spacing:.18em;text-transform:uppercase;opacity:0}
+#chap .pips{display:flex;gap:6px}
+#chap .pip{width:28px;height:5px;border-radius:3px;background:#DCCBCB}
+#chap .pip.on{background:var(--red)}
+#wipe{position:absolute;inset:0;background:var(--red);z-index:45;transform:scaleX(0);transform-origin:0 50%}
+#wipe .t{position:absolute;left:120px;top:420px;color:#fff}
+#wipe .t .n{font-weight:800;font-size:40px;letter-spacing:.2em}
+#wipe .t .h{font-weight:800;font-size:110px;line-height:1;margin-top:10px}
+
+/* Captions: line-level karaoke sweep */
+#caps{position:absolute;left:0;right:0;bottom:44px;height:80px;z-index:50}
+.cap{position:absolute;left:0;right:0;bottom:0;margin:0 auto;width:fit-content;max-width:1560px;padding:14px 34px 16px;border-radius:18px;background:rgba(16,16,16,.88);opacity:0;white-space:nowrap}
+.cap .base,.cap .fill{font-weight:600;font-size:34px;line-height:1.25;letter-spacing:.005em}
+.cap .base{color:#8E8E8E}
+.cap .fill{position:absolute;left:34px;top:14px;color:#fff;clip-path:inset(0% 100% 0% 0%)}
+
+/* Body map */
+.map-note{position:relative;display:inline-block;margin-top:24px;font-size:48px;color:var(--red);transform:rotate(-3deg);opacity:0;white-space:nowrap}
+.cond{position:absolute;left:880px;top:236px;width:960px;opacity:0}
+.cond .ix{font-weight:700;font-size:24px;letter-spacing:.2em;color:var(--red)}
+.cond .t{font-weight:800;font-size:78px;line-height:1.0;letter-spacing:-.015em;margin-top:8px}
+.cond .chips{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+.chip{padding:12px 24px;border-radius:999px;background:var(--black);color:#fff;font-weight:600;font-size:26px;opacity:0;white-space:nowrap}
+.chip.r{background:var(--red)}
+.chip.w{background:#fff;color:var(--black);box-shadow:0 0 0 2px var(--black) inset}
+.guides{position:absolute;left:880px;top:130px;font-weight:600;font-size:22px;letter-spacing:.16em;text-transform:uppercase;color:#6B6B6B}
+.guides b{color:var(--red)}
+
+/* Big phone number */
+.num{font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.grp{display:inline-block;opacity:0}
+
+/* Step cards */
+.step{position:absolute;width:500px;padding:34px 36px;border-radius:28px;background:#fff;box-shadow:0 20px 50px rgba(16,16,16,.1);opacity:0}
+.step .n{font-weight:800;font-size:68px;line-height:1;color:var(--red)}
+.step h4{font-weight:800;font-size:42px;line-height:1.05;margin-top:16px}
+.step p{font-weight:500;font-size:24px;color:#555;margin-top:12px;line-height:1.35}
+.tick{display:flex;align-items:center;gap:18px;font-weight:600;font-size:32px;opacity:0}
+.tick i{flex:none;width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;font-style:normal;font-weight:800;font-size:26px;display:flex;align-items:center;justify-content:center}
+.poster{position:absolute;border-radius:26px;overflow:hidden;box-shadow:0 26px 60px rgba(16,16,16,.25);opacity:0;background:#fff}
+.poster img{display:block;width:100%;height:100%;object-fit:cover}
+#doc1,#doc2{position:absolute;background:url("assets/Doctor_munaza_ghani.png") center top/contain no-repeat}
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="munaza-physio-177s" data-start="0" data-duration="177" data-width="1920" data-height="1080" data-fps="30">
+
+<audio id="song" class="clip" src="series/complete/A_Space_to_Heal.mp3" data-start="0" data-duration="177" data-track-index="0" data-volume="1" data-fade-out="1.2"></audio>
+
+<!-- Shared hand-drawn filter -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
+    <filter id="rough2" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="11"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#E7212B" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+<!-- ===== S1 INTRO 0-10.4 ===== -->
+<section class="scene clip bg-off" id="s1" data-start="0" data-duration="10.4" data-track-index="1">
+  <svg class="abs draw" id="s1-sketch" width="1920" height="1080" viewBox="0 0 1920 1080" style="filter:url(#rough)">
+    <rect x="96" y="96" width="1728" height="888" rx="10" fill="none" stroke="#101010" stroke-width="3" pathLength="1" class="stroke"/>
+    <line x1="1060" y1="96" x2="1060" y2="984" stroke="#CFC2C2" stroke-width="2" pathLength="1" class="stroke"/>
+  </svg>
+  <div class="abs hand o0" id="s1-lbl" style="left:130px;top:112px;font-size:40px;color:#8a7d7d">sc. 01 &mdash; hello, Lahore</div>
+  <div class="abs" style="left:150px;top:300px">
+    <div class="kicker o0" id="s1-k">Munaza Physio Studio &middot; Lahore</div>
+    <div class="h-xl" style="margin-top:26px;font-size:110px"><span class="mask"><span id="s1-a">Physiotherapy</span></span><span class="mask"><span id="s1-b">for women</span></span><span class="mask"><span id="s1-c" class="red">&amp; children.</span></span></div>
+  </div>
+  <div class="browser" id="s1-br" style="left:1120px;top:170px;width:680px;height:470px;opacity:0">
+    <div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b></div></div>
+    <div class="view"><img src="assets/site/home-hero.jpg" style="opacity:1" alt=""></div>
+  </div>
+  <div class="abs hand o0" id="s1-note" style="left:1150px;top:690px;font-size:50px;color:var(--red);transform:rotate(-3deg)">let's talk about pain &amp; the next step &rarr;</div>
+  <svg class="abs draw" width="1920" height="1080" viewBox="0 0 1920 1080" style="filter:url(#rough);pointer-events:none">
+    <path id="s1-ul" d="M150,742 C380,730 610,736 880,726" fill="none" stroke="#E7212B" stroke-width="7" stroke-linecap="round" pathLength="1" class="stroke"/>
+    <path id="s1-circ" d="M1110,160 C1300,130 1790,140 1812,300 C1830,520 1700,660 1400,652 C1180,648 1100,600 1104,380 C1106,260 1120,190 1170,168" fill="none" stroke="#E7212B" stroke-width="4" stroke-linecap="round" pathLength="1" class="stroke"/>
+  </svg>
+</section>
+
+<!-- ===== BODY MAP (used in S2 / S6 / S10) ===== -->
+<template id="body-tpl">
+  <svg class="abs draw bodysvg" width="1920" height="1080" viewBox="0 0 1920 1080">
+    <g transform="translate(360,112) scale(0.88)">
+      <g style="filter:url(#rough2)">
+        <path d="M125,560 L275,560 L262,850 L221,850 L206,625 L194,625 L179,850 L138,850 Z" fill="#E4D7D7" stroke="#101010" stroke-width="3" stroke-linejoin="round"/>
+        <ellipse cx="158" cy="864" rx="32" ry="14" fill="#E4D7D7" stroke="#101010" stroke-width="3"/>
+        <ellipse cx="242" cy="864" rx="32" ry="14" fill="#E4D7D7" stroke="#101010" stroke-width="3"/>
+        <path d="M200,30 C240,30 262,62 262,100 C262,130 250,150 262,170 C285,185 300,200 305,225 L318,470 C320,490 312,505 300,505 L292,505 C284,505 280,495 280,485 L272,300 L290,560 L110,560 L128,300 L120,485 C120,495 116,505 108,505 L100,505 C88,505 80,490 82,470 L95,225 C100,200 115,185 138,170 C150,150 138,130 138,100 C138,62 160,30 200,30 Z" fill="#F4ECEC" stroke="#101010" stroke-width="3" stroke-linejoin="round"/>
+        <ellipse cx="200" cy="104" rx="34" ry="42" fill="#FFFFFF" stroke="#101010" stroke-width="2.5"/>
+      </g>
+      <g class="spine">
+        <rect x="193" y="160" width="14" height="9" rx="3" fill="#E7212B"/><rect x="193" y="176" width="14" height="9" rx="3" fill="#E7212B"/><rect x="193" y="192" width="14" height="9" rx="3" fill="#E7212B"/>
+        <rect x="192" y="214" width="16" height="10" rx="3" fill="#E7212B" opacity=".75"/><rect x="192" y="232" width="16" height="10" rx="3" fill="#E7212B" opacity=".75"/><rect x="192" y="250" width="16" height="10" rx="3" fill="#E7212B" opacity=".75"/><rect x="192" y="268" width="16" height="10" rx="3" fill="#E7212B" opacity=".75"/><rect x="192" y="286" width="16" height="10" rx="3" fill="#E7212B" opacity=".75"/><rect x="192" y="304" width="16" height="10" rx="3" fill="#E7212B" opacity=".75"/><rect x="192" y="322" width="16" height="10" rx="3" fill="#E7212B" opacity=".75"/>
+        <rect x="190" y="346" width="20" height="12" rx="4" fill="#E7212B" opacity=".6"/><rect x="190" y="366" width="20" height="12" rx="4" fill="#E7212B" opacity=".6"/><rect x="190" y="386" width="20" height="12" rx="4" fill="#E7212B" opacity=".6"/><rect x="190" y="406" width="20" height="12" rx="4" fill="#E7212B" opacity=".6"/><rect x="190" y="426" width="20" height="12" rx="4" fill="#E7212B" opacity=".6"/>
+      </g>
+      <g class="paths"></g>
+      <g class="hots"></g>
+    </g>
+    <g class="leaders"></g>
+  </svg>
+</template>
+
+<!-- ===== S2 SPINE 10.4-35.3 ===== -->
+<section class="scene clip bg-soft bodyscene" id="s2" data-start="10.4" data-duration="24.9" data-track-index="2">
+  <div class="guides o0">Chapter 01 &middot; <b>Spine, back &amp; neck</b> &middot; 9 guides on the site</div>
+  <div class="browser mini" style="left:1270px;top:590px;width:560px;height:350px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
+</section>
+
+<!-- ===== S3 PRE 1 35.3-41.9 ===== -->
+<section class="scene clip bg-black" id="s3" data-start="35.3" data-duration="6.6" data-track-index="3">
+  <div class="abs" style="left:150px;top:230px">
+    <div class="h-xl"><span class="mask"><span id="s3-a">No quick fix.</span></span><span class="mask"><span id="s3-b">No magic cure.</span></span></div>
+  </div>
+  <svg class="abs draw" width="1920" height="1080" viewBox="0 0 1920 1080" style="filter:url(#rough)">
+    <path id="s3-x" d="M140,478 C520,452 860,470 1160,440" fill="none" stroke="#E7212B" stroke-width="12" stroke-linecap="round" pathLength="1" class="stroke"/>
+  </svg>
+  <div class="abs hand o0" id="s3-plan" style="left:156px;top:600px;font-size:78px;color:#fff;transform:rotate(-2deg)">just a plan that's made for <span style="color:var(--red)">you</span>.</div>
+  <div class="abs" id="s3-list" style="left:1330px;top:250px">
+    <div class="tick" style="color:#fff"><i>&#10003;</i>Assess</div>
+    <div class="tick" style="color:#fff;margin-top:22px"><i>&#10003;</i>Plan, step by step</div>
+    <div class="tick" style="color:#fff;margin-top:22px"><i>&#10003;</i>Steady &amp; sure</div>
+  </div>
+</section>
+
+<!-- ===== S4 CHORUS 1 41.9-51.0 ===== -->
+<section class="scene clip bg-black" id="s4" data-start="41.9" data-duration="9.1" data-track-index="4">
+  <div id="doc1" style="left:1060px;top:60px;width:800px;height:1200px"></div>
+  <div class="abs h-xl" id="s4-move" data-text="MOVE." style="left:150px;top:190px;font-size:250px;color:var(--red);letter-spacing:-.03em"></div>
+  <div class="abs" id="s4-every" style="left:156px;top:470px;opacity:0">
+    <div style="font-weight:700;font-size:48px">Every muscle. Every joint.</div>
+    <div style="display:flex;gap:16px;margin-top:22px"><div class="chip r" style="opacity:1">Assess it</div><div class="chip w" style="opacity:1">Rebuild it</div></div>
+  </div>
+  <div class="abs" id="s4-name" style="left:156px;top:660px;opacity:0">
+    <div style="display:inline-block;padding:14px 28px;background:var(--red);font-weight:800;font-size:58px;line-height:1">Dr. Munaza Ghani</div><br>
+    <div style="display:inline-block;padding:12px 28px;background:#fff;color:var(--black);font-weight:700;font-size:26px;letter-spacing:.04em">MSOMPT &middot; DPT &middot; AHPC-registered &middot; Orthopedic Manual Therapist</div>
+  </div>
+  <div class="abs hand o0" id="s4-heal" style="left:170px;top:830px;font-size:60px;color:#fff;transform:rotate(-2deg)">women &amp; children &mdash; <span style="color:var(--red)">a space to heal</span></div>
+</section>
+
+<!-- ===== S5 CALL 1 51.0-62.4 ===== -->
+<section class="scene clip bg-red" id="s5" data-start="51" data-duration="11.4" data-track-index="5">
+  <div class="abs" style="left:150px;top:180px">
+    <div style="font-weight:700;font-size:30px;letter-spacing:.24em;opacity:0" id="s5-k">CALL MUNAZA PHYSIO STUDIO</div>
+    <div class="num" style="font-size:150px;line-height:1;margin-top:30px"><span class="grp" id="g1">0307</span> <span class="grp" id="g2">581</span> <span class="grp" id="g3">0689</span></div>
+    <div style="font-weight:600;font-size:40px;margin-top:22px;opacity:0" id="s5-wa">Phone &amp; WhatsApp &middot; +92 307 5810689</div>
+  </div>
+  <div class="browser" id="s5-br" style="left:150px;top:640px;width:760px;height:300px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url" id="s5-url"><b></b></div></div><div class="view"><img src="assets/site/home-hero.jpg" alt="" id="s5-img"></div></div>
+  <div class="phone" id="s5-ph" style="left:1360px;top:120px;width:400px;height:820px;opacity:0"><div class="scr"><img src="assets/site/m-home.jpg" alt=""></div></div>
+  <div class="abs hand o0" id="s5-note" style="left:980px;top:760px;font-size:56px;color:#fff;transform:rotate(-4deg)">or just visit &rarr;</div>
+</section>
+
+<!-- ===== S6 SHOULDER & ARM 62.4-91.9 ===== -->
+<section class="scene clip bg-soft bodyscene" id="s6" data-start="62.4" data-duration="29.5" data-track-index="6">
+  <div class="guides o0">Chapter 02 &middot; <b>Shoulder &amp; upper limb</b> &middot; 7 guides on the site</div>
+  <div class="browser mini" style="left:1270px;top:590px;width:560px;height:350px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
+</section>
+
+<!-- ===== S7 JOURNEY 91.9-96.3 ===== -->
+<section class="scene clip bg-off" id="s7" data-start="91.9" data-duration="4.4" data-track-index="7">
+  <div class="abs" style="left:150px;top:150px"><div class="kicker">From the About page</div><div class="h-l" style="margin-top:18px">From first visit <span class="red">to recovery.</span></div></div>
+  <div class="step" style="left:150px;top:470px"><div class="n">01</div><h4>Assess &amp; Diagnose</h4><p>First session 45&ndash;60 min. Movement screening, posture, history, goals.</p></div>
+  <div class="step" style="left:710px;top:470px"><div class="n">02</div><h4>Treat &amp; Recover</h4><p>Manual therapy and targeted exercise, reviewed session by session.</p></div>
+  <div class="step" style="left:1270px;top:470px"><div class="n">03</div><h4>Strengthen &amp; Prevent</h4><p>Strength, movement habits and a routine you can keep.</p></div>
+  <svg class="abs draw" width="1920" height="1080" viewBox="0 0 1920 1080" style="filter:url(#rough)">
+    <path d="M655,620 C675,600 690,600 705,618" fill="none" stroke="#E7212B" stroke-width="5" marker-end="url(#ah)" pathLength="1" class="stroke s7a"/>
+    <path d="M1215,620 C1235,600 1250,600 1265,618" fill="none" stroke="#E7212B" stroke-width="5" marker-end="url(#ah)" pathLength="1" class="stroke s7a"/>
+  </svg>
+</section>
+
+<!-- ===== S8 CHORUS 2: WEBSITE WALKTHROUGH 96.3-105.5 ===== -->
+<section class="scene clip bg-soft" id="s8" data-start="96.3" data-duration="9.2" data-track-index="8">
+  <div class="browser" id="s8-br" style="left:620px;top:120px;width:1180px;height:780px">
+    <div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b></div></div>
+    <div class="view"><img id="s8-i1" src="assets/site/home-hero.jpg" alt=""><img id="s8-i2" src="assets/site/home-services.jpg" alt=""><img id="s8-i3" src="assets/site/home-approach.jpg" alt=""></div>
+  </div>
+  <div class="abs h-xl" id="s8-move" data-text="MOVE" style="left:110px;top:140px;font-size:170px;color:var(--red)"></div>
+  <div class="abs" id="s8-steps" style="left:120px;top:420px">
+    <div class="tick"><i>1</i>Treat</div><div class="tick" style="margin-top:20px"><i>2</i>Restore</div><div class="tick" style="margin-top:20px"><i>3</i>Perform</div><div class="tick" style="margin-top:20px"><i>4</i>Prevent</div>
+  </div>
+  <div class="abs hand o0" id="s8-note" style="left:120px;top:780px;font-size:48px;color:var(--red);transform:rotate(-3deg)">the site's 4-step approach</div>
+  <svg class="cursor" id="s8-cur" viewBox="0 0 24 24"><path d="M3,2 L20,12 L12,13.5 L8,21 Z" fill="#101010" stroke="#fff" stroke-width="1.5"/></svg>
+  <div class="ripple" id="s8-rip"></div>
+</section>
+
+<!-- ===== S9 CALL 2: BOOK + ONLINE 105.5-114.6 ===== -->
+<section class="scene clip bg-off" id="s9" data-start="105.5" data-duration="9.1" data-track-index="9">
+  <div class="abs" style="left:150px;top:170px">
+    <div class="kicker o0" id="s9-k">Book your assessment</div>
+    <div class="num" style="font-size:150px;line-height:1;margin-top:26px"><span class="grp" id="h1">0307</span> <span class="grp" id="h2">581</span> <span class="grp red" id="h3">0689</span></div>
+    <div class="num o0" id="s9-intl" style="font-size:64px;margin-top:40px"><span class="hand red" style="font-size:66px;font-weight:700">from abroad:</span> +92 307 5810689</div>
+    <div style="display:flex;gap:14px;margin-top:34px" id="s9-chips"><div class="chip">Clinic</div><div class="chip r">Home visits in Lahore</div><div class="chip w">Online consultations</div></div>
+  </div>
+  <div class="browser" id="s9-br" style="left:1130px;top:430px;width:690px;height:470px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b> &middot; Telehealth</div></div><div class="view"><img src="assets/site/home-online.jpg" style="opacity:1" alt=""></div></div>
+  <svg class="abs draw" width="1920" height="1080" viewBox="0 0 1920 1080" style="filter:url(#rough)">
+    <g id="s9-globe" fill="none" stroke="#E7212B" stroke-width="4"><circle cx="1700" cy="250" r="90" pathLength="1" class="stroke"/><ellipse cx="1700" cy="250" rx="40" ry="90" pathLength="1" class="stroke"/><path d="M1612,225 C1660,240 1740,240 1788,225 M1612,275 C1660,290 1740,290 1788,275" pathLength="1" class="stroke"/></g>
+  </svg>
+</section>
+
+<!-- ===== S10 LEG / RECOVERY 114.6-142.6 ===== -->
+<section class="scene clip bg-soft bodyscene" id="s10" data-start="114.6" data-duration="28" data-track-index="10">
+  <div class="guides o0">Chapter 03 &middot; <b>Hip, knee, foot &amp; ankle</b> &middot; + recovery &amp; persistent pain</div>
+  <div class="browser mini" style="left:1270px;top:590px;width:560px;height:350px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
+</section>
+
+<!-- ===== S11 CHORUS 3: WOMEN-ONLY 142.6-153.0 ===== -->
+<section class="scene clip bg-black" id="s11" data-start="142.6" data-duration="10.4" data-track-index="11">
+  <div class="abs" style="left:150px;top:170px">
+    <div class="h-l" style="font-size:84px"><span class="mask"><span id="s11-a">FOR WOMEN.</span></span><span class="mask"><span id="s11-b" class="red">FOR MOVEMENT.</span></span><span class="mask"><span id="s11-c">FOR EVERYDAY LIFE.</span></span></div>
+  </div>
+  <div class="abs" id="s11-list" style="left:1220px;top:190px">
+    <div class="tick" style="color:#fff"><i>&#10003;</i>Female physiotherapist</div>
+    <div class="tick" style="color:#fff;margin-top:26px"><i>&#10003;</i>Private, respectful care</div>
+    <div class="tick" style="color:#fff;margin-top:26px"><i>&#10003;</i>Home visits across Lahore</div>
+    <div class="tick" style="color:#fff;margin-top:26px"><i>&#10003;</i>No referral needed</div>
+    <div class="tick" style="color:#fff;margin-top:26px"><i>&#10003;</i>Evening appointments</div>
+  </div>
+  <div class="poster" id="s11-clinic" style="left:150px;top:600px;width:620px;height:300px"><img src="assets/clinic.png" alt=""></div>
+  <div class="abs hand o0" id="s11-heal" style="left:820px;top:760px;font-size:64px;color:#fff;transform:rotate(-3deg)">women &amp; children &mdash; <span style="color:var(--red)">a space to heal</span></div>
+</section>
+
+<!-- ===== S12 FINAL CALL: VISIT 153.0-161.8 ===== -->
+<section class="scene clip bg-off" id="s12" data-start="153" data-duration="8.8" data-track-index="12">
+  <div class="poster" id="s12-img" style="left:0;top:0;width:820px;height:1080px;border-radius:0;box-shadow:none"><img src="assets/clinic.png" alt=""></div>
+  <div class="abs" style="left:900px;top:130px;width:920px">
+    <div class="kicker o0" id="s12-k">Visit &middot; Call &middot; WhatsApp</div>
+    <div class="h-m o0" id="s12-name" style="margin-top:18px">Munaza Physio Studio, Lahore</div>
+    <div class="num o0" id="s12-num" style="font-size:120px;line-height:1;margin-top:26px;color:var(--red)">0307 5810689</div>
+    <div class="o0" id="s12-rows" style="margin-top:34px;font-size:28px;line-height:1.5">
+      <div><b style="letter-spacing:.14em;font-size:20px;color:#777">ADDRESS</b><br><span style="font-weight:600">Hasham St, Karim Block, Allama Iqbal Town, Lahore</span></div>
+      <div style="display:flex;gap:70px;margin-top:18px"><div><b style="letter-spacing:.14em;font-size:20px;color:#777">HOURS</b><br><span style="font-weight:600">Mon&ndash;Sat 10 AM&ndash;8 PM<br>Sun 5 PM&ndash;8 PM</span></div><div><b style="letter-spacing:.14em;font-size:20px;color:#777">ONLINE</b><br><span style="font-weight:600">munazaphysio.studio</span></div></div>
+    </div>
+  </div>
+  <svg class="abs draw" width="1920" height="1080" viewBox="0 0 1920 1080" style="filter:url(#rough)">
+    <path id="s12-pin" d="M760,780 C700,700 700,640 760,620 C820,640 820,700 760,780 Z M760,690 m-18,0 a18,18 0 1,0 36,0 a18,18 0 1,0 -36,0" fill="#fff" stroke="#E7212B" stroke-width="5" pathLength="1" class="stroke"/>
+  </svg>
+</section>
+
+<!-- ===== S13 NEURO + BREATHING 161.8-168.3 ===== -->
+<section class="scene clip bg-soft" id="s13" data-start="161.8" data-duration="6.5" data-track-index="13">
+  <div class="abs" style="left:150px;top:150px"><div class="kicker">Neurological &amp; breathing rehab</div></div>
+  <div class="poster" id="s13-p1" style="left:150px;top:250px;width:470px;height:588px"><img src="assets/posts/Facial Palsy Rehabilitation.png" alt=""></div>
+  <div class="abs" id="s13-t1" style="left:680px;top:300px;opacity:0"><div class="h-m">Facial palsy</div><div class="hand red" style="font-size:52px;margin-top:6px">gentle facial exercises, week by week</div></div>
+  <div class="poster" id="s13-p2" style="left:1330px;top:250px;width:470px;height:588px"><img src="assets/posts/Airway-Clearance and Breathing Dysfunction.png" alt=""></div>
+  <div class="abs" id="s13-t2" style="left:680px;top:560px;opacity:0"><div class="h-m">Breathing &amp;<br>airway clearance</div><div class="hand red" style="font-size:52px;margin-top:6px">breathing techniques</div></div>
+</section>
+
+<!-- ===== S14 CHILDREN 168.3-174.0 ===== -->
+<section class="scene clip bg-off" id="s14" data-start="168.3" data-duration="5.7" data-track-index="14">
+  <div class="browser" id="s14-br" style="left:760px;top:110px;width:1080px;height:760px"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/pediatric-physiotherapy</div></div><div class="view"><img id="s14-i1" src="assets/site/ped-hero.jpg" alt=""><img id="s14-i2" src="assets/site/ped-world.jpg" alt=""></div></div>
+  <div class="abs" style="left:120px;top:150px"><div class="kicker">Paediatric physiotherapy</div><div class="h-l" style="margin-top:18px;font-size:80px">Movement<br>should feel<br><span class="red">like play.</span></div></div>
+  <div class="abs" style="left:120px;top:560px;display:flex;flex-direction:column;gap:14px;align-items:flex-start" id="s14-chips">
+    <div class="chip r">Cerebral palsy</div><div class="chip">Stretching &middot; strength &middot; play</div><div class="chip w">Sensory-motor skills</div><div class="chip r">Fun, guided activities</div>
+  </div>
+  <svg class="abs draw" width="1920" height="1080" viewBox="0 0 1920 1080" style="filter:url(#rough)">
+    <path id="s14-star" d="M640,200 L652,236 L690,236 L660,258 L672,294 L640,272 L608,294 L620,258 L590,236 L628,236 Z" fill="none" stroke="#E7212B" stroke-width="4" pathLength="1" class="stroke"/>
+  </svg>
+</section>
+
+<!-- ===== S15 PARTICLE LOGO 174.0-177.0 ===== -->
+<section class="scene clip bg-black" id="s15" data-start="174" data-duration="3" data-track-index="15">
+  <canvas id="pcv" width="1920" height="1080" style="position:absolute;inset:0"></canvas>
+  <img id="p-logo" src="assets/site_logo.png" alt="Munaza Physio" style="position:absolute;left:660px;top:230px;width:600px;height:375px;object-fit:contain;opacity:0">
+  <div class="abs o0" id="p-cta" style="left:0;right:0;top:660px;text-align:center;color:#fff">
+    <div style="font-weight:800;font-size:54px">Munaza Physio Studio</div>
+    <div style="font-weight:600;font-size:30px;color:#cfcfcf;margin-top:6px">Women-only physiotherapy &middot; Lahore</div>
+    <div style="font-weight:800;font-size:44px;margin-top:22px"><span style="color:var(--red)">+92 307 5810689</span> &nbsp;&middot;&nbsp; munazaphysio.studio</div>
+  </div>
+</section>
+
+<img id="brand" src="assets/site_logo.png" alt="">
+<div id="chap"><span id="chap-t">The spine</span><div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div></div>
+<div id="wipe"><div class="t"><div class="n" id="wipe-n">CHAPTER 02</div><div class="h" id="wipe-h">Shoulder &amp; arm</div></div></div>
+<div id="caps" class="clip" data-start="0" data-duration="177" data-track-index="16"></div>
+</div>
+
+<script>
+(function () {
+  var W = 1920;
+  // ---------------- Captions (line-level, aligned to A_Space_to_Heal.mp3) ----------------
+  var CAP = [
+    [1.4, "Hi! This is Munaza Physio Studio, in Lahore."], [5.4, "Physiotherapy for women and children."], [7.7, "Let's talk about pain, and the next step.", 10.3],
+    [10.5, "Neck pain from the phone, a heavy, stiff head,"], [12.5, "Posture work and gentle stretches, loosen up instead."],
+    [14.9, "Back pain when you bend, or when you sit too long,"], [17.1, "Core and movement training help your back get strong."],
+    [19.4, "Lumbar spondylosis, the lower spine wears thin,"], [21.6, "Mobility and strength work, let the movement begin."],
+    [23.9, "Sciatica, a burning line that runs down to your feet,"], [26.0, "Nerve glides and gentle loading, move at your own beat."],
+    [28.5, "Thoracic and rib pain, tight across the chest,"], [31.0, "Breathing and mobility to help you move your best.", 35.0],
+    [35.3, "No quick fix, no magic cure,"], [37.6, "Just a plan that's made for you, steady and sure.", 41.6],
+    [41.9, "Move, move, like you mean it,"], [44.0, "Every muscle, every joint, let's assess it, let's rebuild it."],
+    [46.9, "Dr. Munaza Ghani, care that's real,"], [48.8, "Women and children, a space to heal.", 50.8],
+    [51.0, "Call Munaza Physio Studio:"], [53.3, "0307 · 581 · 0689", 59.5], [59.8, "Or visit munazaphysio.studio", 62.3],
+    [62.5, "Frozen shoulder, stiff and aching, can't reach up high,"], [64.9, "Gentle range-of-motion work, gradually we try."],
+    [67.2, "Rotator cuff strain when you lift or when you throw,"], [69.4, "Strengthening the shoulder, building control slow."],
+    [71.6, "Shoulder joint and bursa, pain when you raise your arm,"], [74.2, "Tendon loading, rest and form, to get the balance right.", 78.3],
+    [78.6, "Wrist and hand from typing, stiffness in the grip,"], [80.8, "Hand and finger exercises, tip to fingertip."],
+    [83.2, "Upper limb nerve pain, tingling down the arm,"], [85.7, "Nerve glides and posture checks to settle the alarm."],
+    [87.8, "Overuse and repeated strain, the same move every day,"], [90.0, "Pacing, rest and strength work help you find a better way."],
+    [92.1, "No quick fix, no magic cure,"], [94.1, "Just a plan that's made for you, steady and sure."],
+    [96.3, "Move, move, like you mean it,"], [98.6, "Every muscle, every joint, let's assess it, let's rebuild it."],
+    [101.7, "Dr. Munaza Ghani, care that's real,"], [103.6, "Women and children, a space to heal.", 105.4],
+    [105.6, "Book your assessment:"], [107.0, "0307 · 581 · 0689", 110.1], [110.3, "From abroad: +92 307 581 0689", 114.4],
+    [117.4, "Muscle injury, a pull, a strain, a tear,"], [119.9, "Gradual loading helps it rebuild with proper care."],
+    [122.2, "Achilles tendon pain, just above the heel,"], [124.5, "A calf and tendon loading plan, adjusted to how you feel."],
+    [126.8, "Plantar heel pain, first steps in the morning sting,"], [129.0, "Calf and foot stretching, footwear tips, strengthening."],
+    [131.2, "Forefoot, midfoot, ankle tendons strained,"], [133.4, "After a fracture, the bone has healed, but the joint is tight,"],
+    [135.9, "Range and strength rebuilt with care, at a pace that's right."], [138.1, "Arthritis and persistent pain, osteoarthritis too,"],
+    [140.3, "Exercise and pain education, a plan that fits you.", 142.4],
+    [142.6, "Move, move, like you mean it,"], [145.0, "Every muscle, every joint, let's assess it, let's rebuild it."],
+    [148.3, "Dr. Munaza Ghani, care that's real,"], [150.5, "Women and children, a space to heal.", 152.8],
+    [153.2, "Munaza Physio Studio, Lahore."], [155.8, "Call 0307 · 581 · 0689", 161.6],
+    [162.0, "Facial palsy, one side of the face feels weak,"], [164.3, "Gentle facial exercises, practised week by week."],
+    [166.4, "Breathing trouble, mucus, a tight and heavy chest,"],
+    [168.5, "Cerebral palsy, muscles tight or weak,"], [170.3, "Stretching, strength and play, the movement goals we seek."],
+    [172.2, "Sensory-motor, learning how to move,"], [173.9, "Fun, guided activities help each skill improve.", 176.4]
+  ];
+
+  // ---------------- Body-map chapters ----------------
+  // hot = [x,y] in figure space (400x900); path = optional nerve/line drawn on the figure
+  var SPINE = [
+    { t: 10.5, t2: 12.5, title: 'Neck Pain', chips: ['Posture work', 'Gentle stretches'], note: 'phone neck? posture first', hot: [200, 168], img: 'cond-neck' },
+    { t: 14.9, t2: 17.1, title: 'Back Pain', chips: ['Core training', 'Movement training'], note: 'sit less, move more', hot: [200, 330], img: 'cond-back' },
+    { t: 19.4, t2: 21.6, title: 'Lumbar Spondylosis', chips: ['Mobility', 'Strength work'], note: 'lower spine, gently', hot: [200, 420], img: 'cond-spine' },
+    { t: 23.9, t2: 26.0, title: 'Sciatica', chips: ['Nerve glides', 'Gentle loading'], note: 'at your own beat', hot: [210, 450], path: 'M210,450 C232,490 240,570 236,650 C233,730 240,800 242,852', img: 'cond-spine' },
+    { t: 28.5, t2: 31.0, title: 'Thoracic & Rib Pain', chips: ['Breathing', 'Mobility'], note: 'breathe, then move', hot: [200, 250], path: 'M150,240 C170,270 230,270 250,240 M150,270 C170,300 230,300 250,270', img: 'cond-spine' }
+  ];
+  var ARM = [
+    { t: 62.5, t2: 64.9, title: 'Frozen Shoulder', chips: ['Gentle range of motion', 'Gradual progress'], note: 'a little more reach, gradually', hot: [284, 222], path: 'M284,222 m-70,-10 a72,72 0 0,1 120,-60', img: 'cond-shoulder' },
+    { t: 67.2, t2: 69.4, title: 'Rotator Cuff', chips: ['Strengthening', 'Control'], note: 'strength + control, slowly', hot: [272, 244], img: 'cond-shoulder' },
+    { t: 71.6, t2: 72.9, title: 'Shoulder Joint & Bursa', chips: ['Ease the load', 'Rebuild strength'], note: 'keep movement calm', hot: [292, 230], img: 'cond-shoulder' },
+    { t: 74.2, t2: 75.4, title: 'Elbow & Tendons', chips: ['Tendon loading', 'Rest & form'], note: 'find the balance', hot: [293, 360], img: 'cond-shoulder' },
+    { t: 78.6, t2: 80.8, title: 'Wrist & Hand', chips: ['Hand exercises', 'Finger exercises'], note: 'tip to fingertip', hot: [300, 492], img: 'cond-wrist' },
+    { t: 83.2, t2: 85.7, title: 'Upper-Limb Nerve', chips: ['Nerve glides', 'Posture checks'], note: 'settle the alarm', hot: [300, 470], path: 'M212,168 C262,190 292,236 296,330 C300,400 304,450 300,498', img: 'cond-wrist' },
+    { t: 87.8, t2: 90.0, title: 'Overuse & Repetitive Load', chips: ['Pacing', 'Rest', 'Strength work'], note: 'same move every day?', hot: [298, 470], path: 'M330,420 a34,34 0 1,1 -4,48', img: 'cond-overuse' }
+  ];
+  var LEG = [
+    { t: 114.7, t2: 115.8, title: 'Hip & Knee', chips: ['Hip & glute strength', 'Balance training'], note: 'step by step', hot: [238, 700], extra: [[250, 575]], img: 'cond-hip' },
+    { t: 117.4, t2: 119.9, title: 'Muscle Injury', chips: ['Gradual loading'], note: 'pull, strain or tear', hot: [240, 640], img: 'cond-overuse' },
+    { t: 122.2, t2: 124.5, title: 'Achilles Tendon', chips: ['Calf & tendon loading plan'], note: 'adjusted to how you feel', hot: [236, 830], img: 'cond-hip' },
+    { t: 126.8, t2: 129.0, title: 'Plantar Heel Pain', chips: ['Stretching', 'Footwear tips', 'Strengthening'], note: 'first steps sting?', hot: [230, 868], img: 'cond-plantar' },
+    { t: 131.2, t2: 132.3, title: 'Forefoot, Midfoot & Ankle', chips: ['Balance', 'Footwork'], note: 'retrained step by step', hot: [262, 868], img: 'cond-plantar' },
+    { t: 133.4, t2: 135.9, title: 'After a Fracture', chips: ['Range', 'Strength', 'At your pace'], note: 'bone healed, joint tight', hot: [236, 770], img: 'cond-fracture' },
+    { t: 138.1, t2: 140.3, title: 'Arthritis & Persistent Pain', chips: ['Exercise', 'Pain education'], note: 'a plan that fits you', hot: [236, 700], extra: [[164, 700], [102, 495], [298, 495]], img: 'cond-arthritis' }
+  ];
+
+  // ---------------- Build DOM ----------------
+  var NS = 'http://www.w3.org/2000/svg';
+  var capsEl = document.getElementById('caps');
+  CAP.forEach(function (c, i) {
+    var d = document.createElement('div'); d.className = 'cap';
+    d.innerHTML = '<span class="base">' + c[1] + '</span><span class="fill">' + c[1] + '</span>';
+    capsEl.appendChild(d); c.el = d;
+    c.end = c[2] != null ? c[2] : (CAP[i + 1] ? CAP[i + 1][0] - 0.15 : 177);
+  });
+  document.querySelectorAll('[data-text]').forEach(function (el) {
+    el.innerHTML = el.getAttribute('data-text').split('').map(function (ch) { return '<span class="l">' + (ch === ' ' ? '&nbsp;' : ch) + '</span>'; }).join('');
+  });
+  function fig(x, y) { return [360 + 0.88 * x, 112 + 0.88 * y]; }
+
+  function buildBody(sceneId, items) {
+    var sc = document.getElementById(sceneId);
+    var svg = document.getElementById('body-tpl').content.firstElementChild.cloneNode(true);
+    sc.insertBefore(svg, sc.firstChild);
+    var gp = svg.querySelector('.paths'), gh = svg.querySelector('.hots'), gl = svg.querySelector('.leaders');
+    var view = sc.querySelector('.browser.mini .view'), imgs = {};
+    items.forEach(function (it, i) {
+      // hotspot rings
+      var pts = [it.hot].concat(it.extra || []);
+      it.hotEls = pts.map(function (p) {
+        var g = document.createElementNS(NS, 'g'); g.setAttribute('opacity', '0');
+        g.innerHTML = '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="26" fill="none" stroke="#E7212B" stroke-width="3" class="ring"/><circle cx="' + p[0] + '" cy="' + p[1] + '" r="11" fill="#E7212B"/>';
+        gh.appendChild(g); return g;
+      });
+      if (it.path) {
+        var pth = document.createElementNS(NS, 'path');
+        pth.setAttribute('d', it.path); pth.setAttribute('fill', 'none'); pth.setAttribute('stroke', '#E7212B'); pth.setAttribute('stroke-width', '5');
+        pth.setAttribute('stroke-linecap', 'round'); pth.setAttribute('stroke-dasharray', '1'); pth.setAttribute('stroke-dashoffset', '1'); pth.setAttribute('pathLength', '1');
+        pth.setAttribute('style', 'filter:url(#rough2)'); gp.appendChild(pth); it.pathEl = pth;
+      }
+      // hand-drawn leader from hotspot to title
+      var a = fig(it.hot[0], it.hot[1]);
+      var lead = document.createElementNS(NS, 'path');
+      var bx = 860, by = 290;
+      lead.setAttribute('d', 'M' + (a[0] + 26) + ',' + a[1] + ' C' + (a[0] + 160) + ',' + (a[1] - 30) + ' ' + (bx - 160) + ',' + (by + 30) + ' ' + bx + ',' + by);
+      lead.setAttribute('fill', 'none'); lead.setAttribute('stroke', '#101010'); lead.setAttribute('stroke-width', '2.5'); lead.setAttribute('stroke-dasharray', '1'); lead.setAttribute('stroke-dashoffset', '1'); lead.setAttribute('pathLength', '1');
+      lead.setAttribute('style', 'filter:url(#rough2)'); gl.appendChild(lead); it.leadEl = lead;
+      // condition title block
+      var c = document.createElement('div'); c.className = 'cond';
+      c.innerHTML = '<div class="ix">' + String(i + 1).padStart(2, '0') + ' / ' + String(items.length).padStart(2, '0') + '</div><div class="t">' + it.title.replace('&', '&amp;') + '</div><div class="chips">' +
+        it.chips.map(function (x, k) { return '<div class="chip' + (k === 0 ? ' r' : k === 2 ? ' w' : '') + '">' + x + '</div>'; }).join('') + '</div>';
+      sc.appendChild(c); it.condEl = c;
+      var n = document.createElement('div'); n.className = 'map-note hand'; n.textContent = it.note;
+      c.appendChild(document.createElement('br')); c.appendChild(n); it.noteEl = n;
+      if (!imgs[it.img]) { var im = document.createElement('img'); im.src = 'assets/site/' + it.img + '.jpg'; im.alt = ''; view.appendChild(im); imgs[it.img] = im; }
+      it.imgEl = imgs[it.img];
+    });
+    return { sc: sc, svg: svg, guides: sc.querySelector('.guides'), mini: sc.querySelector('.browser.mini') };
+  }
+  var B2 = buildBody('s2', SPINE), B6 = buildBody('s6', ARM), B10 = buildBody('s10', LEG);
+
+  // ---------------- Timeline ----------------
+  var tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines['munaza-physio-177s'] = tl;
+
+  function show(sel, a, b) { tl.set(sel, { opacity: 1 }, a); if (b != null) tl.set(sel, { opacity: 0 }, b); }
+  function pop(sel, t, from, dur) { tl.fromTo(sel, Object.assign({ opacity: 0, y: 30 }, from || {}), { opacity: 1, x: 0, y: 0, scale: 1, rotation: from && from.rotEnd || 0, duration: dur || 0.45, ease: 'back.out(1.7)' }, t); }
+  function rise(sel, t, d) { tl.fromTo(sel, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: d || 0.5, ease: 'power3.out' }, t); }
+  function mask(sel, t) { tl.fromTo(sel, { yPercent: 105 }, { yPercent: 0, duration: 0.7, ease: 'power4.out' }, t); }
+  function draw(sel, t, d) { tl.fromTo(sel, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d || 0.8, ease: 'power2.inOut' }, t); }
+  function elastic(sel, t) {
+    tl.set(sel, { opacity: 1 }, t);
+    tl.fromTo(sel + ' .l', { opacity: 0, yPercent: 70, scaleY: 0.3, scaleX: 1.3 }, { opacity: 1, yPercent: 0, scaleY: 1, scaleX: 1, duration: 0.8, ease: 'elastic.out(1,0.5)', stagger: 0.05 }, t);
+  }
+  function push(sel, t, d, s) { tl.fromTo(sel, { scale: 1 }, { scale: s || 1.05, duration: d, ease: 'none' }, t); }
+  function chapter(t, n, title, pipIx) {
+    tl.set('#wipe-n', { textContent: 'CHAPTER 0' + n }, t); tl.set('#wipe-h', { textContent: title }, t);
+    tl.fromTo('#wipe', { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 0.3, ease: 'power3.in' }, t - 0.3);
+    tl.fromTo('#wipe .t', { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.25 }, t - 0.05);
+    tl.set('#wipe', { transformOrigin: '100% 50%' }, t + 0.55);
+    tl.to('#wipe', { scaleX: 0, duration: 0.35, ease: 'power3.out' }, t + 0.55);
+    tl.set('#wipe .t', { opacity: 0 }, t + 0.9);
+    document.querySelectorAll('#chap .pip').forEach(function (p, i) { tl.set(p, { backgroundColor: i < pipIx ? '#E7212B' : '#DCCBCB' }, t); });
+    tl.set('#chap-t', { textContent: title }, t);
+  }
+
+  // ---- S1 intro (hand-drawn storyboard frame -> editorial type -> real site)
+  show('#s1', 0, 10.4);
+  draw('#s1-sketch .stroke', 0.1, 1.1);
+  tl.fromTo('#s1-lbl', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.6);
+  rise('#s1-k', 1.2);
+  mask('#s1-a', 1.4); mask('#s1-b', 5.4); mask('#s1-c', 6.0);
+  tl.fromTo('#s1-br', { opacity: 0, y: 60, rotation: 2 }, { opacity: 1, y: 0, rotation: 0, duration: 0.8, ease: 'power3.out' }, 2.4);
+  draw('#s1-circ', 3.2, 1.0);
+  push('#s1-br .view img', 2.4, 8, 1.08);
+  draw('#s1-ul', 6.4, 0.6);
+  pop('#s1-note', 7.7, { rotation: -8, rotEnd: -3 });
+  tl.to('#s1-sketch, #s1-lbl', { opacity: 0, duration: 0.6 }, 8.6);
+
+  // ---- persistent brand chip + chapter indicator
+  tl.set('#brand', { opacity: 1 }, 10.4); tl.set('#brand', { opacity: 0 }, 51.0); tl.set('#brand', { opacity: 1 }, 62.4); tl.set('#brand', { opacity: 0 }, 153.0); tl.set('#brand', { opacity: 1 }, 161.8); tl.set('#brand', { opacity: 0 }, 174.0);
+  [[35.3, 41.9], [41.9, 62.4], [91.9, 114.6], [142.6, 153]].forEach(function (w) { tl.set('#chap', { opacity: 0 }, w[0]); });
+  [[10.4, 35.3], [62.4, 91.9], [114.6, 142.6]].forEach(function (w) { tl.set('#chap', { opacity: 1 }, w[0]); tl.set('#chap', { opacity: 0 }, w[1]); });
+
+  // ---- body-map chapters
+  function runBody(B, items, t0, t1) {
+    show(B.sc, t0, t1);
+    tl.fromTo(B.svg.querySelector('g'), { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' }, t0);
+    rise(B.guides, t0 + 0.2);
+    tl.fromTo(B.mini, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, items[0].t + 0.3);
+    items.forEach(function (it, i) {
+      var end = i + 1 < items.length ? items[i + 1].t : t1;
+      it.hotEls.forEach(function (h, k) {
+        var pt = [it.hot].concat(it.extra || [])[k];
+        tl.fromTo(h, { opacity: 0, scale: 0.2, svgOrigin: pt[0] + ' ' + pt[1] }, { opacity: 1, scale: 1, svgOrigin: pt[0] + ' ' + pt[1], duration: 0.4, ease: 'back.out(3)' }, it.t + k * 0.12);
+        tl.fromTo(h.querySelector('.ring'), { attr: { r: 14 } }, { attr: { r: 34 }, duration: 0.9, ease: 'power2.out', repeat: Math.max(0, Math.floor((end - it.t) / 1.1) - 1), yoyo: true }, it.t);
+        tl.to(h, { opacity: 0, duration: 0.25 }, end - 0.05);
+      });
+      if (it.pathEl) { draw(it.pathEl, it.t + 0.3, 1.0); tl.to(it.pathEl, { opacity: 0.2, duration: 0.3 }, end - 0.05); }
+      draw(it.leadEl, it.t + 0.1, 0.5);
+      tl.to(it.leadEl, { opacity: 0, duration: 0.2 }, end - 0.1);
+      tl.set(it.condEl, { opacity: 1 }, it.t);
+      tl.fromTo(it.condEl.querySelector('.t'), { opacity: 0, yPercent: 60, clipPath: 'inset(0% 0% 100% 0%)' }, { opacity: 1, yPercent: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55, ease: 'power4.out' }, it.t);
+      tl.fromTo(it.condEl.querySelector('.ix'), { opacity: 0 }, { opacity: 1, duration: 0.3 }, it.t);
+      it.condEl.querySelectorAll('.chip').forEach(function (c, k) { pop(c, it.t2 + k * 0.18, { y: 20, scale: 0.7 }, 0.4); });
+      tl.fromTo(it.noteEl, { opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'power1.out' }, it.t2 + 0.5);
+      tl.set(it.condEl, { opacity: 0 }, end);
+      // site page behind the idea
+      tl.set(it.imgEl, { opacity: 1 }, it.t); if (end < t1) tl.set(it.imgEl, { opacity: 0 }, end);
+      tl.fromTo(it.imgEl, { scale: 1.0, y: 0 }, { scale: 1.18, y: -20, duration: Math.max(0.5, end - it.t), ease: 'none' }, it.t);
+    });
+    // make sure images for shared screenshots are visible for every item that uses them
+    items.forEach(function (it) { tl.set(it.imgEl, { opacity: 1 }, it.t + 0.001); });
+  }
+  runBody(B2, SPINE, 10.4, 35.3);
+  runBody(B6, ARM, 62.4, 91.9);
+  runBody(B10, LEG, 114.6, 142.6);
+  chapter(10.4, 1, 'The spine', 1); chapter(62.4, 2, 'Shoulder & arm', 2); chapter(114.6, 3, 'Hip, knee & foot', 3);
+
+  // ---- S3 pre-chorus 1
+  show('#s3', 35.3, 41.9);
+  mask('#s3-a', 35.3); mask('#s3-b', 36.2);
+  draw('#s3-x', 36.9, 0.4);
+  tl.fromTo('#s3-plan', { opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 1.0, ease: 'power1.out' }, 37.6);
+  gsap.utils.toArray('#s3-list .tick').forEach(function (e, i) { pop(e, 38.6 + i * 0.6, { x: -40, y: 0 }); });
+
+  // ---- S4 chorus 1: presenter
+  show('#s4', 41.9, 51.0);
+  tl.fromTo('#doc1', { opacity: 0, x: 80, clipPath: 'inset(0% 0% 0% 100%)' }, { opacity: 1, x: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'power3.out' }, 41.9);
+  push('#doc1', 41.9, 9.1, 1.06);
+  elastic('#s4-move', 41.95);
+  tl.fromTo('#s4-move', { scale: 1.1 }, { scale: 1, duration: 0.35, ease: 'power2.out' }, 42.9);
+  rise('#s4-every', 44.0);
+  tl.fromTo('#s4-name', { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 46.9);
+  tl.fromTo('#s4-heal', { opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9 }, 48.8);
+
+  // ---- S5 call 1: number, then the site
+  show('#s5', 51.0, 62.4);
+  rise('#s5-k', 51.0);
+  [['#g1', 53.3], ['#g2', 54.9], ['#g3', 56.6]].forEach(function (g) { tl.fromTo(g[0], { opacity: 0, yPercent: 40, scale: 1.3 }, { opacity: 1, yPercent: 0, scale: 1, duration: 0.35, ease: 'power4.out' }, g[1]); });
+  rise('#s5-wa', 57.4);
+  tl.fromTo('#s5-ph', { opacity: 0, y: 200, rotation: 6 }, { opacity: 1, y: 0, rotation: 3, duration: 0.8, ease: 'power3.out' }, 51.6);
+  push('#s5-ph .scr img', 52.2, 10, 1.06);
+  tl.fromTo('#s5-br', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 59.6);
+  var url = 'munazaphysio.studio';
+  for (var i = 0; i <= url.length; i++) tl.set('#s5-url b', { textContent: url.slice(0, i) }, 59.8 + i * 0.05);
+  tl.fromTo('#s5-img', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 60.9);
+  pop('#s5-note', 59.9, { rotation: -10, rotEnd: -4 });
+
+  // ---- S6 chapter-2 extras: frozen-shoulder reach arc is the item path
+
+  // ---- S7 journey (About page)
+  show('#s7', 91.9, 96.3);
+  gsap.utils.toArray('#s7 .step').forEach(function (e, i) { tl.fromTo(e, { opacity: 0, y: 160, rotation: i % 2 ? 3 : -3 }, { opacity: 1, y: 0, rotation: 0, duration: 0.8, ease: 'elastic.out(1,0.7)' }, 92.1 + i * 0.7); });
+  draw('#s7 .s7a', 93.0, 0.6);
+
+  // ---- S8 chorus 2: website walkthrough with cursor
+  show('#s8', 96.3, 105.5);
+  tl.fromTo('#s8-br', { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' }, 96.3);
+  tl.set('#s8-i1', { opacity: 1 }, 96.3); tl.set('#s8-i1', { opacity: 0 }, 99.2);
+  tl.set('#s8-i2', { opacity: 1 }, 99.2); tl.set('#s8-i2', { opacity: 0 }, 101.7);
+  tl.set('#s8-i3', { opacity: 1 }, 101.7);
+  tl.fromTo('#s8-i2', { y: 60 }, { y: -40, duration: 2.5, ease: 'power2.out' }, 99.2);
+  tl.fromTo('#s8-i3', { y: 60 }, { y: -30, duration: 3.8, ease: 'power2.out' }, 101.7);
+  elastic('#s8-move', 96.35);
+  tl.to('#s8-move', { opacity: 0, duration: 0.3 }, 101.4);
+  tl.set('#s8-cur', { opacity: 1, x: 1500, y: 700 }, 97.0);
+  tl.to('#s8-cur', { x: 820, y: 520, duration: 1.2, ease: 'power2.inOut' }, 97.2);
+  tl.fromTo('#s8-rip', { opacity: 1, scale: 0.2 }, { opacity: 0, scale: 1.4, duration: 0.5 }, 98.5);
+  tl.to('#s8-cur', { x: 1300, y: 560, duration: 1.2, ease: 'power2.inOut' }, 99.6);
+  tl.to('#s8-cur', { x: 1120, y: 470, duration: 1.0, ease: 'power2.inOut' }, 102.0);
+  gsap.utils.toArray('#s8-steps .tick').forEach(function (e, i) { pop(e, 101.9 + i * 0.45, { x: -40, y: 0 }); });
+  tl.fromTo('#s8-note', { opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.8 }, 103.8);
+  tl.set('#s8-cur', { opacity: 0 }, 105.5);
+
+  // ---- S9 call 2: book + online
+  show('#s9', 105.5, 114.6);
+  rise('#s9-k', 105.6);
+  [['#h1', 107.0], ['#h2', 108.0], ['#h3', 109.0]].forEach(function (g) { tl.fromTo(g[0], { opacity: 0, yPercent: 40, scale: 1.3 }, { opacity: 1, yPercent: 0, scale: 1, duration: 0.35, ease: 'power4.out' }, g[1]); });
+  rise('#s9-intl', 110.3);
+  draw('#s9-globe .stroke', 110.3, 1.2);
+  tl.fromTo('#s9-br', { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 107.4);
+  push('#s9-br .view img', 107.4, 7.2, 1.12);
+  gsap.utils.toArray('#s9-chips .chip').forEach(function (e, i) { pop(e, [107.8, 108.4, 110.9][i], { y: 20, scale: 0.7 }); });
+
+  // ---- S11 chorus 3: women-only promise
+  show('#s11', 142.6, 153.0);
+  mask('#s11-a', 142.6); mask('#s11-b', 145.0); mask('#s11-c', 148.3);
+  gsap.utils.toArray('#s11-list .tick').forEach(function (e, i) { pop(e, 143.4 + i * 0.9, { x: 50, y: 0 }); });
+  tl.fromTo('#s11-clinic', { opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'power3.inOut' }, 150.3);
+  tl.fromTo('#s11-heal', { opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9 }, 150.6);
+
+  // ---- S12 final call: visit
+  show('#s12', 153.0, 161.8);
+  tl.fromTo('#s12-img', { opacity: 0, clipPath: 'inset(0% 0% 100% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'power3.out' }, 153.0);
+  push('#s12-img img', 153.0, 8.8, 1.08);
+  rise('#s12-k', 153.1); rise('#s12-name', 153.3);
+  tl.fromTo('#s12-num', { opacity: 0, scale: 1.3, transformOrigin: '0% 50%' }, { opacity: 1, scale: 1, duration: 0.4, ease: 'power4.out' }, 155.8);
+  rise('#s12-rows', 156.8);
+  draw('#s12-pin', 156.8, 0.8);
+  tl.fromTo('#s12-num', { scale: 1 }, { scale: 1.04, duration: 0.2, yoyo: true, repeat: 1, transformOrigin: '0% 50%' }, 159.5);
+
+  // ---- S13 facial palsy + breathing
+  show('#s13', 161.8, 168.3);
+  tl.fromTo('#s13-p1', { opacity: 0, y: 200, rotation: -8 }, { opacity: 1, y: 0, rotation: -3, duration: 0.6, ease: 'back.out(1.5)' }, 162.0);
+  rise('#s13-t1', 162.3);
+  tl.fromTo('#s13-p2', { opacity: 0, y: 200, rotation: 8 }, { opacity: 1, y: 0, rotation: 3, duration: 0.6, ease: 'back.out(1.5)' }, 166.4);
+  rise('#s13-t2', 166.6);
+
+  // ---- S14 children
+  show('#s14', 168.3, 174.0);
+  tl.fromTo('#s14-br', { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' }, 168.3);
+  tl.set('#s14-i1', { opacity: 1 }, 168.3); tl.set('#s14-i1', { opacity: 0 }, 171.4); tl.set('#s14-i2', { opacity: 1 }, 171.4);
+  push('#s14-i1', 168.3, 3.1, 1.06); push('#s14-i2', 171.4, 2.6, 1.06);
+  gsap.utils.toArray('#s14-chips .chip').forEach(function (e, i) { pop(e, [168.5, 170.3, 172.2, 173.4][i], { x: -40, y: 0, scale: 0.8 }); });
+  draw('#s14-star', 169.0, 0.8);
+
+  // ---- S15 particle logo (seeded, seek-safe)
+  show('#s15', 174.0);
+  var cv = document.getElementById('pcv'), cx = cv.getContext('2d'), logo = document.getElementById('p-logo'), P = null;
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function sample() {
+    if (P || !logo.complete || !logo.naturalWidth) return;
+    var ow = 600, oh = 375, off = document.createElement('canvas'); off.width = ow; off.height = oh;
+    var o = off.getContext('2d'), r = Math.min(ow / logo.naturalWidth, oh / logo.naturalHeight), dw = logo.naturalWidth * r, dh = logo.naturalHeight * r;
+    o.drawImage(logo, (ow - dw) / 2, (oh - dh) / 2, dw, dh);
+    var d = o.getImageData(0, 0, ow, oh).data, R = rng(177); P = [];
+    for (var y = 0; y < oh; y += 5) for (var x = 0; x < ow; x += 5) {
+      var k = (y * ow + x) * 4; if (d[k + 3] > 140) P.push({ tx: 660 + x, ty: 230 + y, sx: R() * 1920, sy: R() * 1080, dl: R() * 0.35, c: 'rgb(' + d[k] + ',' + d[k + 1] + ',' + d[k + 2] + ')' });
+    }
+  }
+  var prog = { p: 0 };
+  function render() {
+    sample(); cx.clearRect(0, 0, 1920, 1080); if (!P) return;
+    for (var i = 0; i < P.length; i++) {
+      var q = P[i], u = Math.min(1, Math.max(0, (prog.p - q.dl) / 0.65)); u = 1 - Math.pow(1 - u, 3);
+      cx.fillStyle = q.c; cx.fillRect(q.sx + (q.tx - q.sx) * u, q.sy + (q.ty - q.sy) * u, 3.2, 3.2);
+    }
+  }
+  tl.fromTo(prog, { p: 0 }, { p: 1, duration: 1.5, ease: 'none', onUpdate: render }, 174.0);
+  tl.fromTo('#p-logo', { opacity: 0 }, { opacity: 1, duration: 0.35 }, 175.35);
+  tl.to('#pcv', { opacity: 0, duration: 0.35 }, 175.45);
+  tl.fromTo('#p-cta', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 175.4);
+
+  // ---- captions: line in, karaoke sweep, line out
+  CAP.forEach(function (c) {
+    var dur = Math.max(0.4, c.end - c[0]);
+    tl.fromTo(c.el, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, c[0] - 0.08);
+    tl.fromTo(c.el.querySelector('.fill'), { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: dur * 0.85, ease: 'none' }, c[0]);
+    tl.set(c.el, { opacity: 0 }, c.end);
+  });
+
+  tl.set({}, {}, 177);
+})();
+</script>
+</body>
+</html>

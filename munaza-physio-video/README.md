@@ -57,3 +57,17 @@ npm run render:back   # renders renders/01-back-pain.mp4
 ```
 
 Asset paths are relative to the project root (`munaza-physio-video/`), so render from here. GSAP and the Archivo font are vendored (`vendor/`, `assets/fonts/`), so no CDN is needed.
+
+## Full song video: "A Space to Heal" (16:9, 2:57)
+
+`series/complete/index.html` is a 1920x1080, 177 s YouTube composition timed to `series/complete/A_Space_to_Heal.mp3`.
+
+- **Chapters follow the song:** intro, spine body-map, pre-chorus, chorus with Dr. Munaza, call break, shoulder/arm body-map, the About-page journey, a home-page walkthrough, a booking and online call break, hip/knee/foot body-map, a women-only promise, the visit/contact card, facial palsy and breathing, paediatric, then a particle logo.
+- **Real site pages:** `assets/site/*.jpg` are screenshots of munazaphysio.studio (home, about, conditions, paediatric; desktop and mobile).
+- **Hand-drawn layer:** sketch strokes use an SVG turbulence filter, with notes in Caveat. Type is Poppins, matching the site. Fonts are bundled in `assets/fonts/`.
+- **Captions:** line-level with a karaoke sweep. They come from the `CAP` array near the bottom of the file and are also exported as `series/complete/captions-en.srt` for YouTube.
+- **Lyrics the track skips:** the generated track leaves out several lines from `lyrics.md` (elbow and hip/knee/ACL lines, most of the neuro bridge, the spoken outro). Captions show only what is sung.
+
+```bash
+npm run render:complete   # renders renders/munaza-physio-177s.mp4
+```
