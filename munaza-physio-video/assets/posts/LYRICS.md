@@ -1,217 +1,216 @@
-# "Move Like You Mean It": Munaza Physio Studio Song (v2)
+# "The Chair Is Winning": Munaza Physio Studio Song (v3)
 
 **Audience:** women and children, Lahore
 **Length:** about 3:30
 **Contact:** +92 307 5810689 (0307 5810689), munazaphysio.studio
-**Goal:** explain each condition in plain words and how physiotherapy rehab approaches it, without promising results.
+**Goal:** a catchy, shareable song that explains each pain and how physio rehab approaches it, with no promises of results.
+
+---
+
+## Viral structure map
+
+| Element | How this song uses it |
+|---------|-----------------------|
+| **Format** | Musical satire / relatable "desk-life dread-pop" that turns into a healthcare anthem |
+| **Flavor** | Dark, funny body-horror of modern life: screens, sofas, laptops in bed |
+| **Why it spreads** | Everyone has tech neck. Viewers tag friends: "this is literally you" |
+| **Topic and angle** | Pain and stiffness framed as a villain: **The Chair**, slowly taking over your body |
+| **Hook (0:00)** | Subverts a love-song line: "I'd turn my head to look at you... but my neck won't let me" |
+| **Headfake** | Sounds like a breakup song, then reveals it is about sitting too much |
+| **Stakes (escalating)** | Stiff neck, then can't lift your baby, then can't climb stairs, then can't dance at the cousin's mehndi |
+| **Dopamine loop** | Rapid-fire relatable details (doom-scroll at 2 a.m., ten steps, chair still in the box). Every symptom set up in the verses gets **paid off** in the Rehab Rap |
+| **Art of contrast** | Bright, bouncy pop against lyrics about your body "losing"; clinical terms against emotional panic |
+| **Big question (2:05)** | Beat cuts to silence: "When did I stop moving?" |
+| **Rehook** | Every chorus returns to "The chair is winning". The final chorus flips it to "The chair is losing" |
+| **Callback ending** | The outro repeats the hook with a twist: "It was never you. It was the chair." |
+
+No song can guarantee views. This structure gives it the best chance: a strong hook in the first 3 seconds, a clear villain, rising stakes and a satisfying payoff.
 
 ---
 
 ## Style prompt (paste into your music generator)
 
 ```text
-Clean, upbeat, vocal-forward synth-pop, 108 BPM. Clear female lead vocal, warm Pakistani English accent, very clear diction, dry vocal, no autotune, no vocoder, no heavy effects on vocals. Soft, low-volume background synths and light drums, gentle bass, no loud drops, no distortion, no heavy sidechain pumping. Music sits well under the voice. Spoken-word sections with music almost silent. Friendly, reassuring, modern healthcare jingle.
+Catchy, bouncy, vocal-forward synth-pop with dark comedic lyrics, 112 BPM. Clear female lead vocal, warm Pakistani English accent, very clear diction, dry vocal, no autotune, no vocoder. Soft, low-volume background synths, light drums, gentle bass. Music sits well under the voice. Sudden silence before the spoken question. Spoken-word sections with music almost silent. Playful, ironic, then uplifting final chorus.
 ```
 
 ## Mix notes
 
-- **Vocals first:** lead vocal about 10-12 dB louder than the music bed. Every word must be understandable on a phone speaker.
-- **Phone number:** in every `[Call Break]` the music drops to a soft pad (about -20 dB). The number is **spoken, not sung**, slowly, digit by digit, with no effects.
-- **Number format:** said as **zero-three-zero-seven, five-eight-one, zero-six-eight-nine** (local), then **plus nine-two, three-zero-seven, five-eight-one, zero-six-eight-nine** (international). Use "zero", not "oh", for clarity.
-- **No effects** on condition names or the phone number: no vocoder, reverb tails or delays.
-- **If your generator supports stems:** export vocals and instrumental separately, lower the instrumental by about 8-10 dB, then re-mix.
-
-## Claims rules used in these lyrics
-
-The lyrics describe **assessment, guided exercise and step-by-step rehab** only. They never promise a cure, guaranteed recovery, instant results, 100% results or a fixed recovery time.
+- **Vocals first:** lead vocal about 10-12 dB above the music bed. Every word must be clear on a phone speaker.
+- **Phone number:** spoken, not sung, digit by digit, music at about -20 dB, no effects: **zero-three-zero-seven, five-eight-one, zero-six-eight-nine**.
+- **Big Question:** full silence for about one second before and after.
+- **With stems:** lower the instrumental by 8-10 dB and re-mix.
 
 ---
 
-## [Intro] (spoken, soft pads, music low)
+## [Hook] 0:00 (almost a cappella, soft keys)
 
-Hi! This is Munaza Physio Studio, in Lahore.
-Physiotherapy for women and children.
-Let's talk about pain, and the next step.
+Baby, I'd turn my head to look at you,
+But my neck won't let me...
+*(spoken)* It's not you. It's my neck.
 
-## [Verse 1: The Spine] (light beat, clear sung vocal)
+*(beat drops in)*
 
-Neck pain from the phone, a heavy, stiff head,
-Posture work and gentle stretches, loosen up instead.
-Back pain when you bend, or when you sit too long,
-Core and movement training help your back get strong.
+## [Verse 1: Small Cracks] 0:12
 
-Lumbar spondylosis, the lower spine wears thin,
-Mobility and strength work, let the movement begin.
-Sciatica, a burning line that runs down to your feet,
-Nerve glides and gentle loading, move at your own beat.
+Monday, laptop on the bed, I'm fine, I'm fine,
+Tuesday, little click in my lower spine,
+Scrolling till two a.m., phone above my face,
+Wake up with a neck that's frozen in place.
 
-Thoracic and rib pain, tight across the chest,
-Breathing and mobility to help you move your best.
+Text thumb, laptop hunch, a mouse-hand ache,
+Ten thousand steps? I did ten. Mistake.
+Ergonomic chair still sitting in the box,
+My shoulders climbing to my ears, tight as locks.
 
 ## [Pre-Chorus]
 
-No quick fix, no magic cure,
-Just a plan that's made for you, steady and sure.
+Something's pulling me down, down, down,
+Sinking in the sofa like I'm gonna drown...
+
+## [Chorus] 0:40
+
+The chair is winning, the chair is winning,
+My spine's a question mark, my head is spinning,
+Tech neck, back ache, frozen shoulder too,
+The chair is winning... what am I gonna do?
+
+## [Verse 2: It Spreads] 1:00
+
+Can't reach the top shelf, frozen shoulder's locked,
+Can't lift my baby, lower back is blocked,
+Rotator cuff and bursa, can't even comb my hair,
+Elbow, wrist and fingers from the mouse and phone, unfair.
+
+Sciatica's a live wire running to my toes,
+Tingling down my arm now, that's a nerve, I suppose,
+Heel screams at sunrise, plantar says hello,
+Achilles says "not today", my knee says "go slow".
+
+Hip aches on the stairs, stairs are a mountain now,
+Old sports injury, ACL, don't ask me how,
+Cousin's mehndi's coming and I cannot dance at all,
+Auntie's asking questions while I'm leaning on the wall.
+
+## [Pre-Chorus]
+
+Something's pulling me down, down, down,
+Sinking in the sofa like I'm gonna drown...
 
 ## [Chorus]
 
-Move, move, like you mean it,
-Every muscle, every joint, let's assess it, let's rebuild it.
-Dr. Munaza Ghani, care that's real,
-Women and children, a space to heal.
+The chair is winning, the chair is winning,
+My spine's a question mark, my head is spinning,
+Tech neck, back ache, frozen shoulder too,
+The chair is winning... it took my weekend too.
+
+## [Verse 3: Full Takeover] 1:40 (darker, slower, still catchy)
+
+Now I'm dizzy when I turn, the room goes round,
+Walking on a tightrope with my eyes on the ground,
+Breathing short and shallow, chest is tight,
+Pelvic health's a secret that I never say out loud at night.
+
+One side of my face feels weak when I smile,
+My mother's steps are freezing, she's been shuffling for a while,
+My little one's late to crawl and late to stand,
+And nobody's explaining, nobody holds my hand.
+
+*(half-whispered)*
+The chair doesn't hurry. The chair just waits.
+It's patient. It's comfy. It's sealing my fate.
+
+## [Big Question] 2:05 (beat cuts to full silence, spoken)
+
+...When did I stop moving?
+
+*(one second of silence)*
+
+...And who helps me start again?
 
 ## [Call Break 1] (music almost silent, spoken slowly)
 
-Call Munaza Physio Studio:
-**zero-three-zero-seven... five-eight-one... zero-six-eight-nine.**
-Or visit **munazaphysio dot studio**.
+Munaza Physio Studio, Lahore. For women and children.
+Call **zero-three-zero-seven... five-eight-one... zero-six-eight-nine.**
 
-## [Verse 2: Shoulder and Arm]
+## [Rehab Rap: The Payoff] 2:20 (light beat returns, fast and rhythmic, every word clear)
 
-Frozen shoulder, stiff and aching, can't reach up high,
-Gentle range-of-motion work, gradually we try.
-Rotator cuff strain when you lift or when you throw,
-Strengthening the shoulder, building control slow.
+Assess it, don't guess it, find where it starts,
+A plan built for your body, not a one-size chart.
 
-Shoulder joint and bursa, pain when you raise your arm,
-Ease the load, rebuild the strength, keep your movement calm.
-Elbow pain from gripping, lifting day and night,
-Tendon loading, rest and form, to get the balance right.
+Tech neck? Posture reset, gentle stretch.
+Back pain? Core and movement, step by step.
+Lumbar, thoracic? Mobility, breathe it through.
+Frozen shoulder? Range of motion, slow and true.
+Rotator cuff and bursa? Load it, build control.
+Elbow, wrist and hand? Small drills, grip and roll.
+Nerve pain, arm or leg? Nerve glides, easy load.
+Overuse? Pace it, rest it, change the road.
 
-Wrist and hand from typing, stiffness in the grip,
-Hand and finger exercises, tip to fingertip.
-Upper limb nerve pain, tingling down the arm,
-Nerve glides and posture checks to settle the alarm.
+Knee and hip? Strength and balance, stair by stair.
+ACL, meniscus? Staged rehab, handled with care.
+Heel, Achilles, foot? Calf loading, footwear tips.
+Muscle strain? Gradual loading, no quick fix.
+Arthritis, persistent pain? Move and understand.
+After a fracture? Range and strength, all planned.
 
-Overuse and repeated strain, the same move every day,
-Pacing, rest and strength work help you find a better way.
+Dizzy? Head-and-eye drills, find your ground.
+Balance, gait? Walking practice, steady round.
+Parkinson's? Big steps, rhythm, cue the sound.
+Spinal cord injury? Transfers, daily skills, goals we set.
+Facial palsy? Gentle face drills, don't forget.
+Breathing? Airway clearance, open the chest.
+Pelvic health? Private care, respected, assessed.
 
-## [Pre-Chorus]
+Little ones? Play-based rehab, milestone by milestone,
+Cerebral palsy, sensory-motor, never alone.
 
-No quick fix, no magic cure,
-Just a plan that's made for you, steady and sure.
+## [Final Chorus: The Flip] 3:00 (bigger, vocals still on top)
 
-## [Chorus]
-
-Move, move, like you mean it,
-Every muscle, every joint, let's assess it, let's rebuild it.
-Dr. Munaza Ghani, care that's real,
-Women and children, a space to heal.
-
-## [Call Break 2] (music almost silent, spoken slowly)
-
-Book your assessment:
-**zero-three-zero-seven... five-eight-one... zero-six-eight-nine.**
-From abroad: **plus nine-two, three-zero-seven, five-eight-one, zero-six-eight-nine.**
-
-## [Verse 3: Hip, Knee, Foot and Recovery]
-
-Hip pain when you walk, or climb up the stairs,
-Hip and glute strengthening, movement done with care.
-Knee joint pain, the knee feels weak and sore,
-Quads and balance training, step by step once more.
-
-ACL and meniscus, after injury or surgery,
-Staged rehab, strength and control, returning gradually.
-Muscle injury, a pull, a strain, a tear,
-Gradual loading helps it rebuild with proper care.
-
-Achilles tendon pain, just above the heel,
-A calf and tendon loading plan, adjusted to how you feel.
-Plantar heel pain, first steps in the morning sting,
-Calf and foot stretching, footwear tips, strengthening.
-
-Forefoot, midfoot, ankle tendons strained,
-Balance, strength and footwork, step by step retrained.
-After a fracture, the bone has healed, but the joint is tight,
-Range and strength rebuilt with care, at a pace that's right.
-
-Arthritis and persistent pain, osteoarthritis too,
-Exercise and pain education, a plan that fits you.
-
-## [Bridge: Neuro, Breathing, Women's Health] (beat drops, soft pads, slower and warmer)
-
-Dizzy when you turn, the room begins to spin,
-Vestibular rehab, head and eye exercises begin.
-Balance, gait, coordination, afraid that you might fall,
-Balance training, walking practice, helping you stand tall.
-
-Parkinson's and movement, steps that start to freeze,
-Big-movement practice, rhythm and cues, taken by degrees.
-Spinal cord injury, a long road to rebuild,
-Strength, transfers, daily skills, with goals we set and build.
-
-Facial palsy, one side of the face feels weak,
-Gentle facial exercises, practised week by week.
-Breathing trouble, mucus, a tight and heavy chest,
-Airway clearance, breathing techniques, to help you breathe your best.
-
-Women's pelvic health, private and respected,
-Pelvic floor assessment, care that's well directed.
-
-## [Children's Verse] (music-box synth, soft kids' choir on the last line)
-
-Little ones and infants, milestones running late,
-Play-based developmental rehab, gentle and first-rate.
-Cerebral palsy, muscles tight or weak,
-Stretching, strength and play, the movement goals we seek.
-Sensory-motor, learning how to move,
-Fun, guided activities help each skill improve.
-
-## [Final Chorus] (a little bigger, vocals still on top)
+The chair is losing, the chair is losing,
+Every step I take is a step I'm choosing,
+No magic cure, just work that's true,
+The chair is losing... and I'm moving too.
 
 Move, move, like you mean it,
 Every muscle, every joint, let's assess it, let's rebuild it.
-Dr. Munaza Ghani, care that's real,
-Women and children, a space to heal.
 
 ## [Final Call Break] (music almost silent, clearest delivery)
 
-Munaza Physio Studio, Lahore.
 Call **zero-three-zero-seven... five-eight-one... zero-six-eight-nine.**
-Once more: **zero-three-zero-seven, five-eight-one, zero-six-eight-nine.**
+From abroad: **plus nine-two, three-zero-seven, five-eight-one, zero-six-eight-nine.**
 Visit **munazaphysio dot studio**.
 
-## [Outro] (spoken, pad fades out)
+## [Outro: Callback] 3:25 (soft keys, like the hook)
 
-Every body is different.
-Your plan should be too.
-Munaza Physio Studio.
+Baby, I'm learning to turn my head to look at you...
+*(spoken, smiling)* It was never you. It was the chair.
+Every body is different. Your plan should be too.
 
 ---
 
-## Services covered
+## Setup and payoff checklist (the dopamine loop)
 
-| Section | Condition | Rehab approach in the lyrics |
-|---------|-----------|------------------------------|
-| Spine | Neck pain | Posture work, gentle stretches |
-| Spine | Back pain | Core and movement training |
-| Spine | Lumbar spondylosis | Mobility and strength work |
-| Spine | Sciatica / nerve-related leg pain | Nerve glides, gentle loading |
-| Spine | Thoracic and rib pain | Breathing and mobility |
-| Shoulder and arm | Frozen shoulder | Gradual range-of-motion work |
-| Shoulder and arm | Rotator cuff | Strengthening, control |
-| Shoulder and arm | Shoulder joint and bursal conditions | Load management, strength |
-| Shoulder and arm | Elbow conditions | Tendon loading, rest, form |
-| Shoulder and arm | Wrist and hand | Hand and finger exercises |
-| Shoulder and arm | Upper limb nerve | Nerve glides, posture checks |
-| Shoulder and arm | Overuse and repetitive-load injury | Pacing, rest, strength |
-| Hip, knee, foot | Hip pain | Hip and glute strengthening |
-| Hip, knee, foot | Knee joint pain | Quads and balance training |
-| Hip, knee, foot | ACL and meniscus rehab | Staged rehab, strength, control |
-| Hip, knee, foot | Muscle injury | Gradual loading |
-| Hip, knee, foot | Achilles tendinopathy | Calf and tendon loading plan |
-| Hip, knee, foot | Plantar heel pain | Stretching, footwear tips, strength |
-| Hip, knee, foot | Forefoot, midfoot, foot and ankle tendons | Balance, strength, footwork |
-| Recovery | Post-fracture rehabilitation | Range and strength |
-| Recovery | Arthritis, persistent pain, osteoarthritis | Exercise, pain education |
-| Neuro | Vestibular and dizziness | Head and eye exercises |
-| Neuro | Balance, gait and coordination | Balance training, walking practice |
-| Neuro | Parkinson's and movement disorders | Big-movement practice, rhythm and cues |
-| Neuro | Spinal cord injury rehab | Strength, transfers, daily skills |
-| Neuro | Facial palsy | Gentle facial exercises |
-| Breathing | Airway clearance and breathing dysfunction | Airway clearance, breathing techniques |
-| Women's health | Women's pelvic health | Private pelvic floor assessment |
-| Children | Paediatric and infant rehab, developmental delay | Play-based developmental rehab |
-| Children | Cerebral palsy | Stretching, strength, play |
-| Children | Sensory-motor | Guided activities |
+Every pain raised in the verses is answered in the Rehab Rap.
+
+| Set up in | Condition | Paid off with |
+|-----------|-----------|---------------|
+| Hook, Verse 1 | Neck pain / tech neck | Posture reset, gentle stretch |
+| Verse 1, 2 | Back pain, lumbar spondylosis | Core and movement, mobility |
+| Verse 1 | Thoracic tightness | Mobility, breathing |
+| Verse 1, 2 | Frozen shoulder | Range of motion |
+| Verse 2 | Rotator cuff, shoulder bursa | Loading, control |
+| Verse 1, 2 | Elbow, wrist and hand | Small drills, grip work |
+| Verse 2 | Sciatica, upper limb nerve | Nerve glides, easy loading |
+| Verse 1 | Overuse / repetitive load | Pacing, rest |
+| Verse 2 | Hip, knee | Strength and balance |
+| Verse 2 | ACL, meniscus | Staged rehab |
+| Verse 2 | Plantar heel, Achilles, foot and ankle | Calf loading, footwear tips |
+| Rehab Rap | Muscle injury, arthritis, post-fracture | Gradual loading, movement, range and strength |
+| Verse 3 | Dizziness (vestibular), balance and gait | Head-and-eye drills, walking practice |
+| Verse 3 | Parkinson's / movement disorders | Big steps, rhythm, cues |
+| Rehab Rap | Spinal cord injury | Transfers, daily skills |
+| Verse 3 | Facial palsy | Gentle facial exercises |
+| Verse 3 | Breathing dysfunction | Airway clearance |
+| Verse 3 | Women's pelvic health | Private, respectful assessment |
+| Verse 3 | Children: developmental delay, cerebral palsy, sensory-motor | Play-based rehab |
