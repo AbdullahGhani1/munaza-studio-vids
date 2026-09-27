@@ -1,12 +1,13 @@
-@munaza-physio-video/assets/Move_Like_You_Mean_It.mp3
+@munaza-physio-video/series/complete/A_Space_to_Heal.mp3
 @munaza-physio-video/assets/posts 
 @munaza-physio-video/assets/site_logo.png
 @munaza-physio-video/assets/Doctor_munaza_ghani.png
 @munaza-physio-video/assets/clinic.png
-Story Leader The MAESTRO style
+Story Leader The MAESTRO style 
+InfoGraphics
 
 # MASTER VIDEO PROMPT — Munaza Physio Studio
-## 2:30 Cinematic Motion-Graphics Website Promo using HyperFrames
+## 2:57 Cinematic Motion-Graphics Website Promo using HyperFrames
 
 ### ROLE
 Act as a **senior motion designer, creative director, healthcare brand strategist, frontend animation engineer, and HyperFrames production engineer**.
@@ -17,6 +18,9 @@ Your job is to design and build a **fully rendered 2 minute 30 second motion-gra
 Website: https://munazaphysio.studio/  
 About: https://munazaphysio.studio/about  
 Conditions / Services: https://munazaphysio.studio/conditions  
+pediatric: https://munazaphysio.studio/pediatric-physiotherapy
+
+
 
 The practice is **women-only physiotherapy in Lahore**, led by **Dr. Munaza Ghani**. The film should explain what the clinic offers, how women can use the website, what kinds of physiotherapy concerns are covered, and why the service is designed around privacy, dignity, individualized assessment, rehabilitation, mobility, confidence, and function.
 
