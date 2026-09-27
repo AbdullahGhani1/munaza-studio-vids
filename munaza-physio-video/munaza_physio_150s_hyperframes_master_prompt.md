@@ -3,7 +3,7 @@
 @munaza-physio-video/assets/site_logo.png
 @munaza-physio-video/assets/Doctor_munaza_ghani.png
 @munaza-physio-video/assets/clinic.png
-
+Story Leader The MAESTRO style
 
 # MASTER VIDEO PROMPT — Munaza Physio Studio
 ## 2:30 Cinematic Motion-Graphics Website Promo using HyperFrames
