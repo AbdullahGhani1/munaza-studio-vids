@@ -128,6 +128,31 @@ Upload **thumbnail-a.png** first. Then use **Test & compare** (YouTube Studio â†
 | Altered or synthetic content | **Yes**, if any realistic image in the video is AI-generated (see the warning below) |
 | Paid promotion | No |
 
+### 6b. Education settings (after choosing Category: Education)
+
+| Field | Value |
+|-------|-------|
+| Type | **Concept overview** |
+| Level | **Beginner** (or None if Beginner isn't listed) |
+| Academic system | **None** |
+| Exam, course or standard | Leave empty |
+
+**Problems** (each on its own line):
+
+```
+0:10 How does physiotherapy approach neck pain and back pain?
+0:23 How is sciatica managed with physiotherapy?
+0:35 Is there a quick fix for back pain?
+1:02 How is frozen shoulder treated with physiotherapy?
+1:07 How does rehab help a rotator cuff strain?
+1:23 What can help upper-limb nerve pain and tingling?
+1:32 What happens in a first physiotherapy session?
+2:06 How is plantar heel pain managed with physiotherapy?
+2:13 What does rehab after a fracture involve?
+2:18 How can exercise help arthritis and persistent pain?
+2:48 How does physiotherapy help children with cerebral palsy?
+```
+
 **Two things to check before you publish:**
 1. **Music rights.** If "A Space to Heal" was made with an AI music generator (Suno, Udio, etc.), confirm your plan allows **commercial use**. Free tiers often don't, and YouTube can then claim or block the video. This is your clinic's promotion, so it counts as commercial.
 2. **AI disclosure.** YouTube requires "Altered content: Yes" when realistic people or places are AI-generated. If the doctor photo, the clinic room image or the poster models are AI-generated, tick **Yes**. It doesn't hurt reach, and not disclosing can get the video labelled or removed.
