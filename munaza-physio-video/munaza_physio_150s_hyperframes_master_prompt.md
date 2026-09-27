@@ -1,3 +1,10 @@
+@munaza-physio-video/assets/Move_Like_You_Mean_It.mp3
+@munaza-physio-video/assets/posts 
+@munaza-physio-video/assets/site_logo.png
+@munaza-physio-video/assets/Doctor_munaza_ghani.png
+@munaza-physio-video/assets/clinic.png
+
+
 # MASTER VIDEO PROMPT — Munaza Physio Studio
 ## 2:30 Cinematic Motion-Graphics Website Promo using HyperFrames
 
