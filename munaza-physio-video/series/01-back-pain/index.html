@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, height=1920">
+<title>Munaza Physio - Back Pain (Video 1)</title>
+<script src="vendor/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Archivo";src:url("assets/fonts/Archivo-latin-var.woff2") format("woff2");font-weight:400 900;font-stretch:62% 125%;font-display:block}
+:root{--red:#E7212B;--dark-red:#C80710;--black:#101010;--white:#FFFFFF;--soft:#FFF3F3;--grey:#9A9A9A}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--black)}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--black);font-family:"Archivo",Arial,sans-serif;color:var(--black)}
+#cam{position:absolute;inset:0;transform-origin:50% 42%}
+.scene{position:absolute;inset:0;opacity:0;overflow:hidden}
+.bg-soft{background:var(--soft)}.bg-black{background:var(--black);color:var(--white)}.bg-red{background:var(--red);color:var(--white)}
+.l{display:inline-block;transform-origin:50% 100%}
+.cond{font-stretch:75%}
+.center{position:absolute;left:0;right:0;text-align:center}
+
+/* 1 HOOK */
+#hook-bg{position:absolute;left:-120px;top:-60px;width:1320px;height:2040px;background:url("assets/clinic.png") center/cover no-repeat;filter:blur(16px) brightness(.62)}
+#sticker{position:absolute;left:90px;top:300px;width:900px;padding:26px 34px 30px;border-radius:30px;background:var(--white);box-shadow:0 18px 40px rgba(0,0,0,.35);opacity:0}
+#sticker .who{display:flex;align-items:center;gap:16px;font-size:28px;font-weight:600;color:#6b6b6b}
+#sticker .av{width:48px;height:48px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;font-size:26px;display:flex;align-items:center;justify-content:center}
+#sticker .q{margin-top:12px;font-size:46px;font-weight:800;line-height:1.15;color:var(--black)}
+.chat{position:absolute;left:90px;width:900px;border-radius:36px;background:var(--white);box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden}
+.chat .hd{display:flex;align-items:center;gap:20px;padding:26px 32px;background:var(--black);color:#fff}
+.chat .gav{width:70px;height:70px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:34px}
+.chat .t1{font-size:38px;font-weight:800}.chat .t2{font-size:24px;color:#bdbdbd;margin-top:2px}
+.chat .badge{margin-left:auto;padding:8px 18px;border-radius:999px;background:var(--red);font-weight:800;font-size:28px}
+.chat .body{padding:26px 32px 30px;display:flex;flex-direction:column;gap:18px;background:var(--soft)}
+.bub{align-self:flex-start;max-width:720px;padding:16px 26px 18px;border-radius:8px 30px 30px 30px;background:var(--white);box-shadow:0 4px 10px rgba(0,0,0,.08);opacity:0;transform-origin:0 0}
+.bub .from{font-size:24px;font-weight:800;color:var(--red)}
+.bub .msg{font-size:44px;font-weight:800;line-height:1.1}
+.bub.nani .from{color:#6b6b6b}
+.bub.me{align-self:flex-end;border-radius:30px 8px 30px 30px;background:var(--red)}
+.bub.me .from{color:#ffd6d8}.bub.me .msg{color:#fff}
+#chat1{top:610px;opacity:0}
+
+/* 2 AGITATE */
+.cut{position:absolute;inset:0;opacity:0;overflow:hidden}
+.kin{position:absolute;left:0;right:0;text-align:center;font-weight:900;line-height:.92;white-space:nowrap;opacity:0}
+.small-lines{position:absolute;left:0;right:0;text-align:center;font-weight:800;font-size:64px;line-height:1.12;text-transform:uppercase}
+.small-lines span{display:block;opacity:0}
+.phone{position:absolute;width:600px;height:750px;padding:14px;border-radius:52px;background:var(--white);box-shadow:0 30px 70px rgba(0,0,0,.45);opacity:0}
+.phone img{display:block;width:100%;height:100%;object-fit:cover;border-radius:40px}
+.tag{position:absolute;padding:14px 30px;border-radius:999px;font-weight:800;font-size:44px;opacity:0;white-space:nowrap}
+.tag.w{background:var(--white);color:var(--black)}.tag.r{background:var(--red);color:#fff}.tag.k{background:var(--black);color:#fff}
+.speech{position:absolute;padding:24px 36px;border-radius:36px;background:var(--white);color:var(--black);font-weight:900;font-size:62px;box-shadow:0 16px 40px rgba(0,0,0,.3);opacity:0;white-space:nowrap}
+.speech:after{content:"";position:absolute;left:70px;bottom:-26px;border:18px solid transparent;border-top:26px solid var(--white);border-bottom:0}
+#clock{position:absolute;left:0;right:0;top:360px;text-align:center;font-weight:900;font-size:230px;line-height:1;color:var(--red)}
+#clock span{position:absolute;left:0;right:0;opacity:0}
+#clock-l{position:absolute;left:0;right:0;top:620px;text-align:center;font-weight:800;font-size:56px;color:#fff;letter-spacing:.06em;opacity:0}
+
+/* 3 ESCALATE */
+#esc-title{position:absolute;left:90px;top:320px;font-weight:900;font-size:70px;line-height:1;opacity:0}
+#esc-title b{color:var(--red)}
+.row{position:absolute;left:90px;width:900px;height:170px;display:flex;align-items:center;gap:34px;opacity:0}
+.row .box{flex:none;width:110px;height:110px;border-radius:24px;border:8px solid var(--black);position:relative;background:var(--white)}
+.row .x{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:100px;color:var(--red);line-height:1;opacity:0}
+.row .txt{position:relative;font-weight:900;font-size:108px;line-height:1}
+.row .strike{position:absolute;left:-10px;right:-10px;top:52%;height:14px;background:var(--red);transform-origin:0 50%}
+
+/* 4 SILENCE */
+.mask{overflow:hidden;padding:4px 0}
+.mask>span{display:block}
+#q-wrap{position:absolute;left:0;right:0;top:720px;text-align:center;color:#fff;font-weight:800;font-size:112px;line-height:1.08}
+
+/* 5 TWIST */
+#tw-said{top:470px;font-size:56px;font-weight:800;letter-spacing:.08em;color:#bdbdbd;opacity:0}
+#tw-rest{position:absolute;left:0;right:0;top:560px;text-align:center;opacity:0}
+#tw-rest .word{position:relative;display:inline-block;font-weight:900;font-size:176px;line-height:1;color:#fff}
+#tw-rest .strike{position:absolute;left:-20px;right:-20px;top:48%;height:24px;background:var(--red);transform-origin:0 50%}
+#tw-what{top:840px;font-size:60px;font-weight:800;line-height:1.15;color:#fff;opacity:0}
+#tw-red{position:absolute;inset:0;background:var(--red);opacity:0}
+#tw-move{top:1000px;font-size:330px;color:#fff}
+
+/* 6 RESOLVE */
+#s6-in{position:absolute;inset:0;background:var(--black);clip-path:inset(0% 100% 0% 0%)}
+#doc{position:absolute;left:0;top:150px;width:1080px;height:1620px;background:url("assets/Doctor_munaza_ghani.png") center top/contain no-repeat;transform-origin:50% 20%}
+#edge{position:absolute;top:0;bottom:0;left:0;width:36px;background:var(--red);opacity:0}
+#ch-move{top:990px;font-size:260px;color:var(--red);text-shadow:0 10px 30px rgba(0,0,0,.5)}
+#ch-mean{top:1250px;font-size:58px;font-weight:800;color:#fff;letter-spacing:.04em;opacity:0}
+#lt{position:absolute;left:60px;top:1080px;opacity:0}
+#lt .n{display:inline-block;padding:18px 32px;background:var(--red);color:#fff;font-weight:900;font-size:74px;line-height:1}
+#lt .s{display:inline-block;margin-top:0;padding:14px 32px;background:var(--white);color:var(--black);font-weight:800;font-size:40px}
+.chip{position:absolute;right:50px;padding:14px 30px;border-radius:999px;background:var(--white);color:var(--black);font-weight:900;font-size:46px;opacity:0}
+
+/* 7 PAYOFF */
+#po-k{position:absolute;left:90px;top:300px;font-weight:800;font-size:36px;letter-spacing:.14em;color:var(--red);opacity:0}
+#po-t{position:absolute;left:90px;top:345px;font-weight:900;font-size:74px;opacity:0}
+.card{position:absolute;left:90px;width:900px;height:176px;border-radius:32px;background:var(--white);box-shadow:0 18px 44px rgba(16,16,16,.14);display:flex;align-items:center;gap:30px;padding:0 36px;opacity:0}
+.card .num{flex:none;width:96px;height:96px;border-radius:50%;background:var(--red);color:#fff;font-weight:900;font-size:46px;display:flex;align-items:center;justify-content:center}
+.card:nth-of-type(even) .num{background:var(--black)}
+.card h4{font-weight:900;font-size:64px;line-height:1}
+.card p{font-weight:600;font-size:32px;color:#555;margin-top:8px}
+#stamp{position:absolute;left:90px;width:900px;top:1256px;padding:20px 30px;border-radius:24px;background:var(--black);color:#fff;text-align:center;font-weight:800;font-size:40px;opacity:0}
+#stamp b{color:var(--red)}
+
+/* 8 CTA */
+#cta-img{position:absolute;left:0;top:190px;width:1080px;height:608px;background:url("assets/clinic.png") center/cover no-repeat;transform-origin:50% 50%}
+#cta-logo{position:absolute;left:340px;top:820px;width:400px;height:250px;object-fit:contain;opacity:0}
+#cta-call{top:1080px;font-weight:800;font-size:40px;letter-spacing:.2em;color:var(--red);opacity:0}
+#cta-num{top:1130px;font-size:168px;font-weight:900;color:var(--black);opacity:0}
+#cta-intl{top:1300px;font-weight:700;font-size:46px;color:#333;opacity:0}
+#cta-web{position:absolute;left:0;right:0;margin:0 auto;width:fit-content;top:1380px;padding:18px 44px;border-radius:999px;background:var(--red);color:#fff;font-weight:800;font-size:48px;opacity:0;white-space:nowrap}
+#cta-line{top:1490px;font-weight:700;font-size:40px;color:#333;opacity:0}
+
+/* 9 OPEN LOOP */
+#chat2{top:330px}
+#bar{position:absolute;left:90px;width:900px;top:1210px;padding:22px 30px;border-radius:26px;background:var(--red);color:#fff;text-align:center;font-weight:900;font-size:54px;opacity:0}
+#bar small{display:block;font-weight:700;font-size:32px;margin-top:4px}
+#end-logo{position:absolute;left:290px;top:330px;width:500px;height:312px;object-fit:contain;opacity:0}
+#end-k{top:760px;font-weight:800;font-size:44px;letter-spacing:.24em;color:var(--red);opacity:0}
+#end-next{top:830px;font-weight:900;font-size:200px;color:#fff;line-height:1;opacity:0}
+#end-part{top:1060px;font-weight:700;font-size:38px;color:#bdbdbd;opacity:0}
+#end-contact{top:1180px;font-weight:800;font-size:52px;color:#fff;line-height:1.3;opacity:0}
+#end-contact span{color:var(--red)}
+
+/* CAPTIONS */
+#caps{position:absolute;left:60px;right:60px;top:1400px;height:260px}
+.ph{position:absolute;left:0;right:0;top:0;margin:0 auto;width:fit-content;max-width:960px;padding:16px 30px 20px;border-radius:24px;background:rgba(16,16,16,.86);box-shadow:0 0 0 3px rgba(255,255,255,.18);color:#fff;text-align:center;font-weight:800;font-size:60px;line-height:1.18;opacity:0}
+.ph .w{display:inline-block;margin:0 .1em;opacity:0}
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="munaza-back-60s" data-start="0" data-duration="65" data-width="1080" data-height="1920" data-fps="30">
+
+  <audio id="track" class="clip" src="series/01-back-pain/Let_s_Move_Not_Ache.mp3" data-start="0" data-duration="65" data-track-index="0" data-volume="1" data-fade-out="0.8"></audio>
+
+  <div id="cam">
+
+    <!-- 1 HOOK 0-3.3 -->
+    <section class="scene clip" id="s1" data-start="0" data-duration="3.3" data-track-index="1">
+      <div id="hook-bg"></div>
+      <div id="sticker">
+        <div class="who"><div class="av">?</div>Reply to comment</div>
+        <div class="q">why does my back hurt more than my nani's?</div>
+      </div>
+      <div class="chat" id="chat1">
+        <div class="hd"><div class="gav">F</div><div><div class="t1">Family Group</div><div class="t2">Ammi, Nani, Khala, My Back, +23</div></div><div class="badge">99+</div></div>
+        <div class="body">
+          <div class="bub"><div class="from">My Back</div><div class="msg">*CRACK*</div></div>
+          <div class="bub"><div class="from">My Back</div><div class="msg">*click click*</div></div>
+          <div class="bub"><div class="from">My Back</div><div class="msg">*POP*</div></div>
+          <div class="bub nani"><div class="from">Nani</div><div class="msg">beta... same.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 AGITATE 3.3-20.2 -->
+    <section class="scene clip" id="s2" data-start="3.3" data-duration="16.9" data-track-index="2">
+      <div class="cut bg-soft" id="c1">
+        <div class="small-lines" style="top:470px"><span>Bend</span><span>to lift</span><span>the laundry...</span></div>
+        <div class="kin cond" id="k-click" style="top:880px;font-size:300px;color:var(--red)" data-text="CLICK."></div>
+      </div>
+      <div class="cut bg-black" id="c2">
+        <div id="clock"><span>1h</span><span>3h</span><span>5h</span><span>7h</span><span>9h</span></div>
+        <div id="clock-l">SITTING. STILL SITTING.</div>
+        <div class="kin cond" id="k-stuck" style="top:880px;font-size:320px;color:#fff;letter-spacing:-.04em" data-text="STUCK."></div>
+      </div>
+      <div class="cut bg-red" id="c3">
+        <div class="phone" id="p-spine" style="left:240px;top:330px"><img src="assets/posts/Spine Health.png" alt=""></div>
+        <div class="tag k" id="t-sofa" style="left:90px;top:300px">up from the sofa...</div>
+        <div class="kin cond" id="k-gate" style="top:1030px;font-size:176px;color:#fff;text-shadow:0 12px 30px rgba(0,0,0,.35)" data-text="RUSTY GATE"></div>
+        <div class="speech" id="sp-wait" style="left:120px;top:1230px">"Sister, just wait!"</div>
+      </div>
+      <div class="cut bg-soft" id="c4">
+        <div class="phone" id="p-lumbar" style="left:110px;top:330px"><img src="assets/posts/LUMBAR SPONDYLOSIS.png" alt=""></div>
+        <div class="phone" id="p-sci" style="left:370px;top:420px"><img src="assets/posts/SCIATICA - NERVE-RELATED LEG PAIN.png" alt=""></div>
+        <div class="tag r" id="t-lumbar" style="left:90px;top:1150px;font-size:84px">LUMBAR</div>
+        <div class="tag k" id="t-sci" style="left:430px;top:1230px;font-size:84px">SCIATICA</div>
+      </div>
+      <div class="cut bg-black" id="c5">
+        <div class="small-lines" style="top:420px;color:#fff"><span>Lift my</span><span>little one...</span></div>
+        <div class="kin cond" id="k-no" style="top:640px;font-size:420px;color:var(--red)" data-text="&quot;NO.&quot;"></div>
+        <div class="tag w" id="t-heat" style="left:110px;top:1080px">heating pad</div>
+        <div class="tag w" id="t-pk" style="left:520px;top:1170px">painkillers</div>
+        <div class="tag r" id="t-know" style="left:230px;top:1270px">yeah, I know, I know.</div>
+      </div>
+    </section>
+
+    <!-- 3 ESCALATE 20.2-27.2 -->
+    <section class="scene clip bg-soft" id="s3" data-start="20.2" data-duration="7" data-track-index="3">
+      <div id="esc-title">BACK PAIN<br>IS TAKING <b>MY...</b></div>
+      <div class="row" style="top:560px"><div class="box"><div class="x">&#x2715;</div></div><div class="txt">Shoes<div class="strike"></div></div></div>
+      <div class="row" style="top:750px"><div class="box"><div class="x">&#x2715;</div></div><div class="txt">My child<div class="strike"></div></div></div>
+      <div class="row" style="top:940px"><div class="box"><div class="x">&#x2715;</div></div><div class="txt">Weddings<div class="strike"></div></div></div>
+      <div class="row" style="top:1130px"><div class="box"><div class="x">&#x2715;</div></div><div class="txt">Mornings<div class="strike"></div></div></div>
+    </section>
+
+    <!-- 4 SILENCE 27.2-29.1 -->
+    <section class="scene clip bg-black" id="s4" data-start="27.2" data-duration="1.9" data-track-index="4">
+      <div id="q-wrap">
+        <div class="mask"><span>Is this just</span></div>
+        <div class="mask"><span>my life now?</span></div>
+      </div>
+    </section>
+
+    <!-- 5 TWIST 29.1-34.6 -->
+    <section class="scene clip bg-black" id="s5" data-start="29.1" data-duration="5.5" data-track-index="5">
+      <div id="tw-red"></div>
+      <div class="center" id="tw-said">EVERYONE SAID:</div>
+      <div id="tw-rest"><span class="word cond">REST MORE?<span class="strike"></span></span></div>
+      <div class="center" id="tw-what">But what if my back<br>is asking me to...</div>
+      <div class="kin cond" id="tw-move" data-text="MOVE."></div>
+    </section>
+
+    <!-- 6 RESOLVE 34.6-44.5 -->
+    <section class="scene clip" id="s6" data-start="34.6" data-duration="9.9" data-track-index="6">
+      <div id="s6-in">
+        <div id="doc"></div>
+        <div class="kin cond" id="ch-move" data-text="MOVE"></div>
+        <div class="center" id="ch-mean">LIKE YOU MEAN IT</div>
+        <div class="chip" id="ch-1" style="top:520px">Core</div>
+        <div class="chip" id="ch-2" style="top:620px">Hips</div>
+        <div class="chip" id="ch-3" style="top:720px">Posture</div>
+        <div id="lt"><div class="n">Dr. Munaza Ghani</div><br><div class="s">Women-Only Physiotherapy, Lahore</div></div>
+      </div>
+      <div id="edge"></div>
+    </section>
+
+    <!-- 7 PAYOFF 44.5-53.0 -->
+    <section class="scene clip bg-soft" id="s7" data-start="44.5" data-duration="8.5" data-track-index="7">
+      <div id="po-k">THE PLAN</div>
+      <div id="po-t">Assess, don't guess.</div>
+      <div class="card" style="top:460px"><div class="num">1</div><div><h4>ASSESS</h4><p>Find where it starts</p></div></div>
+      <div class="card" style="top:656px"><div class="num">2</div><div><h4>MOBILITY</h4><p>Guided, gentle movement</p></div></div>
+      <div class="card" style="top:852px"><div class="num">3</div><div><h4>CORE + HIPS</h4><p>Core and glutes, step by step</p></div></div>
+      <div class="card" style="top:1048px"><div class="num">4</div><div><h4>DAILY HABITS</h4><p>Sitting breaks, lifting form, walking</p></div></div>
+      <div id="stamp">No magic cure. <b>Steady progress,</b> in a private space.</div>
+    </section>
+
+    <!-- 8 CTA 53.0-57.8 -->
+    <section class="scene clip bg-soft" id="s8" data-start="53" data-duration="4.8" data-track-index="8">
+      <div id="cta-img"></div>
+      <img id="cta-logo" src="assets/site_logo.png" alt="Munaza Physio">
+      <div class="center" id="cta-call">CALL OR WHATSAPP</div>
+      <div class="center cond" id="cta-num">0307 5810689</div>
+      <div class="center" id="cta-intl">+92 307 5810689</div>
+      <div id="cta-web">munazaphysio.studio</div>
+      <div class="center" id="cta-line">Munaza Physio Studio, Lahore &middot; For women and children</div>
+    </section>
+
+    <!-- 9 OPEN LOOP 57.8-65 -->
+    <section class="scene clip bg-soft" id="s9" data-start="57.8" data-duration="4" data-track-index="9">
+      <div class="chat" id="chat2">
+        <div class="hd"><div class="gav">F</div><div><div class="t1">Family Group</div><div class="t2">Ammi, Nani, Khala, My Back, +23</div></div><div class="badge">1</div></div>
+        <div class="body">
+          <div class="bub" style="opacity:.45"><div class="from">My Back</div><div class="msg">*CRACK*</div></div>
+          <div class="bub" id="b-still"><div class="from">My Back</div><div class="msg">still here...</div></div>
+          <div class="bub me" id="b-move"><div class="from">My Back</div><div class="msg">but now: let's move.</div></div>
+        </div>
+      </div>
+      <div id="bar">0307 5810689<small>munazaphysio.studio</small></div>
+    </section>
+
+    <section class="scene clip bg-black" id="s10" data-start="61.8" data-duration="3.2" data-track-index="10">
+      <img id="end-logo" src="assets/site_logo.png" alt="Munaza Physio">
+      <div class="center" id="end-k">NEXT EPISODE</div>
+      <div class="center cond" id="end-next">Neck Pain &rarr;</div>
+      <div class="center" id="end-part">Part 2 of 6 &middot; follow so you don't miss it</div>
+      <div class="center" id="end-contact"><span>0307 5810689</span><br>munazaphysio.studio</div>
+    </section>
+
+  </div>
+
+  <div id="caps" class="clip" data-start="0" data-duration="65" data-track-index="11"></div>
+</div>
+
+<script>
+(function () {
+  // ---------- Caption data: [time, word] per phrase (aligned to Let_s_Move_Not_Ache.mp3) ----------
+  // Each phrase shows from its first word until the next phrase starts (or its explicit end).
+  var PH = [
+    { end: 3.3, w: [[0.3,'My'],[0.5,'back'],[0.9,'makes'],[1.1,'more'],[1.3,'noise'],[1.8,'than'],[2.0,'my'],[2.2,'family'],[2.5,'WhatsApp'],[2.8,'group.']] },
+    { w: [[3.5,'Bend'],[3.7,'to'],[4.8,'lift'],[5.1,'the'],[5.3,'laundry...'],[5.8,'click.']] },
+    { end: 8.4, w: [[6.3,'Sit'],[6.5,'for'],[6.7,'nine'],[7.1,'hours...'],[7.7,'stuck.']] },
+    { w: [[8.5,'Stand'],[9.0,'up'],[9.2,'from'],[9.3,'the'],[9.4,'sofa'],[9.8,'like'],[9.9,'a'],[10.0,'rusty'],[10.2,'gate,']] },
+    { end: 12.5, w: [[10.4,'lower'],[10.6,'back'],[10.8,'is'],[11.0,'shouting,'],[11.5,'"Sister,'],[11.9,'just'],[12.1,'wait!"']] },
+    { w: [[12.5,'Lumbar'],[12.9,'feels'],[13.2,'tired,'],[13.5,'the'],[13.6,'lower'],[13.8,'spine'],[14.0,'feels'],[14.1,'worn,']] },
+    { end: 16.4, w: [[14.3,'Sciatica'],[14.7,'is'],[14.8,'sparking'],[15.5,'down'],[15.7,'my'],[15.8,'leg'],[16.0,'like'],[16.1,'a'],[16.2,'thorn,']] },
+    { w: [[16.4,'Lift'],[16.6,'my'],[16.9,'little'],[17.2,'one,'],[17.4,'my'],[17.5,'back'],[17.6,'says'],[17.7,'"no",']] },
+    { w: [[17.9,'heating'],[18.2,'pad'],[18.5,'and'],[18.9,'painkillers...']] },
+    { end: 20.2, w: [[19.3,'yeah,'],[19.4,'I'],[19.5,'know,'],[19.6,'I'],[19.9,'know.']] },
+    { w: [[20.2,"Can't"],[20.5,'tie'],[20.7,'my'],[20.9,'shoes,'],[21.3,"can't"],[21.5,'carry'],[21.8,'my'],[22.0,'child,']] },
+    { w: [[22.4,'Sitting'],[22.8,'through'],[23.0,'a'],[23.2,'wedding'],[23.9,'like'],[24.1,"I'm"],[24.4,'walking'],[24.9,'a'],[25.0,'mile,']] },
+    { end: 27.2, w: [[25.3,'Every'],[25.5,'single'],[25.8,'morning'],[26.1,'starts'],[26.3,'with'],[26.4,'the'],[26.5,'same'],[26.7,'old'],[26.9,'ache...']] },
+    // 27.2-29.1: the big question is on screen as the main text, no caption box
+    { w: [[29.2,'Everyone'],[29.6,'said:'],[29.9,'rest'],[30.2,'more.']] },
+    { end: 34.6, w: [[30.6,'But'],[30.8,'what'],[30.9,'if'],[31.1,'my'],[31.2,'back'],[31.6,'is'],[31.7,'asking'],[32.1,'me'],[32.2,'to'],[32.9,'move?']] },
+    { w: [[35.0,'Move'],[35.3,'like'],[35.5,'you'],[35.7,'mean'],[36.0,'it,'],[36.5,'move'],[36.8,'like'],[37.1,'you'],[37.5,'mean'],[37.8,'it,']] },
+    { w: [[38.2,"Your"],[38.4,"back's"],[38.6,'been'],[38.8,'waiting,'],[39.2,"let's"],[39.4,'assess'],[39.8,'it,'],[40.1,"let's"],[40.3,'rebuild'],[40.6,'it,']] },
+    { w: [[40.8,'Core'],[41.0,'and'],[41.2,'hips'],[41.4,'and'],[41.6,'posture,'],[41.9,'step'],[42.1,'by'],[42.3,'step,']] },
+    { end: 44.5, w: [[42.5,'Dr.'],[42.8,'Munaza'],[43.2,'Ghani,'],[43.5,'guiding'],[43.8,'every'],[44.0,'rep.']] },
+    { w: [[44.6,'Assess,'],[44.9,"don't"],[45.1,'guess,'],[45.5,'find'],[45.8,'where'],[46.0,'it'],[46.2,'starts,']] },
+    { w: [[46.6,'Mobility,'],[47.2,'core'],[47.4,'and'],[47.6,'glutes,'],[47.9,'a'],[48.1,'plan'],[48.3,'with'],[48.5,'heart,']] },
+    { w: [[48.8,'Sitting'],[49.2,'breaks,'],[49.5,'lifting'],[49.8,'form,'],[50.0,'walking'],[50.3,'at'],[50.4,'your'],[50.6,'pace,']] },
+    { end: 53.0, w: [[50.9,'No'],[51.1,'magic'],[51.4,'cure,'],[51.7,'just'],[51.9,'steady'],[52.1,'progress,'],[52.5,'in'],[52.6,'a'],[52.7,'private'],[52.8,'space.']] },
+    // 53.0-57.8: CTA, the phone number is the on-screen text
+    { w: [[58.0,'My'],[58.2,"back's"],[58.4,'still'],[58.6,'in'],[58.8,'the'],[58.9,'group'],[59.2,'chat...']] },
+    { end: 62.2, w: [[59.9,'But'],[60.0,'now'],[60.2,"it's"],[60.4,'saying:'],[61.1,"let's"],[61.6,'move.']] }
+  ];
+
+  // ---------- Build caption DOM ----------
+  var capsEl = document.getElementById('caps');
+  PH.forEach(function (p, i) {
+    var d = document.createElement('div');
+    d.className = 'ph';
+    d.innerHTML = p.w.map(function (x) { return '<span class="w">' + x[1] + '</span>'; }).join(' ');
+    capsEl.appendChild(d);
+    p.el = d;
+    p.words = d.querySelectorAll('.w');
+    var next = PH[i + 1];
+    p.stop = p.end != null ? p.end : (next ? next.w[0][0] : 65);
+  });
+
+  // ---------- Split kinetic words into letters ----------
+  document.querySelectorAll('.kin[data-text]').forEach(function (el) {
+    var txt = el.getAttribute('data-text');
+    el.innerHTML = txt.split('').map(function (c) {
+      return c === ' ' ? '<span class="l">&nbsp;</span>' : '<span class="l">' + c + '</span>';
+    }).join('');
+  });
+
+  // ---------- Timeline ----------
+  var tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines['munaza-back-60s'] = tl;
+
+  var cam = '#cam';
+  function show(sel, a, b) { tl.set(sel, { opacity: 1 }, a); if (b != null) tl.set(sel, { opacity: 0 }, b); }
+  function pop(sel, t, from) {
+    tl.fromTo(sel, Object.assign({ opacity: 0, scale: 0.6, y: 30 }, from || {}),
+      { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: 'back.out(2)' }, t);
+  }
+  function elastic(sel, t) {
+    tl.set(sel, { opacity: 1 }, t);
+    tl.fromTo(sel + ' .l', { opacity: 0, yPercent: 60, scaleY: 0.2, scaleX: 1.5 },
+      { opacity: 1, yPercent: 0, scaleY: 1, scaleX: 1, duration: 0.75, ease: 'elastic.out(1,0.42)', stagger: 0.035 }, t);
+  }
+  function punch(t, s) {
+    tl.to(cam, { scale: s || 1.07, duration: 0.07, ease: 'power2.out' }, t);
+    tl.to(cam, { scale: 1, duration: 0.55, ease: 'power2.out' }, t + 0.07);
+  }
+  function snapCard(sel, t, rot) {
+    tl.fromTo(sel, { opacity: 0, y: 420, rotation: rot - 16, scale: 0.85 },
+      { opacity: 1, y: 0, rotation: rot, scale: 1, duration: 0.5, ease: 'back.out(1.5)' }, t);
+  }
+
+  // Seeded handheld drift (mulberry32), deterministic
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var R = rng(20260927);
+  function drift(a, b, amp) {
+    for (var t = a; t < b - 0.01; t += 0.5) {
+      tl.to(cam, { x: (R() - 0.5) * 2 * amp, y: (R() - 0.5) * 2 * amp, rotation: (R() - 0.5) * 0.8, duration: 0.5, ease: 'sine.inOut' }, t);
+    }
+    tl.to(cam, { x: 0, y: 0, rotation: 0, duration: 0.2, ease: 'sine.out' }, b);
+  }
+  drift(0, 27.0, 9);
+  drift(29.1, 34.4, 7);
+
+  // Scene windows (opacity; HyperFrames also keys visibility off data-start/data-duration)
+  show('#s1', 0, 3.3); show('#s2', 3.3, 20.2); show('#s3', 20.2, 27.2); show('#s4', 27.2, 29.1);
+  show('#s5', 29.1, 34.9); show('#s6', 34.6, 44.5); show('#s7', 44.5, 53.0); show('#s8', 53.0, 57.8);
+  show('#s9', 57.8, 61.8); show('#s10', 61.8);
+
+  // 1 HOOK
+  tl.fromTo('#hook-bg', { scale: 1.12 }, { scale: 1.2, duration: 3.3, ease: 'none' }, 0);
+  pop('#sticker', 0.05, { y: -40 });
+  pop('#chat1', 0.25, { y: 80, scale: 0.9 });
+  gsap.utils.toArray('#chat1 .bub').forEach(function (b, i) { pop(b, [0.5, 1.0, 1.5, 2.6][i], { scale: 0.5, y: 10 }); });
+  punch(1.5, 1.04); punch(2.6, 1.04);
+
+  // 2 AGITATE: jump cuts
+  show('#c1', 3.3, 6.2); show('#c2', 6.2, 8.4); show('#c3', 8.4, 12.5); show('#c4', 12.5, 16.4); show('#c5', 16.4, 20.2);
+  gsap.utils.toArray('#c1 .small-lines span').forEach(function (s, i) { pop(s, [3.5, 4.8, 5.3][i], { y: 40 }); });
+  elastic('#k-click', 5.8); punch(5.8, 1.1);
+  gsap.utils.toArray('#clock span').forEach(function (s, i) {
+    var t = 6.3 + i * 0.28; tl.set(s, { opacity: 1 }, t); if (i < 4) tl.set(s, { opacity: 0 }, t + 0.28);
+  });
+  pop('#clock-l', 6.4);
+  tl.to('#clock, #clock-l', { opacity: 0.25, duration: 0.2 }, 7.6);
+  elastic('#k-stuck', 7.7); punch(7.7, 1.1);
+  snapCard('#p-spine', 8.4, -5);
+  pop('#t-sofa', 8.6, { x: -60 });
+  elastic('#k-gate', 10.0); punch(10.0, 1.06);
+  pop('#sp-wait', 11.5, { y: 40, rotation: -6 });
+  tl.to('#sp-wait', { rotation: 2, duration: 0.12, yoyo: true, repeat: 5, ease: 'sine.inOut' }, 11.9);
+  snapCard('#p-lumbar', 12.5, -6);
+  pop('#t-lumbar', 12.6, { x: -80 });
+  snapCard('#p-sci', 14.3, 5);
+  pop('#t-sci', 14.4, { x: 80 });
+  tl.to('#p-sci', { x: 8, duration: 0.05, yoyo: true, repeat: 7, ease: 'none' }, 14.8);
+  punch(14.8, 1.05);
+  gsap.utils.toArray('#c5 .small-lines span').forEach(function (s, i) { pop(s, [16.4, 16.9][i], { y: 40 }); });
+  elastic('#k-no', 17.7); punch(17.7, 1.12);
+  pop('#t-heat', 17.9, { rotation: -8 }); pop('#t-pk', 18.9, { rotation: 8 }); pop('#t-know', 19.4, { y: 40 });
+
+  // 3 ESCALATE
+  pop('#esc-title', 20.2, { x: -60 });
+  var rows = gsap.utils.toArray('#s3 .row');
+  var rowIn = [20.25, 21.3, 22.4, 25.3], rowX = [20.9, 21.8, 23.2, 25.8];
+  rows.forEach(function (r, i) {
+    tl.fromTo(r, { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.35, ease: 'power3.out' }, rowIn[i]);
+    tl.fromTo(r.querySelector('.strike'), { scaleX: 0 }, { scaleX: 1, duration: 0.22, ease: 'power3.out' }, rowX[i]);
+    tl.to(r.querySelector('.txt'), { color: '#9A9A9A', duration: 0.2 }, rowX[i] + 0.05);
+    tl.fromTo(r.querySelector('.x'), { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(2)' }, rowX[i]);
+    punch(rowX[i], 1.035);
+  });
+  tl.fromTo('#s3', { scale: 1 }, { scale: 1.05, duration: 7, ease: 'none' }, 20.2);
+
+  // 4 SILENCE: masked type
+  tl.fromTo('#q-wrap .mask:nth-child(1) span', { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: 'power3.out' }, 27.55);
+  tl.fromTo('#q-wrap .mask:nth-child(2) span', { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: 'power3.out' }, 28.1);
+
+  // 5 TWIST
+  pop('#tw-said', 29.2, { y: 20 });
+  pop('#tw-rest', 29.9, { scale: 1.4, y: 0 });
+  tl.fromTo('#tw-rest .strike', { scaleX: 0, rotation: -3 }, { scaleX: 1, rotation: -3, duration: 0.25, ease: 'power3.out' }, 30.5);
+  tl.to('#tw-rest .word', { color: '#6b6b6b', duration: 0.2 }, 30.55);
+  pop('#tw-what', 30.8, { y: 30 });
+  tl.set('#tw-red', { opacity: 1 }, 32.9);
+  tl.set('#tw-said, #tw-rest, #tw-what', { opacity: 0 }, 32.9);
+  elastic('#tw-move', 32.9); punch(32.9, 1.14);
+
+  // 6 RESOLVE: red-edge clip-path wipe onto Dr. Munaza (steady framing, no drift)
+  tl.to('#s6-in', { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.45, ease: 'power3.inOut' }, 34.6);
+  tl.set('#edge', { opacity: 1 }, 34.6);
+  tl.fromTo('#edge', { x: -36 }, { x: 1080, duration: 0.45, ease: 'power3.inOut' }, 34.6);
+  tl.set('#edge', { opacity: 0 }, 35.06);
+  tl.fromTo('#doc', { scale: 1 }, { scale: 1.08, duration: 9.9, ease: 'none' }, 34.6);
+  elastic('#ch-move', 35.0);
+  tl.fromTo('#ch-move', { scale: 1.12 }, { scale: 1, duration: 0.3, ease: 'power2.out' }, 36.5);
+  pop('#ch-mean', 35.5, { y: 20 });
+  tl.to('#ch-move, #ch-mean', { opacity: 0, y: -40, duration: 0.3 }, 38.0);
+  tl.fromTo('#lt', { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.45, ease: 'power3.out' }, 38.2);
+  pop('#ch-1', 40.8, { x: 60 }); pop('#ch-2', 41.2, { x: 60 }); pop('#ch-3', 41.6, { x: 60 });
+  tl.fromTo('#lt .n', { scale: 1 }, { scale: 1.06, duration: 0.15, yoyo: true, repeat: 1, transformOrigin: '0 50%' }, 42.8);
+
+  // 7 PAYOFF: spring stack
+  pop('#po-k', 44.5, { y: 20 }); pop('#po-t', 44.6, { y: 20 });
+  var cards = gsap.utils.toArray('#s7 .card'), cardIn = [44.6, 46.6, 47.2, 48.8];
+  cards.forEach(function (c, i) {
+    tl.fromTo(c, { opacity: 0, y: 500, rotation: i % 2 ? 4 : -4 },
+      { opacity: 1, y: 0, rotation: 0, duration: 0.9, ease: 'elastic.out(1,0.6)' }, cardIn[i]);
+  });
+  tl.fromTo('#stamp', { opacity: 0, scale: 1.6, rotation: -4 }, { opacity: 1, scale: 1, rotation: -1.5, duration: 0.3, ease: 'power4.out' }, 50.9);
+  punch(50.9, 1.04);
+
+  // 8 CTA
+  tl.fromTo('#cta-img', { scale: 1.02 }, { scale: 1.1, duration: 4.8, ease: 'none' }, 53.0);
+  pop('#cta-logo', 53.1);
+  pop('#cta-call', 53.3, { y: 20 });
+  tl.fromTo('#cta-num', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'power4.out' }, 53.4);
+  pop('#cta-intl', 53.8, { y: 20 });
+  tl.fromTo('#cta-web', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'back.out(2)' }, 54.1);
+  pop('#cta-line', 54.4, { y: 20 });
+  tl.fromTo('#cta-num', { scale: 1 }, { scale: 1.05, duration: 0.18, yoyo: true, repeat: 1 }, 56.0);
+
+  // 9 OPEN LOOP
+  pop('#chat2', 57.8, { y: 60, scale: 0.92 });
+  pop('#b-still', 58.4, { scale: 0.5, y: 10 });
+  pop('#b-move', 61.1, { scale: 0.5, y: 10 });
+  punch(61.1, 1.05);
+  pop('#bar', 58.0, { y: 40 });
+  pop('#end-logo', 61.85, { scale: 0.8, y: 0 });
+  pop('#end-k', 62.2, { y: 20 });
+  pop('#end-next', 62.35, { scale: 1.3, y: 0 });
+  pop('#end-part', 62.8, { y: 20 });
+  pop('#end-contact', 63.0, { y: 20 });
+
+  // Captions: word-by-word reveal, active word in brand red
+  PH.forEach(function (p) {
+    var t0 = p.w[0][0];
+    tl.fromTo(p.el, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.15, ease: 'power2.out' }, t0 - 0.05);
+    tl.set(p.el, { opacity: 0 }, p.stop);
+    p.w.forEach(function (x, j) {
+      var el = p.words[j];
+      var nextT = j + 1 < p.w.length ? p.w[j + 1][0] : Math.min(p.stop, x[0] + 0.6);
+      tl.set(el, { opacity: 1, color: '#E7212B' }, x[0]);
+      tl.set(el, { color: '#FFFFFF' }, nextT);
+    });
+  });
+
+  tl.set({}, {}, 65);
+})();
+</script>
+</body>
+</html>

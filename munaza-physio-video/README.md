@@ -47,3 +47,13 @@ No audio is included. Record or generate a voiceover from `script.md`, then add 
 - Colors: CSS variables in `:root` in `index.html`
 - Caption text: `.cap` elements; timings in `capTimes`
 - Mouth sync windows: `talk` array
+
+## Series video 1: Back Pain (9:16, 65 s)
+
+`series/01-back-pain/index.html` is a 1080x1920 composition timed to the generated track `series/01-back-pain/Let_s_Move_Not_Ache.mp3` (66.5 s with trailing silence, so the video runs 65 s instead of the script's 60 s). Scene and caption times follow where the vocals actually fall in that track. They are listed in the `PH` array at the bottom of the file.
+
+```bash
+npm run render:back   # renders renders/01-back-pain.mp4
+```
+
+Asset paths are relative to the project root (`munaza-physio-video/`), so render from here. GSAP and the Archivo font are vendored (`vendor/`, `assets/fonts/`), so no CDN is needed.
