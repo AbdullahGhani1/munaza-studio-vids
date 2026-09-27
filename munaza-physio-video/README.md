@@ -23,6 +23,10 @@ npm run render    # npx hyperframes render --output renders/munaza-physio-30s.mp
 
 If your HyperFrames version uses different CLI flags, check the HyperFrames README and adjust `package.json`. You can also open `index.html` in a browser and scrub with `window.__timelines['munaza-physio'].seek(12)` in the console.
 
+## Render in GitLab CI (no local setup)
+
+Every push that changes `munaza-physio-video/` runs two jobs, `render:en` and `render:ur`. When they finish, open **Build > Pipelines**, select the pipeline, open a job, then **Job artifacts > Download**. The MP4s are in `munaza-physio-video/renders/`. Artifacts are kept for 30 days.
+
 ## Urdu caption version
 
 Captions have an Urdu track (Noto Nastaliq Urdu, right-to-left). Everything else stays the same.
