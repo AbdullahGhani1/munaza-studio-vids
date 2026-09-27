@@ -2,6 +2,7 @@
 
 **Artist brief:** upbeat synth-pop / electronic, about 3:00
 **Tempo:** 124 BPM, 4/4. **Key:** A minor verses, lifting to C major in the chorus
+**Audience:** women and children
 **Contact in song:** +92 307 5810689, munazaphysio.studio
 
 ## Production notes
@@ -52,7 +53,7 @@ So before the static takes control...
 **Move, move, like you mean it!**
 **Every muscle, every joint, you can feel it!**
 **Dr. Munaza Ghani, hands that heal,**
-**Women only, safe and real!**
+**Women and children, safe and real!**
 
 **Call now! Plus nine-two,**
 **Three-oh-seven, five-eight-one, oh-six-eight-nine,**
@@ -93,7 +94,7 @@ But the future's bright when you take control...
 **Move, move, like you mean it!**
 **Every muscle, every joint, you can feel it!**
 **Dr. Munaza Ghani, hands that heal,**
-**Women only, safe and real!**
+**Women and children, safe and real!**
 
 **Call now! Plus nine-two,**
 **Three-oh-seven, five-eight-one, oh-six-eight-nine,**
@@ -115,13 +116,17 @@ Facial palsy, a smile you'll find.
 
 Breath running short in a crowded place,
 Airway clearance, give your lungs some space,
-Little ones learning the steps to take,
-Paediatric care for the moves they make.
+Women's pelvic health, strength from within,
+This is where your healing begins.
 
+*(Kids' choir joins, music-box synth)*
+
+Little ones learning the steps to take,
+From newborn babies to the moves they make,
 Cerebral palsy, developmental delay,
 Sensory-motor, a brighter day,
-Women's pelvic health, strength from within,
-*This is where your healing begins.*
+Mothers and daughters, sons as well,
+*Every child has a story to tell.*
 
 ## [Build] 2:30 - 2:34
 *(Riser, filtered arp climbing)*
@@ -129,12 +134,12 @@ Women's pelvic health, strength from within,
 > Three... two... one... RESTORE!
 
 ## [Final Chorus] 2:34 - 2:54
-*(Key lift, doubled vocals, extra synth lead)*
+*(Key lift, doubled vocals with kids' choir, extra synth lead)*
 
 **Move, move, like you mean it!**
 **Every muscle, every joint, you can feel it!**
 **Dr. Munaza Ghani, hands that heal,**
-**Women only, safe and real!**
+**Women and children, safe and real!**
 
 **Call now! Plus nine-two,**
 **Three-oh-seven, five-eight-one, oh-six-eight-nine,**
@@ -146,7 +151,7 @@ Women's pelvic health, strength from within,
 
 > System restored.
 > Pain... released.
-> Munaza Physio. **+92 307 5810689.**
+> Munaza Physio. For women and children. **+92 307 5810689.**
 
 ---
 
@@ -161,5 +166,5 @@ Women's pelvic health, strength from within,
 | Joints and recovery | Arthritis and persistent pain, osteoarthritis, post-fracture rehabilitation |
 | Neuro | Parkinson's disease and movement disorders, spinal cord injury rehab, facial palsy, vestibular and dizziness rehab, balance, gait and coordination |
 | Breathing | Airway clearance and breathing dysfunction |
-| Paediatric | Paediatric rehab (including infants), cerebral palsy, developmental delay, sensory-motor |
+| Children | Paediatric rehab, rehab for infants, cerebral palsy, developmental delay, sensory-motor |
 | Women's health | Women's pelvic health |
