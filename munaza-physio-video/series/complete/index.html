@@ -67,14 +67,17 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
 
 /* Body map */
 .map-note{position:relative;display:inline-block;margin-top:24px;font-size:48px;color:var(--red);transform:rotate(-3deg);opacity:0;white-space:nowrap}
-.cond{position:absolute;left:880px;top:236px;width:960px;opacity:0}
+.cond{position:absolute;left:740px;top:236px;width:620px;opacity:0}
 .cond .ix{font-weight:700;font-size:24px;letter-spacing:.2em;color:var(--red)}
-.cond .t{font-weight:800;font-size:78px;line-height:1.0;letter-spacing:-.015em;margin-top:8px}
+.cond .t{font-weight:800;font-size:64px;line-height:1.0;letter-spacing:-.015em;margin-top:8px}
 .cond .chips{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
 .chip{padding:12px 24px;border-radius:999px;background:var(--black);color:#fff;font-weight:600;font-size:26px;opacity:0;white-space:nowrap}
 .chip.r{background:var(--red)}
 .chip.w{background:#fff;color:var(--black);box-shadow:0 0 0 2px var(--black) inset}
-.guides{position:absolute;left:880px;top:130px;font-weight:600;font-size:22px;letter-spacing:.16em;text-transform:uppercase;color:#6B6B6B}
+.pstack{position:absolute;left:1400px;top:180px;width:430px;height:538px}
+.pcard{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 24px 60px rgba(16,16,16,.28);opacity:0}
+.pcard img{display:block;width:100%;height:100%;object-fit:cover}
+.guides{position:absolute;left:740px;top:130px;font-weight:600;font-size:22px;letter-spacing:.16em;text-transform:uppercase;color:#6B6B6B}
 .guides b{color:var(--red)}
 
 /* Big phone number */
@@ -155,7 +158,7 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
 <!-- ===== S2 SPINE 10.4-35.3 ===== -->
 <section class="scene clip bg-soft bodyscene" id="s2" data-start="10.4" data-duration="24.9" data-track-index="2">
   <div class="guides o0">Chapter 01 &middot; <b>Spine, back &amp; neck</b> &middot; 9 guides on the site</div>
-  <div class="browser mini" style="left:1270px;top:590px;width:560px;height:350px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
+  <div class="pstack"></div><div class="browser mini" style="left:740px;top:600px;width:560px;height:340px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
 </section>
 
 <!-- ===== S3 PRE 1 35.3-41.9 ===== -->
@@ -204,7 +207,7 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
 <!-- ===== S6 SHOULDER & ARM 62.4-91.9 ===== -->
 <section class="scene clip bg-soft bodyscene" id="s6" data-start="62.4" data-duration="29.5" data-track-index="6">
   <div class="guides o0">Chapter 02 &middot; <b>Shoulder &amp; upper limb</b> &middot; 7 guides on the site</div>
-  <div class="browser mini" style="left:1270px;top:590px;width:560px;height:350px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
+  <div class="pstack"></div><div class="browser mini" style="left:740px;top:600px;width:560px;height:340px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
 </section>
 
 <!-- ===== S7 JOURNEY 91.9-96.3 ===== -->
@@ -251,7 +254,7 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
 <!-- ===== S10 LEG / RECOVERY 114.6-142.6 ===== -->
 <section class="scene clip bg-soft bodyscene" id="s10" data-start="114.6" data-duration="28" data-track-index="10">
   <div class="guides o0">Chapter 03 &middot; <b>Hip, knee, foot &amp; ankle</b> &middot; + recovery &amp; persistent pain</div>
-  <div class="browser mini" style="left:1270px;top:590px;width:560px;height:350px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
+  <div class="pstack"></div><div class="browser mini" style="left:740px;top:600px;width:560px;height:340px;opacity:0"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/conditions</div></div><div class="view"></div></div>
 </section>
 
 <!-- ===== S11 CHORUS 3: WOMEN-ONLY 142.6-153.0 ===== -->
@@ -298,11 +301,12 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
 
 <!-- ===== S14 CHILDREN 168.3-174.0 ===== -->
 <section class="scene clip bg-off" id="s14" data-start="168.3" data-duration="5.7" data-track-index="14">
-  <div class="browser" id="s14-br" style="left:760px;top:110px;width:1080px;height:760px"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/pediatric-physiotherapy</div></div><div class="view"><img id="s14-i1" src="assets/site/ped-hero.jpg" alt=""><img id="s14-i2" src="assets/site/ped-world.jpg" alt=""></div></div>
+  <div class="browser" id="s14-br" style="left:700px;top:110px;width:1000px;height:700px"><div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url"><b>munazaphysio.studio</b>/pediatric-physiotherapy</div></div><div class="view"><img id="s14-i1" src="assets/site/ped-hero.jpg" alt=""><img id="s14-i2" src="assets/site/ped-world.jpg" alt=""></div></div>
   <div class="abs" style="left:120px;top:150px"><div class="kicker">Paediatric physiotherapy</div><div class="h-l" style="margin-top:18px;font-size:80px">Movement<br>should feel<br><span class="red">like play.</span></div></div>
   <div class="abs" style="left:120px;top:560px;display:flex;flex-direction:column;gap:14px;align-items:flex-start" id="s14-chips">
     <div class="chip r">Cerebral palsy</div><div class="chip">Stretching &middot; strength &middot; play</div><div class="chip w">Sensory-motor skills</div><div class="chip r">Fun, guided activities</div>
   </div>
+  <div class="pstack" id="s14-ps" style="left:1470px;top:330px;width:360px;height:450px"><div class="pcard"><img src="assets/posts/CEREBRAL PALSY.png" alt=""></div><div class="pcard"><img src="assets/posts/PAEDIATRIC REHABILITATION.png" alt=""></div><div class="pcard"><img src="assets/posts/SENSORY-MOTOR.png" alt=""></div></div>
   <svg class="abs draw" width="1920" height="1080" viewBox="0 0 1920 1080" style="filter:url(#rough)">
     <path id="s14-star" d="M640,200 L652,236 L690,236 L660,258 L672,294 L640,272 L608,294 L620,258 L590,236 L628,236 Z" fill="none" stroke="#E7212B" stroke-width="4" pathLength="1" class="stroke"/>
   </svg>
@@ -368,29 +372,29 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
   // ---------------- Body-map chapters ----------------
   // hot = [x,y] in figure space (400x900); path = optional nerve/line drawn on the figure
   var SPINE = [
-    { t: 10.5, t2: 12.5, title: 'Neck Pain', chips: ['Posture work', 'Gentle stretches'], note: 'phone neck? posture first', hot: [200, 168], img: 'cond-neck' },
-    { t: 14.9, t2: 17.1, title: 'Back Pain', chips: ['Core training', 'Movement training'], note: 'sit less, move more', hot: [200, 330], img: 'cond-back' },
-    { t: 19.4, t2: 21.6, title: 'Lumbar Spondylosis', chips: ['Mobility', 'Strength work'], note: 'lower spine, gently', hot: [200, 420], img: 'cond-spine' },
-    { t: 23.9, t2: 26.0, title: 'Sciatica', chips: ['Nerve glides', 'Gentle loading'], note: 'at your own beat', hot: [210, 450], path: 'M210,450 C232,490 240,570 236,650 C233,730 240,800 242,852', img: 'cond-spine' },
-    { t: 28.5, t2: 31.0, title: 'Thoracic & Rib Pain', chips: ['Breathing', 'Mobility'], note: 'breathe, then move', hot: [200, 250], path: 'M150,240 C170,270 230,270 250,240 M150,270 C170,300 230,300 250,270', img: 'cond-spine' }
+    { t: 10.5, t2: 12.5, title: 'Neck Pain', posters: ["NECK PAIN"], chips: ['Posture work', 'Gentle stretches'], note: 'phone neck? posture first', hot: [200, 168], img: 'cond-neck' },
+    { t: 14.9, t2: 17.1, title: 'Back Pain', posters: ["Spine Health"], chips: ['Core training', 'Movement training'], note: 'sit less, move more', hot: [200, 330], img: 'cond-back' },
+    { t: 19.4, t2: 21.6, title: 'Lumbar Spondylosis', posters: ["LUMBAR SPONDYLOSIS"], chips: ['Mobility', 'Strength work'], note: 'lower spine, gently', hot: [200, 420], img: 'cond-spine' },
+    { t: 23.9, t2: 26.0, title: 'Sciatica', posters: ["SCIATICA - NERVE-RELATED LEG PAIN"], chips: ['Nerve glides', 'Gentle loading'], note: 'at your own beat', hot: [210, 450], path: 'M210,450 C232,490 240,570 236,650 C233,730 240,800 242,852', img: 'cond-spine' },
+    { t: 28.5, t2: 31.0, title: 'Thoracic & Rib Pain', posters: ["THORACIC RIB PAIN"], chips: ['Breathing', 'Mobility'], note: 'breathe, then move', hot: [200, 250], path: 'M150,240 C170,270 230,270 250,240 M150,270 C170,300 230,300 250,270', img: 'cond-spine' }
   ];
   var ARM = [
-    { t: 62.5, t2: 64.9, title: 'Frozen Shoulder', chips: ['Gentle range of motion', 'Gradual progress'], note: 'a little more reach, gradually', hot: [284, 222], path: 'M284,222 m-70,-10 a72,72 0 0,1 120,-60', img: 'cond-shoulder' },
-    { t: 67.2, t2: 69.4, title: 'Rotator Cuff', chips: ['Strengthening', 'Control'], note: 'strength + control, slowly', hot: [272, 244], img: 'cond-shoulder' },
-    { t: 71.6, t2: 72.9, title: 'Shoulder Joint & Bursa', chips: ['Ease the load', 'Rebuild strength'], note: 'keep movement calm', hot: [292, 230], img: 'cond-shoulder' },
-    { t: 74.2, t2: 75.4, title: 'Elbow & Tendons', chips: ['Tendon loading', 'Rest & form'], note: 'find the balance', hot: [293, 360], img: 'cond-shoulder' },
-    { t: 78.6, t2: 80.8, title: 'Wrist & Hand', chips: ['Hand exercises', 'Finger exercises'], note: 'tip to fingertip', hot: [300, 492], img: 'cond-wrist' },
-    { t: 83.2, t2: 85.7, title: 'Upper-Limb Nerve', chips: ['Nerve glides', 'Posture checks'], note: 'settle the alarm', hot: [300, 470], path: 'M212,168 C262,190 292,236 296,330 C300,400 304,450 300,498', img: 'cond-wrist' },
-    { t: 87.8, t2: 90.0, title: 'Overuse & Repetitive Load', chips: ['Pacing', 'Rest', 'Strength work'], note: 'same move every day?', hot: [298, 470], path: 'M330,420 a34,34 0 1,1 -4,48', img: 'cond-overuse' }
+    { t: 62.5, t2: 64.9, title: 'Frozen Shoulder', posters: ["FROZEN SHOULDER"], chips: ['Gentle range of motion', 'Gradual progress'], note: 'a little more reach, gradually', hot: [284, 222], path: 'M284,222 m-70,-10 a72,72 0 0,1 120,-60', img: 'cond-shoulder' },
+    { t: 67.2, t2: 69.4, title: 'Rotator Cuff', posters: ["ROTATOR CUFF"], chips: ['Strengthening', 'Control'], note: 'strength + control, slowly', hot: [272, 244], img: 'cond-shoulder' },
+    { t: 71.6, t2: 72.9, title: 'Shoulder Joint & Bursa', posters: ["SHOULDER JOINT AND BURSAL CONDITIONS"], chips: ['Ease the load', 'Rebuild strength'], note: 'keep movement calm', hot: [292, 230], img: 'cond-shoulder' },
+    { t: 74.2, t2: 75.4, title: 'Elbow & Tendons', posters: ["ELBOW JOINT CONDITIONS"], chips: ['Tendon loading', 'Rest & form'], note: 'find the balance', hot: [293, 360], img: 'cond-shoulder' },
+    { t: 78.6, t2: 80.8, title: 'Wrist & Hand', posters: ["WRIST AND HAND"], chips: ['Hand exercises', 'Finger exercises'], note: 'tip to fingertip', hot: [300, 492], img: 'cond-wrist' },
+    { t: 83.2, t2: 85.7, title: 'Upper-Limb Nerve', posters: ["UPPER LIMB NERVE"], chips: ['Nerve glides', 'Posture checks'], note: 'settle the alarm', hot: [300, 470], path: 'M212,168 C262,190 292,236 296,330 C300,400 304,450 300,498', img: 'cond-wrist' },
+    { t: 87.8, t2: 90.0, title: 'Overuse & Repetitive Load', posters: ["OVERUSE & REPETITIVE-LOAD INJURY (2)"], chips: ['Pacing', 'Rest', 'Strength work'], note: 'same move every day?', hot: [298, 470], path: 'M330,420 a34,34 0 1,1 -4,48', img: 'cond-overuse' }
   ];
   var LEG = [
-    { t: 114.7, t2: 115.8, title: 'Hip & Knee', chips: ['Hip & glute strength', 'Balance training'], note: 'step by step', hot: [238, 700], extra: [[250, 575]], img: 'cond-hip' },
-    { t: 117.4, t2: 119.9, title: 'Muscle Injury', chips: ['Gradual loading'], note: 'pull, strain or tear', hot: [240, 640], img: 'cond-overuse' },
-    { t: 122.2, t2: 124.5, title: 'Achilles Tendon', chips: ['Calf & tendon loading plan'], note: 'adjusted to how you feel', hot: [236, 830], img: 'cond-hip' },
-    { t: 126.8, t2: 129.0, title: 'Plantar Heel Pain', chips: ['Stretching', 'Footwear tips', 'Strengthening'], note: 'first steps sting?', hot: [230, 868], img: 'cond-plantar' },
-    { t: 131.2, t2: 132.3, title: 'Forefoot, Midfoot & Ankle', chips: ['Balance', 'Footwork'], note: 'retrained step by step', hot: [262, 868], img: 'cond-plantar' },
-    { t: 133.4, t2: 135.9, title: 'After a Fracture', chips: ['Range', 'Strength', 'At your pace'], note: 'bone healed, joint tight', hot: [236, 770], img: 'cond-fracture' },
-    { t: 138.1, t2: 140.3, title: 'Arthritis & Persistent Pain', chips: ['Exercise', 'Pain education'], note: 'a plan that fits you', hot: [236, 700], extra: [[164, 700], [102, 495], [298, 495]], img: 'cond-arthritis' }
+    { t: 114.7, t2: 115.8, title: 'Hip & Knee', posters: ["HIP PAIN", "JOINT KNEE PAIN"], chips: ['Hip & glute strength', 'Balance training'], note: 'step by step', hot: [238, 700], extra: [[250, 575]], img: 'cond-hip' },
+    { t: 117.4, t2: 119.9, title: 'Muscle Injury', posters: ["MUSCLE INJURY"], chips: ['Gradual loading'], note: 'pull, strain or tear', hot: [240, 640], img: 'cond-overuse' },
+    { t: 122.2, t2: 124.5, title: 'Achilles Tendon', posters: ["ACHILLES TENDINOPATHY"], chips: ['Calf & tendon loading plan'], note: 'adjusted to how you feel', hot: [236, 830], img: 'cond-hip' },
+    { t: 126.8, t2: 129.0, title: 'Plantar Heel Pain', posters: ["PLANTAR HEEL PAIN (2)"], chips: ['Stretching', 'Footwear tips', 'Strengthening'], note: 'first steps sting?', hot: [230, 868], img: 'cond-plantar' },
+    { t: 131.2, t2: 132.3, title: 'Forefoot, Midfoot & Ankle', posters: ["Forefoot and Midfoot Pain", "Foot and Ankle Tendon Conditions"], chips: ['Balance', 'Footwork'], note: 'retrained step by step', hot: [262, 868], img: 'cond-plantar' },
+    { t: 133.4, t2: 135.9, title: 'After a Fracture', posters: ["POST-FRACTURE REHABILITATION"], chips: ['Range', 'Strength', 'At your pace'], note: 'bone healed, joint tight', hot: [236, 770], img: 'cond-fracture' },
+    { t: 138.1, t2: 140.3, title: 'Arthritis & Persistent Pain', posters: ["ARTHRITIS & PERSISTENT PAIN", "OSTEOARTHRITIS"], chips: ['Exercise', 'Pain education'], note: 'a plan that fits you', hot: [236, 700], extra: [[164, 700], [102, 495], [298, 495]], img: 'cond-arthritis' }
   ];
 
   // ---------------- Build DOM ----------------
@@ -412,7 +416,7 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
     var svg = document.getElementById('body-tpl').content.firstElementChild.cloneNode(true);
     sc.insertBefore(svg, sc.firstChild);
     var gp = svg.querySelector('.paths'), gh = svg.querySelector('.hots'), gl = svg.querySelector('.leaders');
-    var view = sc.querySelector('.browser.mini .view'), imgs = {};
+    var view = sc.querySelector('.browser.mini .view'), stack = sc.querySelector('.pstack'), imgs = {};
     items.forEach(function (it, i) {
       // hotspot rings
       var pts = [it.hot].concat(it.extra || []);
@@ -430,7 +434,7 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
       // hand-drawn leader from hotspot to title
       var a = fig(it.hot[0], it.hot[1]);
       var lead = document.createElementNS(NS, 'path');
-      var bx = 860, by = 290;
+      var bx = 720, by = 290;
       lead.setAttribute('d', 'M' + (a[0] + 26) + ',' + a[1] + ' C' + (a[0] + 160) + ',' + (a[1] - 30) + ' ' + (bx - 160) + ',' + (by + 30) + ' ' + bx + ',' + by);
       lead.setAttribute('fill', 'none'); lead.setAttribute('stroke', '#101010'); lead.setAttribute('stroke-width', '2.5'); lead.setAttribute('stroke-dasharray', '1'); lead.setAttribute('stroke-dashoffset', '1'); lead.setAttribute('pathLength', '1');
       lead.setAttribute('style', 'filter:url(#rough2)'); gl.appendChild(lead); it.leadEl = lead;
@@ -443,11 +447,13 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
       c.appendChild(document.createElement('br')); c.appendChild(n); it.noteEl = n;
       if (!imgs[it.img]) { var im = document.createElement('img'); im.src = 'assets/site/' + it.img + '.jpg'; im.alt = ''; view.appendChild(im); imgs[it.img] = im; }
       it.imgEl = imgs[it.img];
+      it.pEls = (it.posters || []).map(function (nm) { var d = document.createElement('div'); d.className = 'pcard'; var im = document.createElement('img'); im.src = 'assets/posts/' + nm + '.png'; im.alt = nm; d.appendChild(im); stack.appendChild(d); return d; });
     });
     return { sc: sc, svg: svg, guides: sc.querySelector('.guides'), mini: sc.querySelector('.browser.mini') };
   }
   var B2 = buildBody('s2', SPINE), B6 = buildBody('s6', ARM), B10 = buildBody('s10', LEG);
 
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   // ---------------- Timeline ----------------
   var tl = gsap.timeline({ paused: true });
   window.__timelines = window.__timelines || {};
@@ -493,6 +499,7 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
   [[10.4, 35.3], [62.4, 91.9], [114.6, 142.6]].forEach(function (w) { tl.set('#chap', { opacity: 1 }, w[0]); tl.set('#chap', { opacity: 0 }, w[1]); });
 
   // ---- body-map chapters
+  var PR = rng(4471);
   function runBody(B, items, t0, t1) {
     show(B.sc, t0, t1);
     tl.fromTo(B.svg.querySelector('g'), { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' }, t0);
@@ -515,6 +522,11 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
       it.condEl.querySelectorAll('.chip').forEach(function (c, k) { pop(c, it.t2 + k * 0.18, { y: 20, scale: 0.7 }, 0.4); });
       tl.fromTo(it.noteEl, { opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'power1.out' }, it.t2 + 0.5);
       tl.set(it.condEl, { opacity: 0 }, end);
+      it.pEls.forEach(function (pc, k) {
+        var rot = (PR() - 0.5) * 8, dx = k * 26;
+        tl.fromTo(pc, { opacity: 0, y: 620, x: dx + 60, rotation: rot + (k ? 14 : -14), scale: 0.9 }, { opacity: 1, y: k * 18, x: dx, rotation: rot, scale: 1, duration: 0.85, ease: 'elastic.out(1,0.65)' }, it.t + 0.15 + k * 0.55);
+        tl.to(pc, { scale: 0.94, y: k * 18 - 10, duration: 0.4 }, end - 0.05);
+      });
       // site page behind the idea
       tl.set(it.imgEl, { opacity: 1 }, it.t); if (end < t1) tl.set(it.imgEl, { opacity: 0 }, end);
       tl.fromTo(it.imgEl, { scale: 1.0, y: 0 }, { scale: 1.18, y: -20, duration: Math.max(0.5, end - it.t), ease: 'none' }, it.t);
@@ -624,11 +636,11 @@ svg.draw path,svg.draw line,svg.draw circle,svg.draw ellipse,svg.draw polyline{v
   push('#s14-i1', 168.3, 3.1, 1.06); push('#s14-i2', 171.4, 2.6, 1.06);
   gsap.utils.toArray('#s14-chips .chip').forEach(function (e, i) { pop(e, [168.5, 170.3, 172.2, 173.4][i], { x: -40, y: 0, scale: 0.8 }); });
   draw('#s14-star', 169.0, 0.8);
+  gsap.utils.toArray('#s14-ps .pcard').forEach(function (pc, i) { tl.fromTo(pc, { opacity: 0, y: 500, rotation: 16 }, { opacity: 1, y: i * 16, x: i * 22, rotation: [-5, 3, -2][i], duration: 0.8, ease: 'elastic.out(1,0.65)' }, [168.6, 170.4, 172.3][i]); });
 
   // ---- S15 particle logo (seeded, seek-safe)
   show('#s15', 174.0);
   var cv = document.getElementById('pcv'), cx = cv.getContext('2d'), logo = document.getElementById('p-logo'), P = null;
-  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   function sample() {
     if (P || !logo.complete || !logo.naturalWidth) return;
     var ow = 600, oh = 375, off = document.createElement('canvas'); off.width = ow; off.height = oh;
