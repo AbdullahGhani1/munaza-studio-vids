@@ -1,0 +1,32 @@
+{
+  "voice": "hf_alpha",
+  "duration": 30.0,
+  "out": "30",
+  "speeds": [1.0, 1.05, 1.1, 1.15, 1.2],
+  "note": "30 s short. Each phrase is synthesised separately so captions are exactly in sync. 'say' overrides pronunciation; 'text' is what the caption shows.",
+  "scenes": [
+    { "id": "hook", "start": 0.12, "end": 2.55, "phrases": [
+      { "text": "Quick check.", "gapAfter": 0.12 },
+      { "text": "Where's your head right now?" } ] },
+    { "id": "work", "start": 2.7, "end": 4.55, "phrases": [
+      { "text": "Craned toward a laptop?" } ] },
+    { "id": "read", "start": 4.7, "end": 6.45, "phrases": [
+      { "text": "Bent over a book?" } ] },
+    { "id": "rest", "start": 6.6, "end": 8.65, "phrases": [
+      { "text": "Stiff when you lie down?" } ] },
+    { "id": "pause", "start": 8.8, "end": 13.2, "phrases": [
+      { "text": "When neck pain keeps pausing your day,", "gapAfter": 0.18 },
+      { "text": "it's tempting to want one quick fix." } ] },
+    { "id": "story", "start": 13.4, "end": 15.05, "phrases": [
+      { "text": "But your neck has a story." } ] },
+    { "id": "listen", "start": 15.25, "end": 20.45, "phrases": [
+      { "text": "Munaza Physio Studio starts by listening.", "say": "Moo-naa-za Physio Studio starts by listening.", "gapAfter": 0.22 },
+      { "text": "Your symptoms. Your routine. Your goals." } ] },
+    { "id": "check", "start": 20.6, "end": 23.05, "phrases": [
+      { "text": "Then a gentle movement check, at your comfort." } ] },
+    { "id": "plan", "start": 23.2, "end": 26.25, "phrases": [
+      { "text": "And a plan that fits your real day." } ] },
+    { "id": "cta", "start": 26.6, "end": 29.6, "phrases": [
+      { "text": "Book your assessment at munazaphysio.studio.", "say": "Book your assessment at moo-naa-za physio dot studio." } ] }
+  ]
+}
