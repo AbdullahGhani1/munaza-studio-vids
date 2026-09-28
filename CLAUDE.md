@@ -1,11 +1,10 @@
 # CLAUDE.md
 
-Motion-graphics videos for Munaza Physio Studio (munazaphysio.studio, a female-only physiotherapy practice run by Dr. Munaza Ghani). Each video is an HTML composition rendered to MP4 with [HyperFrames](https://github.com/heygen-com/hyperframes) (pinned `0.8.79`).
+The Video Studio web app (main project, `studio/`) plus the Munaza Physio Studio films (`series/`). The films are motion-graphics videos for Munaza Physio Studio (munazaphysio.studio, a female-only physiotherapy practice run by Dr. Munaza Ghani). Each video is an HTML composition rendered to MP4 with [HyperFrames](https://github.com/heygen-com/hyperframes) (pinned `0.8.79`).
 
 ## Layout
 
 - The repo root is the npm project root. Run every command from here; asset paths in the compositions are relative to it.
-- `index.html`: the original 30 s 16:9 promo (English, plus an Urdu build via `scripts/make-urdu.js`).
 - `series/01-back-pain/`: 9:16, 65 s, timed to the MP3.
 - `series/complete/`: 16:9, 177 s "A Space to Heal" song video (`lyrics.md`, `captions-en.srt`, `youtube/`).
 - `series/03-neck-pain/`: 9:16 paper-cut animated film (177 s main + short). It has its own `README.md`, `lib/` engine, `tools/` audio scripts and `CREDITS.md`. Read that README before touching it.
@@ -17,9 +16,6 @@ Motion-graphics videos for Munaza Physio Studio (munazaphysio.studio, a female-o
 
 ```bash
 npm install
-npm run preview            # hyperframes preview
-npm run render             # 30 s promo -> renders/
-npm run render:ur          # Urdu captions
 npm run render:back        # series/01-back-pain
 npm run render:complete    # series/complete (177 s)
 npm run render:neck        # neck-pain main (~10 min)
@@ -35,6 +31,6 @@ Rendering needs FFmpeg and a Chrome headless shell (`npx hyperframes doctor`). O
 - Scene, caption and mouth-sync timings follow the audio track. When you change the audio, update the timing arrays (`PH`, `CAP`, `capTimes`, `talk`).
 - **Modesty is structural in character art:** hijab covers hair, neck and chest; garments are opaque, loose and full length; Dr. Munaza's mask always covers nose and mouth, and no mouth is drawn for her. Keep this.
 - Captions reflect only what is actually sung or spoken in the track.
-- Colors are CSS variables in `:root`. The site's type is Poppins, and Urdu uses Noto Nastaliq (RTL).
+- Colors are CSS variables in `:root`. The films use Poppins (matching the site); the studio UI uses Archivo + Inter per `docs/design-standard.md`.
 - There is no CI: all rendering is local.
 - `docs/planning/` holds the promo script and the 150 s master prompt.
