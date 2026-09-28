@@ -1,8 +1,8 @@
-@munaza-physio-video/series/complete/A_Space_to_Heal.mp3
-@munaza-physio-video/assets/posts 
-@munaza-physio-video/assets/site_logo.png
-@munaza-physio-video/assets/Doctor_munaza_ghani.png
-@munaza-physio-video/assets/clinic.png
+@./series/complete/A_Space_to_Heal.mp3
+@./assets/posts 
+@./assets/site_logo.png
+@./assets/Doctor_munaza_ghani.png
+@./assets/clinic.png
 Story Leader The MAESTRO style 
 InfoGraphics
 
@@ -895,7 +895,7 @@ Validate:
 Produce:
 
 ```text
-munaza-physio-video/
+./
 ├── index.html
 ├── package.json
 ├── README.md

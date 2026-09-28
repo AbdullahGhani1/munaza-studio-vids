@@ -1,0 +1,8 @@
+node_modules/
+renders/
+ur/
+*.mp4
+.DS_Store
+.hyperframes/
+.thumbnails/
+.waveform-cache/

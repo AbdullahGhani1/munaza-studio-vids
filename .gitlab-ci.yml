@@ -13,18 +13,17 @@ stages:
   before_script:
     - apt-get update
     - apt-get install -y --no-install-recommends ffmpeg chromium fonts-noto-core fonts-liberation ca-certificates
-    - cd munaza-physio-video
     - mkdir -p renders
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_SHORT_SHA"
     paths:
-      - munaza-physio-video/renders/
+      - renders/
     expire_in: 30 days
   interruptible: true
   timeout: 30m
   rules:
     - changes:
-        - munaza-physio-video/**/*
+        - "**/*"
         - .gitlab-ci.yml
 
 render:en:
