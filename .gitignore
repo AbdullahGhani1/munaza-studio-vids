@@ -3,6 +3,7 @@ renders/
 ur/
 *.mp4
 .DS_Store
+studio/projects/
 .hyperframes/
 .thumbnails/
 .waveform-cache/

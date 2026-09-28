@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{name}}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;width:100vw;height:100vh;object-fit:contain}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script src="data.js"></script>
+<script>
+// Scaffold animatic. Every pixel is a pure function of t: window.seek(t) paints frame t.
+// No timers, no CSS transitions, no carried state, seeded noise only. Claude Code replaces this in src/.
+const P = window.PROJECT, W = P.outputWidth, H = P.outputHeight, DUR = P.durationSeconds;
+const cv = document.getElementById('c'); cv.width = W; cv.height = H;
+const g = cv.getContext('2d');
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const pal = P.palette;
+
+function spring(t, k = 170, d = 26) {               // closed-form damped spring, 0 -> 1
+  if (t <= 0) return 0;
+  const w0 = Math.sqrt(k), z = d / (2 * w0);
+  if (z < 1) { const wd = w0 * Math.sqrt(1 - z * z);
+    return 1 - Math.exp(-z * w0 * t) * (Math.cos(wd * t) + (z * w0 / wd) * Math.sin(wd * t)); }
+  return 1 - Math.exp(-w0 * t) * (1 + w0 * t);
+}
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+  let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+function wrap(text, maxW) {
+  const words = String(text).split(' '), lines = []; let line = '';
+  for (const w of words) { const test = line ? line + ' ' + w : w;
+    if (g.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test; }
+  if (line) lines.push(line); return lines;
+}
+
+function draw(t) {
+  t = Math.min(Math.max(t, 0), DUR - 1e-6);
+  g.fillStyle = pal.bg; g.fillRect(0, 0, W, H);
+  const u = Math.min(W, H) / 1080;
+  // seeded drifting dots: same every render
+  const r = rng(P.seed);
+  for (let i = 0; i < 24; i++) {
+    const x = r() * W, y0 = r() * H, sp = 8 + r() * 24, s = (3 + r() * 6) * u;
+    g.globalAlpha = 0.10; g.fillStyle = pal.fg;
+    g.beginPath(); g.arc(x, (y0 - t * sp * u + H * 4) % H, s, 0, 7); g.fill();
+  }
+  g.globalAlpha = 1;
+  const sc = P.scenes.find((s) => t >= s.startSeconds && t < s.endSeconds) || P.scenes[P.scenes.length - 1];
+  const lt = t - sc.startSeconds, len = sc.endSeconds - sc.startSeconds;
+  const sIn = spring(lt - 0.05, 220, 24), out = clamp((len - lt) / 0.18);
+  // accent block that grows in
+  g.fillStyle = pal.accent; g.globalAlpha = 0.9 * out;
+  g.fillRect(80 * u, H * 0.30, (W - 160 * u) * 0.18 * sIn, 12 * u);
+  g.globalAlpha = 1;
+  // beat label
+  g.fillStyle = pal.accent; g.font = `600 ${34 * u}px Inter, system-ui, sans-serif`; g.textBaseline = 'alphabetic';
+  g.globalAlpha = out; g.fillText(`${sc.order}  ${sc.beat.toUpperCase()}`, 80 * u, H * 0.27);
+  // main text: first on-screen text, else the purpose
+  const main = (sc.onScreenText && sc.onScreenText[0]) || sc.purpose;
+  g.fillStyle = pal.fg; g.font = `800 ${(sc.onScreenText && sc.onScreenText[0] ? 96 : 54) * u}px Archivo, Inter, system-ui, sans-serif`;
+  const lines = wrap(main, W - 160 * u), lh = (sc.onScreenText && sc.onScreenText[0] ? 108 : 66) * u;
+  lines.forEach((ln, i) => {
+    const a = clamp(sIn * 1.2 - i * 0.12);
+    g.globalAlpha = a * out; g.fillText(ln, 80 * u, H * 0.30 + 90 * u + i * lh + (1 - a) * 40 * u);
+  });
+  g.globalAlpha = 1;
+  // scene strip + playhead
+  const y = H - 120 * u, x0 = 80 * u, w = W - 160 * u;
+  P.scenes.forEach((s, i) => {
+    g.fillStyle = pal.fg; g.globalAlpha = s === sc ? 0.85 : 0.22;
+    g.fillRect(x0 + (s.startSeconds / DUR) * w + 2, y, ((s.endSeconds - s.startSeconds) / DUR) * w - 4, 10 * u);
+  });
+  g.globalAlpha = 1; g.fillStyle = pal.accent; g.fillRect(x0 + (t / DUR) * w - 2, y - 10 * u, 4, 30 * u);
+  g.fillStyle = pal.fg; g.globalAlpha = 0.6; g.font = `500 ${24 * u}px ui-monospace, Menlo, monospace`;
+  g.fillText(`${t.toFixed(2)} / ${DUR}s  ·  scaffold animatic`, x0, y + 64 * u); g.globalAlpha = 1;
+}
+window.seek = (t) => { draw(t); return true; };
+window.__ready = document.fonts ? document.fonts.ready.then(() => true) : Promise.resolve(true);
+draw(0);
+// Live preview in a normal browser (off in headless render and when embedded with ?manual=1)
+if (!navigator.webdriver && !/manual=1/.test(location.search)) {
+  const t0 = performance.now();
+  (function loop() { draw(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>
