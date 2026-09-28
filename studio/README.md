@@ -16,6 +16,7 @@ No dependencies: a Node http server (`server.mjs`), a vanilla ES-module front en
 | Project library (search, filter, duplicate, delete to `.trash`, reveal) | Done |
 | Reference upload, ffprobe metadata, ffmpeg frame extraction (up to 12 frames) | Done |
 | Storyboard generation (MAESTRO-style beats), scene editing, add/duplicate/delete/reorder, rebalance, timing validation | Done. The generator is a deterministic template, not a model call |
+| Undo / redo in the plan editor (100 steps; buttons, or Ctrl/Cmd+Z and Shift+Z outside a text field) | Done |
 | Approve → scaffold (CLAUDE.md, shotlist, style guide, audio plan, seek(t) renderer, render.mjs, copy-ready prompt) | Done |
 | Scrubbable animatic preview (the scaffold's real `window.seek(t)`), timeline, beat ticks, keyboard shortcuts | Done |
 | Sound: music upload, tempo detection (`lib/beats.mjs`, ffmpeg decode + onset autocorrelation), manual BPM, ×2 / ÷2, `audio/beats.json`, mix level | Done. Detection found 120, 100 and 140 BPM correctly on synthetic tracks and was off by an octave on 87 BPM; the first beat can be off by about 0.05 s |
@@ -31,7 +32,6 @@ No dependencies: a Node http server (`server.mjs`), a vanilla ES-module front en
 - **Tempo detection is an estimate.** It is not librosa; check it against the track.
 - **No automatic style extraction.** Frames are extracted, but the take/avoid lists are templates for you to edit; Claude Code refines the style guide from `refs/frames`.
 - Voiceover generation, synthesized SFX, URL references and product-site asset capture (FR-16/17/23) are not built.
-- Undo in the plan editor is not built.
 
 ## Layout
 

@@ -242,9 +242,26 @@ async function tabPlan() {
     <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:12px"><span class="label">Beat sheet</span><span id="tot" class="small num"></span><button class="btn secondary compact" data-act="rebalance">Rebalance</button></div><div id="btl"></div></div>
     <div class="stack" id="cards"></div>
     <div class="row"><button class="btn secondary" data-act="add-scene-end">Add scene</button><button class="btn ghost" data-act="regen">Regenerate plan</button></div>
-    <div class="approve" role="region" aria-label="Approval"><span class="help" style="flex:1;min-width:200px">Claude Code starts writing code only after you approve. Nothing renders yet.</span><span id="errsum" class="error" hidden></span><button class="btn secondary" data-act="save-plan">Save draft</button><button class="btn primary" data-act="approve">${P.approvedAt ? 'Rebuild scaffold' : 'Approve and build'}</button></div></div>`;
+    <div class="approve" role="region" aria-label="Approval"><span class="help" style="flex:1;min-width:200px">Claude Code starts writing code only after you approve. Nothing renders yet.</span><span id="errsum" class="error" hidden></span><button class="btn ghost" id="undo" data-act="undo" title="Undo (Ctrl/Cmd+Z outside a field)" aria-disabled="true">Undo</button><button class="btn ghost" id="redo" data-act="redo" title="Redo (Ctrl/Cmd+Shift+Z)" aria-disabled="true">Redo</button><button class="btn secondary" data-act="save-plan">Save draft</button><button class="btn primary" data-act="approve">${P.approvedAt ? 'Rebuild scaffold' : 'Approve and build'}</button></div></div>`;
   drawPlanParts();
+  resetHist();
 }
+// ---- undo / redo for the plan editor (snapshots of logline, style lists and scenes) ----
+let hist = [], fut = [], cur = '', histTimer = 0;
+const snapPlan = () => JSON.stringify({ plan, logline: $('#logline')?.value ?? '', take: $('#take')?.value ?? '', avoid: $('#avoid')?.value ?? '' });
+function resetHist() { hist = []; fut = []; collectPlan(); cur = snapPlan(); syncUndo(); }
+function commitHist() { collectPlan(); const n = snapPlan(); if (n !== cur) { hist.push(cur); if (hist.length > 100) hist.shift(); cur = n; fut = []; } syncUndo(); }
+function syncUndo() { const u = $('#undo'), r = $('#redo'); if (u) u.setAttribute('aria-disabled', String(!hist.length)); if (r) r.setAttribute('aria-disabled', String(!fut.length)); }
+function applySnap(str) { const o = JSON.parse(str); plan = o.plan; $('#logline').value = o.logline; $('#take').value = o.take; $('#avoid').value = o.avoid; dirty = true; drawPlanParts(); syncUndo(); }
+function undo() { if (!hist.length) return; collectPlan(); fut.push(snapPlan()); cur = hist.pop(); applySnap(cur); toast('Undid last change.'); }
+function redo() { if (!fut.length) return; hist.push(cur); cur = fut.pop(); applySnap(cur); toast('Redid change.'); }
+document.addEventListener('keydown', (e) => {
+  if (view !== 'plan' || !(e.metaKey || e.ctrlKey) || e.altKey) return;
+  if (/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return; // native text undo wins inside fields
+  const k = e.key.toLowerCase();
+  if (k === 'z' && !e.shiftKey) { e.preventDefault(); undo(); } else if ((k === 'z' && e.shiftKey) || k === 'y') { e.preventDefault(); redo(); }
+});
+
 function sceneColor(i) { return SCENE_COLORS[i % SCENE_COLORS.length]; }
 function drawPlanParts() {
   const D = P.durationSeconds;
@@ -457,7 +474,7 @@ try { if (localStorage.getItem('studio.reduce')) document.documentElement.datase
 document.addEventListener('click', (e) => { if (!e.target.closest('.menu')) $$('.menu-list').forEach((m) => m.remove()); });
 document.addEventListener('keydown', (e) => { if (e.target.dataset?.act === 'rename' && e.key === 'Enter') e.target.click(); });
 
-document.addEventListener('input', (e) => { if (view === 'plan' && e.target.closest('#cards')) { dirty = true; collectPlan(); const errs = planErrors(); const t = $('#tot'); t.textContent = errs.length ? (errs.find((x) => x.startsWith('Scenes add up')) || errs[0]) : `Scenes add up to ${plan[plan.length - 1].endSeconds} s`; t.className = 'small num ' + (errs.length ? 'total-bad' : 'total-ok'); const es = $('#errsum'); es.hidden = !errs.length; es.textContent = errs.length ? errs[0] + (errs.length > 1 ? ` (+${errs.length - 1} more)` : '') : ''; } });
+document.addEventListener('input', (e) => { if (view === 'plan' && e.target.closest('#cards, #logline, #take, #avoid')) { clearTimeout(histTimer); histTimer = setTimeout(commitHist, 600); } if (view === 'plan' && e.target.closest('#cards')) { dirty = true; collectPlan(); const errs = planErrors(); const t = $('#tot'); t.textContent = errs.length ? (errs.find((x) => x.startsWith('Scenes add up')) || errs[0]) : `Scenes add up to ${plan[plan.length - 1].endSeconds} s`; t.className = 'small num ' + (errs.length ? 'total-bad' : 'total-ok'); const es = $('#errsum'); es.hidden = !errs.length; es.textContent = errs.length ? errs[0] + (errs.length > 1 ? ` (+${errs.length - 1} more)` : '') : ''; } });
 
 document.addEventListener('click', async (e) => {
   const b = e.target.closest('[data-act]'); if (!b || b.getAttribute('aria-disabled') === 'true') return;
@@ -482,11 +499,13 @@ document.addEventListener('click', async (e) => {
         break;
       }
       case 'reveal': { const r = await api(`/projects/${P.id}/reveal`, { method: 'POST' }); toast('Opened ' + r.path); break; }
+      case 'undo': undo(); break;
+      case 'redo': redo(); break;
       case 'jump-card': $('#sc' + i)?.scrollIntoView({ behavior: document.documentElement.dataset.reduce ? 'auto' : 'smooth', block: 'start' }); $('#sc' + i + ' input')?.focus({ preventScroll: true }); break;
-      case 'up': case 'down': { collectPlan(); const j = act === 'up' ? i - 1 : i + 1; if (j < 0 || j >= plan.length) break; const durs = plan.map((s) => Math.round((s.endSeconds - s.startSeconds) * 10) / 10); [plan[i], plan[j]] = [plan[j], plan[i]]; [durs[i], durs[j]] = [durs[j], durs[i]]; let c = 0; plan.forEach((s, k) => { s.order = k + 1; s.startSeconds = Math.round(c * 10) / 10; c += durs[k]; s.endSeconds = k === plan.length - 1 ? P.durationSeconds : Math.round(c * 10) / 10; }); dirty = true; drawPlanParts(); document.querySelector(`#sc${j} [data-act="${act}"]`)?.focus(); break; }
-      case 'split': case 'add-scene-end': { collectPlan(); const k = act === 'split' ? i : plan.length - 1, s = plan[k], mid = Math.round(((s.startSeconds + s.endSeconds) / 2) * 10) / 10; const n = clone(s); n.startSeconds = mid; n.id = 's' + Date.now(); if (act === 'add-scene-end') { n.beat = 'Detail'; n.onScreenText = []; } n.transition = s.transition; s.endSeconds = mid; s.transition = 'Match cut into the next scene'; plan.splice(k + 1, 0, n); plan.forEach((x, q) => (x.order = q + 1)); dirty = true; drawPlanParts(); break; }
-      case 'del': { collectPlan(); if (plan.length < 2) break; if (!(await confirmBox(`Delete scene ${plan[i].order}?`, 'Its time goes to the previous scene.', 'Delete', 'danger'))) break; const s = plan[i]; if (i > 0) plan[i - 1].endSeconds = s.endSeconds; else plan[1].startSeconds = 0; plan.splice(i, 1); plan.forEach((x, q) => (x.order = q + 1)); dirty = true; drawPlanParts(); break; }
-      case 'rebalance': { collectPlan(); const r = await api(`/projects/${P.id}/plan`, { method: 'PUT', json: { scenes: plan, rebalance: true, logline: $('#logline').value, styleGuide: { take: lines('#take'), avoid: lines('#avoid') }, force: true } }); P = r.project; plan = clone(P.scenes); drawPlanParts(); toast('Scene times rebalanced.'); break; }
+      case 'up': case 'down': { collectPlan(); const j = act === 'up' ? i - 1 : i + 1; if (j < 0 || j >= plan.length) break; const durs = plan.map((s) => Math.round((s.endSeconds - s.startSeconds) * 10) / 10); [plan[i], plan[j]] = [plan[j], plan[i]]; [durs[i], durs[j]] = [durs[j], durs[i]]; let c = 0; plan.forEach((s, k) => { s.order = k + 1; s.startSeconds = Math.round(c * 10) / 10; c += durs[k]; s.endSeconds = k === plan.length - 1 ? P.durationSeconds : Math.round(c * 10) / 10; }); dirty = true; drawPlanParts(); commitHist(); document.querySelector(`#sc${j} [data-act="${act}"]`)?.focus(); break; }
+      case 'split': case 'add-scene-end': { collectPlan(); const k = act === 'split' ? i : plan.length - 1, s = plan[k], mid = Math.round(((s.startSeconds + s.endSeconds) / 2) * 10) / 10; const n = clone(s); n.startSeconds = mid; n.id = 's' + Date.now(); if (act === 'add-scene-end') { n.beat = 'Detail'; n.onScreenText = []; } n.transition = s.transition; s.endSeconds = mid; s.transition = 'Match cut into the next scene'; plan.splice(k + 1, 0, n); plan.forEach((x, q) => (x.order = q + 1)); dirty = true; drawPlanParts(); commitHist(); break; }
+      case 'del': { collectPlan(); if (plan.length < 2) break; if (!(await confirmBox(`Delete scene ${plan[i].order}?`, 'Its time goes to the previous scene.', 'Delete', 'danger'))) break; const s = plan[i]; if (i > 0) plan[i - 1].endSeconds = s.endSeconds; else plan[1].startSeconds = 0; plan.splice(i, 1); plan.forEach((x, q) => (x.order = q + 1)); dirty = true; drawPlanParts(); commitHist(); break; }
+      case 'rebalance': { collectPlan(); const r = await api(`/projects/${P.id}/plan`, { method: 'PUT', json: { scenes: plan, rebalance: true, logline: $('#logline').value, styleGuide: { take: lines('#take'), avoid: lines('#avoid') }, force: true } }); P = r.project; plan = clone(P.scenes); drawPlanParts(); commitHist(); toast('Scene times rebalanced.'); break; }
       case 'regen': if (await confirmBox('Regenerate the plan?', 'Your edits to the logline, style lists and scenes will be replaced.', 'Regenerate', 'danger')) { P = await api(`/projects/${P.id}/plan`, { method: 'POST' }); plan = clone(P.scenes); route(); toast('New plan generated.'); } break;
       case 'save-plan': case 'approve': {
         if (view !== 'plan') { location.hash = `#/p/${P.id}/plan`; break; }
