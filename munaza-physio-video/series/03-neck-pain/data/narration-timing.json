@@ -1,0 +1,301 @@
+{
+ "voice": "hf_alpha",
+ "words": 332,
+ "voiced_seconds": 134.87,
+ "phrases": [
+  {
+   "scene": "s01",
+   "text": "Neck pain can interrupt the smallest moments of your day.",
+   "start": 0.8,
+   "end": 4.425
+  },
+  {
+   "scene": "s01",
+   "text": "Even a simple turn toward someone you love.",
+   "start": 4.925,
+   "end": 7.975
+  },
+  {
+   "scene": "s02",
+   "text": "Working.",
+   "start": 9.0,
+   "end": 9.928
+  },
+  {
+   "scene": "s02",
+   "text": "Reading.",
+   "start": 12.128,
+   "end": 13.027
+  },
+  {
+   "scene": "s02",
+   "text": "Even getting comfortable at night.",
+   "start": 15.427,
+   "end": 17.582
+  },
+  {
+   "scene": "s02",
+   "text": "So where do you begin?",
+   "start": 19.782,
+   "end": 21.317
+  },
+  {
+   "scene": "s03",
+   "text": "Maybe it's the task you keep putting aside,",
+   "start": 23.6,
+   "end": 26.34
+  },
+  {
+   "scene": "s03",
+   "text": "or a quiet family moment you want to be present for.",
+   "start": 26.69,
+   "end": 30.147
+  },
+  {
+   "scene": "s03",
+   "text": "Comfort, concentration, rest and confidence all matter.",
+   "start": 30.497,
+   "end": 34.502
+  },
+  {
+   "scene": "s03",
+   "text": "What does it interrupt for you?",
+   "start": 34.852,
+   "end": 36.9
+  },
+  {
+   "scene": "s04",
+   "text": "It's tempting to look for one quick fix.",
+   "start": 38.8,
+   "end": 41.34
+  },
+  {
+   "scene": "s04",
+   "text": "But every neck, and every day, is different.",
+   "start": 41.69,
+   "end": 44.536
+  },
+  {
+   "scene": "s04",
+   "text": "So care starts somewhere else: with your story.",
+   "start": 44.886,
+   "end": 47.739
+  },
+  {
+   "scene": "s04",
+   "text": "Your symptoms, your routine, and what you want to get back to.",
+   "start": 48.339,
+   "end": 52.339
+  },
+  {
+   "scene": "s05",
+   "text": "At Munaza Physio Studio in Lahore,",
+   "start": 53.6,
+   "end": 56.426
+  },
+  {
+   "scene": "s05",
+   "text": "Dr. Munaza Ghani offers women-only physiotherapy",
+   "start": 56.776,
+   "end": 61.011
+  },
+  {
+   "scene": "s05",
+   "text": "in a private, respectful space.",
+   "start": 61.361,
+   "end": 63.675
+  },
+  {
+   "scene": "s05",
+   "text": "She listens first.",
+   "start": 64.025,
+   "end": 65.555
+  },
+  {
+   "scene": "s05",
+   "text": "You share only what you're comfortable sharing,",
+   "start": 66.255,
+   "end": 69.16
+  },
+  {
+   "scene": "s05",
+   "text": "ask questions, and make choices about your care.",
+   "start": 69.51,
+   "end": 72.657
+  },
+  {
+   "scene": "s06",
+   "text": "What happens at an assessment?",
+   "start": 73.6,
+   "end": 75.751
+  },
+  {
+   "scene": "s06",
+   "text": "Dr. Munaza talks with you about when your neck feels uncomfortable,",
+   "start": 76.451,
+   "end": 80.89
+  },
+  {
+   "scene": "s06",
+   "text": "and what makes it easier.",
+   "start": 81.24,
+   "end": 82.96
+  },
+  {
+   "scene": "s06",
+   "text": "She observes how you move, gently and comfortably.",
+   "start": 83.31,
+   "end": 86.675
+  },
+  {
+   "scene": "s06",
+   "text": "Together, you choose the everyday activities that matter most,",
+   "start": 87.275,
+   "end": 91.096
+  },
+  {
+   "scene": "s06",
+   "text": "like desk work, reading, or resting at night.",
+   "start": 91.446,
+   "end": 94.552
+  },
+  {
+   "scene": "s06",
+   "text": "Listen. Assess. Set goals.",
+   "start": 95.352,
+   "end": 97.506
+  },
+  {
+   "scene": "s07",
+   "text": "What could your plan include?",
+   "start": 98.6,
+   "end": 100.569
+  },
+  {
+   "scene": "s07",
+   "text": "Depending on your assessment, it may include",
+   "start": 101.269,
+   "end": 104.35
+  },
+  {
+   "scene": "s07",
+   "text": "guided movement and strengthening,",
+   "start": 104.7,
+   "end": 106.954
+  },
+  {
+   "scene": "s07",
+   "text": "practical changes to your desk, phone and sleeping setup,",
+   "start": 108.154,
+   "end": 111.775
+  },
+  {
+   "scene": "s07",
+   "text": "and hands-on care, when it's appropriate and you agree to it.",
+   "start": 112.975,
+   "end": 116.721
+  },
+  {
+   "scene": "s07",
+   "text": "There's no single routine for everyone.",
+   "start": 117.52,
+   "end": 120.264
+  },
+  {
+   "scene": "s07",
+   "text": "Your plan is built around you.",
+   "start": 120.614,
+   "end": 122.852
+  },
+  {
+   "scene": "s08",
+   "text": "Then comes practice:",
+   "start": 123.6,
+   "end": 125.07
+  },
+  {
+   "scene": "s08",
+   "text": "a few movements, at a pace that suits your day.",
+   "start": 125.42,
+   "end": 128.183
+  },
+  {
+   "scene": "s08",
+   "text": "Some days feel easier than others, and that's okay.",
+   "start": 128.983,
+   "end": 132.015
+  },
+  {
+   "scene": "s08",
+   "text": "At follow-up visits, you review what's changed,",
+   "start": 132.615,
+   "end": 135.394
+  },
+  {
+   "scene": "s08",
+   "text": "ask questions, and adjust the plan together.",
+   "start": 135.744,
+   "end": 138.459
+  },
+  {
+   "scene": "s08",
+   "text": "Step by step, you work toward more comfortable movement.",
+   "start": 139.259,
+   "end": 142.589
+  },
+  {
+   "scene": "s09",
+   "text": "How do you take the first step?",
+   "start": 143.6,
+   "end": 145.509
+  },
+  {
+   "scene": "s09",
+   "text": "On munazaphysio.studio, open the menu,",
+   "start": 146.109,
+   "end": 149.717
+  },
+  {
+   "scene": "s09",
+   "text": "choose What We Treat, then Neck Pain.",
+   "start": 150.067,
+   "end": 152.539
+  },
+  {
+   "scene": "s09",
+   "text": "Read how care works, and learn about Dr. Munaza.",
+   "start": 152.889,
+   "end": 156.257
+  },
+  {
+   "scene": "s09",
+   "text": "Then tap Book Now and choose an initial assessment.",
+   "start": 156.607,
+   "end": 160.093
+  },
+  {
+   "scene": "s10",
+   "text": "Care starts with understanding your day.",
+   "start": 162.6,
+   "end": 165.229
+  },
+  {
+   "scene": "s10",
+   "text": "Start with a neck-pain assessment",
+   "start": 166.429,
+   "end": 168.671
+  },
+  {
+   "scene": "s10",
+   "text": "at Munaza Physio Studio.",
+   "start": 169.021,
+   "end": 171.274
+  },
+  {
+   "scene": "s10",
+   "text": "Women-only physiotherapy, in Lahore.",
+   "start": 171.624,
+   "end": 174.391
+  }
+ ]
+}
