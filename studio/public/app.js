@@ -307,15 +307,19 @@ async function tabPreview() {
   const beats = await api(`/projects/${P.id}/beats`).catch(() => ({ beats: [], downbeats: [] }));
   const prompt = await fetch(`/api/projects/${P.id}/prompt`).then((r) => r.text());
   const D = P.durationSeconds;
+  const exp = await api(`/projects/${P.id}/export`).catch(() => ({ files: [] }));
+  const anim = exp.files.find((f) => f.name === 'animatic.mp4'), fin = exp.files.find((f) => f.name === 'final.mp4');
   $('#tabbody').innerHTML = `<div class="stack"><div class="player"><div class="stagebox" id="sb"><iframe id="pv" title="Animatic preview" src="/files/${P.id}/index.html?manual=1"></iframe></div><div class="controls"><button class="btn secondary icon-btn" id="pp" aria-label="Play">▶</button><span class="mono num" id="tc">${fmt(0)} / ${fmt(D)}</span><input id="scrub" type="range" min="0" max="${D}" step="${1 / P.fps}" value="0" aria-label="Seek"><button class="btn ghost icon-btn" id="mute" aria-label="Mute" ${P.audio ? '' : 'hidden'}>🔊</button><span class="small muted">Scaffold animatic · ${P.outputWidth}×${P.outputHeight}</span></div></div>
     ${P.audio ? `<audio id="au" src="/files/${P.id}/${P.audio.path}" preload="auto"></audio>` : ''}
     <div class="timeline" id="tl" aria-label="Timeline"><div class="tl-scenes">${plan.map((s, i) => `<button class="tl-scene" style="flex:${s.endSeconds - s.startSeconds};background:${sceneColor(i)}" data-act="seek-scene" data-i="${i}" ${i === selScene ? 'aria-current="true"' : ''} aria-label="Scene ${s.order}, ${esc(s.beat)}, starts at ${fmt(s.startSeconds)}">${s.order} ${esc((s.beat || '').slice(0, 10))}</button>`).join('')}</div><div class="tl-audio" title="${P.audio ? esc(P.audio.name) : 'No audio track'}">${(beats.beats || []).filter((t) => t <= D).map((t) => `<i class="tl-tick ${(beats.downbeats || []).includes(t) ? 'down' : ''}" style="left:${(t / D) * 100}%"></i>`).join('')}${P.audio ? '' : '<span class="small faint" style="position:absolute;left:12px;top:5px">No audio. Add a track in Sound.</span>'}</div><div class="tl-head" id="head" style="left:${16}px"></div></div>
+    <div class="card stack" style="gap:var(--space-4)" id="act"><div class="row" style="justify-content:space-between"><h3>Render</h3><span class="small muted">Uses the project's index.html and window.seek(t)</span></div><div class="row"><button class="btn secondary" data-act="render" data-kind="animatic">Render animatic (540p)</button><button class="btn primary" data-act="render" data-kind="final">Render final (${P.outputWidth}×${P.outputHeight})</button><button class="btn danger" data-act="cancel-render" id="cancel-r" hidden>Cancel</button></div><div id="job" class="act" hidden><div class="row" style="justify-content:space-between"><span id="jobline">Starting…</span><span class="mono num" id="jobpct"></span></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="jobbar"><i style="width:0%"></i></div><pre class="log" id="joblog"></pre><div class="row" id="jobend" hidden><button class="btn secondary compact" data-act="render" data-kind="retry">Retry</button></div></div>${anim ? `<div><span class="label">out/animatic.mp4 · ${bytes(anim.size)}</span><video controls preload="metadata" src="${anim.url}?v=${Date.now()}" style="display:block;margin-top:8px;max-height:360px;max-width:100%;border-radius:var(--radius-md);background:#000"></video></div>` : ''}${fin ? `<div class="row"><span class="chip s-complete">${ICON.check}out/final.mp4 · ${bytes(fin.size)}</span><a class="btn secondary compact" href="${fin.url}" download>Download</a><a class="btn ghost compact" href="#/p/${P.id}/review">Open delivery</a></div>` : ''}</div>
     <div class="card stack" style="gap:var(--space-4)"><h3>Hand off to Claude Code</h3><p class="muted small">Direct launch is not built in, so the studio prepares the folder and a copy-ready prompt. Project folder: <span class="mono" id="ppath">${esc(P.path || '')}</span></p><pre class="prompt" id="prm">${esc(prompt)}</pre><div class="row"><button class="btn primary" data-act="copy-prompt">Copy prompt</button><button class="btn secondary" data-act="copy-cmd">Copy launch command</button><button class="btn secondary" data-act="reveal">Open project folder</button></div></div></div>`;
   const ifr = $('#pv'), sb = $('#sb'), scrub = $('#scrub'), tl = $('#tl'), head = $('#head'), au = $('#au');
   const fit = () => { const bw = sb.clientWidth, bh = sb.clientHeight, s = Math.min(bw / P.outputWidth, bh / P.outputHeight); ifr.style.width = P.outputWidth * s + 'px'; ifr.style.height = P.outputHeight * s + 'px'; };
   fit(); const ro = new ResizeObserver(fit); ro.observe(sb); cleanups.push(() => ro.disconnect());
   let t = 0, playing = false, raf = 0, t0 = 0, base = 0;
   const seek = (x, fromAudio) => {
+    if (!$('#tc') || !ifr.isConnected) return;
     t = Math.min(Math.max(x, 0), D - 1e-3);
     try { ifr.contentWindow.seek(t); } catch { /* not loaded yet */ }
     scrub.value = t; $('#tc').textContent = `${fmt(t)} / ${fmt(D)}`;
@@ -348,9 +352,34 @@ async function tabPreview() {
   };
   document.addEventListener('keydown', key);
   cleanups.push(() => { document.removeEventListener('keydown', key); cancelAnimationFrame(raf); if (au) au.pause(); });
-  window.addEventListener('resize', () => seek(t));
+  const onResize = () => seek(t); window.addEventListener('resize', onResize); cleanups.push(() => window.removeEventListener('resize', onResize));
+  pollJob(true);
   if (window._pendingScene !== undefined) { const i = window._pendingScene; window._pendingScene = undefined; setTimeout(() => view_actions.seekScene(i), 100); }
 }
+
+let jobTimer = 0, lastKind = 'animatic';
+async function pollJob(first) {
+  clearTimeout(jobTimer);
+  if (view !== 'preview' || !$('#job')) return;
+  let j; try { j = await api(`/projects/${P.id}/job`); } catch { return; }
+  const box = $('#job');
+  if (j.state === 'idle') return;
+  box.hidden = false;
+  const pct = j.total ? Math.round((j.done / j.total) * 100) : 0;
+  $('#jobbar i').style.width = pct + '%'; $('#jobbar').setAttribute('aria-valuenow', pct);
+  $('#jobpct').textContent = j.total ? `${j.done} / ${j.total} frames · ${pct}%` : '';
+  const log = $('#joblog'); const atEnd = log.scrollTop + log.clientHeight >= log.scrollHeight - 8; log.textContent = j.log.join('\n'); if (atEnd) log.scrollTop = log.scrollHeight;
+  const running = j.state === 'running';
+  $('#cancel-r').hidden = !running;
+  $$('#act [data-act="render"]:not([data-kind="retry"])').forEach((b) => b.toggleAttribute('aria-disabled', running));
+  $('#jobend').hidden = j.state !== 'failed';
+  const label = { running: `Rendering ${j.kind}…`, done: `${j.kind} render finished`, failed: 'Render failed' + (j.error ? ': ' + j.error : ''), cancelled: 'Render cancelled' }[j.state];
+  $('#jobline').textContent = label; $('#jobline').className = j.state === 'failed' ? 'total-bad' : j.state === 'done' ? 'total-ok' : '';
+  lastKind = j.kind;
+  if (running) jobTimer = setTimeout(pollJob, 700);
+  else if (!first && j.state === 'done') { $('#live').textContent = label; toast(label + '.'); P = await api('/projects/' + P.id); await tabPreview(); drawInspector(); }
+}
+cleanups.push(() => clearTimeout(jobTimer));
 
 // --- Sound tab ---
 async function tabSound() {
@@ -467,6 +496,12 @@ document.addEventListener('click', async (e) => {
         b.setAttribute('aria-disabled', 'true'); b.textContent = 'Building…';
         P = await api(`/projects/${P.id}/approve`, { method: 'POST' }); plan = clone(P.scenes); toast('Plan approved. Scaffold and preview are ready.'); location.hash = `#/p/${P.id}/preview`; break;
       }
+      case 'render': {
+        const kind = b.dataset.kind === 'retry' ? lastKind : b.dataset.kind;
+        if (kind === 'final' && (await api(`/projects/${P.id}/export`)).files.some((f) => f.name === 'final.mp4') && !(await confirmBox('Render again?', 'out/final.mp4 already exists. It is kept as final-v1.mp4 (or the next free number) before the new file is written.', 'Render', 'primary'))) break;
+        await api(`/projects/${P.id}/render`, { method: 'POST', json: { kind } }); lastKind = kind; $('#job').hidden = false; $('#joblog').textContent = ''; pollJob(); break;
+      }
+      case 'cancel-render': if (await confirmBox('Cancel this render?', 'Frames rendered so far are discarded. Earlier outputs are kept.', 'Cancel render', 'danger')) { await api(`/projects/${P.id}/job`, { method: 'DELETE' }); pollJob(); } break;
       case 'seek-scene': view_actions.seekScene(i); break;
       case 'goto-scene': window._pendingScene = i; selScene = i; break;
       case 'copy-prompt': await navigator.clipboard.writeText($('#prm').textContent); toast('Prompt copied.'); break;

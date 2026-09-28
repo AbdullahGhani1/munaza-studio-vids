@@ -20,15 +20,16 @@ No dependencies: a Node http server (`server.mjs`), a vanilla ES-module front en
 | Scrubbable animatic preview (the scaffold's real `window.seek(t)`), timeline, beat ticks, keyboard shortcuts | Done |
 | Sound: music upload, manual BPM → `audio/beats.json`, mix level | Done. No automatic beat detection |
 | Review: 7 scores, three-round 8+ gate, live contact sheet / fast-action strip / phone proof, issue list, fix-pass prompt | Done. Scores are entered by the user |
+| Render jobs: animatic (540p) and final from the Preview tab, live frame progress, log tail, cancel, retry. Runs `studio/lib/render-job.mjs` (puppeteer-core + ffmpeg); a previous `final.mp4` is kept as `final-v1.mp4`; same seed gives identical frames | Done |
 | Files tree, assets table, delivery list | Done |
 
 ## What does not (yet)
 
 - **Claude Code is not launched from the UI.** The studio writes the project folder and a copy-ready prompt (`CLAUDE-PROMPT.md`) instead (PRD §16 leaves this configurable).
-- **No MP4 is rendered by the studio.** Run `npm install && npx playwright install chromium && npm run animatic` inside the project folder. Final files then appear under Review → Delivery.
+- **Rendering needs Chrome.** The studio finds a headless Chrome from HyperFrames, Playwright, Puppeteer or a system install (or `CHROME_PATH`) and uses the repo's `puppeteer-core` (`npm install`). The scaffolded project also has its own Playwright-based `render.mjs` for Claude Code to use; that one has not been run.
 - **No automatic style extraction.** Frames are extracted, but the take/avoid lists are templates for you to edit; Claude Code refines the style guide from `refs/frames`.
 - Voiceover generation, synthesized SFX, URL references and product-site asset capture (FR-16/17/23) are not built.
-- Multi-format recomposition (FR-20), background job queue with cancel/retry, and undo in the plan editor are not built.
+- Multi-format recomposition (FR-20), and undo in the plan editor are not built.
 
 ## Layout
 

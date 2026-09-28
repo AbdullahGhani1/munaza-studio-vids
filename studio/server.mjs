@@ -106,7 +106,36 @@ function extractFrames(dir, file, duration, isVideo) {
 }
 
 // ---------- request handling ----------
-const jobs = new Map();
+const jobs = new Map(); // projectId -> { kind, state, done, total, log[], startedAt, endedAt, error, child }
+const jobView = (j) => j && { kind: j.kind, state: j.state, done: j.done, total: j.total, log: j.log.slice(-200), startedAt: j.startedAt, endedAt: j.endedAt, error: j.error };
+function startJob(p, kind) {
+  const old = jobs.get(p.id);
+  if (old && old.state === 'running') throw Object.assign(new Error('A render is already running for this project.'), { status: 409 });
+  const child = spawn(process.execPath, [join(HERE, 'lib', 'render-job.mjs'), pdir(p.id), kind], { stdio: ['ignore', 'pipe', 'pipe'] });
+  const j = { kind, state: 'running', done: 0, total: 0, log: [], startedAt: new Date().toISOString(), endedAt: null, error: null, child };
+  jobs.set(p.id, j);
+  const onData = (buf) => {
+    for (const line of buf.toString().split('\n')) {
+      if (!line.trim()) continue;
+      const m = /^PROGRESS (\d+) (\d+)/.exec(line);
+      if (m) { j.done = +m[1]; j.total = +m[2]; continue; }
+      j.log.push(line.replace(/(key|token|secret)[=:]\S+/gi, '$1=***'));
+      if (j.log.length > 400) j.log.shift();
+      const e = /^ERROR (.*)/.exec(line); if (e) j.error = e[1];
+    }
+  };
+  child.stdout.on('data', onData); child.stderr.on('data', onData);
+  child.on('close', (code, sig) => {
+    j.endedAt = new Date().toISOString(); j.child = null;
+    const cur = load(p.id);
+    if (j.state === 'cancelled') { cur.status = cur.stage === 'delivered' ? 'Complete' : 'Preview ready'; }
+    else if (code === 0) { j.state = 'done'; cur.status = kind === 'final' ? 'Complete' : 'Preview ready'; if (kind === 'final') cur.stage = 'delivered'; else if (cur.stage === 'animatic') cur.stage = 'animatic'; }
+    else { j.state = 'failed'; j.error = j.error || `Render stopped (exit ${code ?? sig}).`; cur.status = 'Needs attention'; }
+    save(cur);
+  });
+  const cur = load(p.id); cur.status = 'Rendering'; save(cur);
+  return j;
+}
 
 async function api(req, res, url) {
   const parts = url.pathname.split('/').filter(Boolean).slice(1); // after "api"
@@ -275,6 +304,21 @@ async function api(req, res, url) {
       return send(res, 200, { project: p, passed });
     }
 
+    if (sub === 'render' && m === 'POST') {
+      if (!p.approvedAt) return fail(res, 409, 'Approve the plan before rendering.');
+      const b = await readJson(req);
+      if (!['animatic', 'final'].includes(b.kind)) return fail(res, 422, 'Choose animatic or final.');
+      const ff = preflight().checks.find((c) => c.id === 'ffmpeg');
+      if (!ff.ok) return fail(res, 424, 'ffmpeg is not installed. ' + ff.fix);
+      try { return send(res, 202, jobView(startJob(p, b.kind))); } catch (e) { return fail(res, e.status || 500, e.message); }
+    }
+    if (sub === 'job' && m === 'GET') return send(res, 200, jobView(jobs.get(id)) || { state: 'idle' });
+    if (sub === 'job' && m === 'DELETE') {
+      const j = jobs.get(id);
+      if (!j || j.state !== 'running') return fail(res, 409, 'Nothing is running.');
+      j.state = 'cancelled'; j.child && j.child.kill('SIGTERM');
+      return send(res, 200, jobView(j));
+    }
     if (sub === 'files' && m === 'GET') return send(res, 200, tree(pdir(id)));
     if (sub === 'reveal' && m === 'POST') {
       const cmd = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'explorer' : 'xdg-open';
