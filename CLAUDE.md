@@ -11,7 +11,7 @@ Motion-graphics videos for Munaza Physio Studio (munazaphysio.studio, a female-o
 - `series/03-neck-pain/`: 9:16 paper-cut animated film (177 s main + short). It has its own `README.md`, `lib/` engine, `tools/` audio scripts and `CREDITS.md`. Read that README before touching it.
 - `assets/`, `vendor/`: fonts, images and GSAP are vendored, so no CDN is used.
 - `studio/`: the Video Studio web app (see `studio/README.md`). Run with `npm run studio`; it has no dependencies. Projects it creates live in `studio/projects/` (gitignored).
-- `docs/`: PRD and studio notes. `.gitlab-ci.yml` renders the promo in CI.
+- `docs/`: PRD and studio notes.
 
 ## Commands (from the repo root)
 
@@ -36,5 +36,5 @@ Rendering needs FFmpeg and a Chrome headless shell (`npx hyperframes doctor`). O
 - **Modesty is structural in character art:** hijab covers hair, neck and chest; garments are opaque, loose and full length; Dr. Munaza's mask always covers nose and mouth, and no mouth is drawn for her. Keep this.
 - Captions reflect only what is actually sung or spoken in the track.
 - Colors are CSS variables in `:root`. The site's type is Poppins, and Urdu uses Noto Nastaliq (RTL).
-- The Git remote is GitLab; `.gitlab-ci.yml` renders the promo (`render:en`, `render:ur`).
+- There is no CI: all rendering is local.
 - `docs/planning/` holds the promo script and the 150 s master prompt.
