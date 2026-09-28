@@ -12,7 +12,8 @@
 <script>
 // Scaffold animatic. Every pixel is a pure function of t: window.seek(t) paints frame t.
 // No timers, no CSS transitions, no carried state, seeded noise only. Claude Code replaces this in src/.
-const P = window.PROJECT, W = P.outputWidth, H = P.outputHeight, DUR = P.durationSeconds;
+const P = window.PROJECT, Q = new URLSearchParams(location.search);
+const W = +Q.get('w') || P.outputWidth, H = +Q.get('h') || P.outputHeight, DUR = P.durationSeconds;   // ?w=&h= recomposes for another format
 const cv = document.getElementById('c'); cv.width = W; cv.height = H;
 const g = cv.getContext('2d');
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));

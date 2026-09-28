@@ -7,6 +7,7 @@ import { join, extname, normalize, resolve, sep, dirname, basename } from 'node:
 import { fileURLToPath } from 'node:url';
 import { randomInt, randomBytes } from 'node:crypto';
 import { STYLES, STATUSES, slugify, validateBrief, generatePlan, validateScenes, rebalance } from './lib/plan.mjs';
+import { decode, analyze } from './lib/beats.mjs';
 import { scaffold, tree, promptText, writeFileAtomic, shotlistMd, styleGuideMd } from './lib/scaffold.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -107,12 +108,12 @@ function extractFrames(dir, file, duration, isVideo) {
 
 // ---------- request handling ----------
 const jobs = new Map(); // projectId -> { kind, state, done, total, log[], startedAt, endedAt, error, child }
-const jobView = (j) => j && { kind: j.kind, state: j.state, done: j.done, total: j.total, log: j.log.slice(-200), startedAt: j.startedAt, endedAt: j.endedAt, error: j.error };
-function startJob(p, kind) {
+const jobView = (j) => j && { kind: j.kind, size: j.size, state: j.state, done: j.done, total: j.total, log: j.log.slice(-200), startedAt: j.startedAt, endedAt: j.endedAt, error: j.error };
+function startJob(p, kind, size) {
   const old = jobs.get(p.id);
   if (old && old.state === 'running') throw Object.assign(new Error('A render is already running for this project.'), { status: 409 });
-  const child = spawn(process.execPath, [join(HERE, 'lib', 'render-job.mjs'), pdir(p.id), kind], { stdio: ['ignore', 'pipe', 'pipe'] });
-  const j = { kind, state: 'running', done: 0, total: 0, log: [], startedAt: new Date().toISOString(), endedAt: null, error: null, child };
+  const child = spawn(process.execPath, [join(HERE, 'lib', 'render-job.mjs'), pdir(p.id), kind, ...(size ? [`${size[0]}x${size[1]}`] : [])], { stdio: ['ignore', 'pipe', 'pipe'] });
+  const j = { kind, size, state: 'running', done: 0, total: 0, log: [], startedAt: new Date().toISOString(), endedAt: null, error: null, child };
   jobs.set(p.id, j);
   const onData = (buf) => {
     for (const line of buf.toString().split('\n')) {
@@ -251,7 +252,7 @@ async function api(req, res, url) {
     }
 
     if (sub === 'audio') {
-      if (m === 'POST') {
+      if (m === 'POST' && !parts[3]) {
         const name = basename(url.searchParams.get('name') || 'track').replace(/[^\w.\- ]/g, '_');
         const ext = extname(name).toLowerCase();
         if (!AUDIO_EXT.includes(ext)) return fail(res, 415, 'Use mp3, wav or m4a.');
@@ -263,6 +264,18 @@ async function api(req, res, url) {
         p.audio = { name, path: rel, duration: info ? info.duration : null, bpm: null, beatsPath: null, mixLevelDb: 0, muted: false };
         return send(res, 200, save(p));
       }
+      if (m === 'POST' && parts[3] === 'analyze' && p.audio) {
+        const ok = preflight().checks.find((c) => c.id === 'ffmpeg');
+        if (!ok.ok) return fail(res, 424, 'ffmpeg is not installed. ' + ok.fix);
+        let r;
+        try { r = analyze(await decode(join(pdir(id), p.audio.path))); } catch (e) { return fail(res, 422, e.message); }
+        const beat = 60 / r.bpm, dur = p.audio.duration || r.duration, beats = [];
+        for (let t = r.offset; t < dur; t += beat) beats.push(Math.round(t * 1000) / 1000);
+        mkdirSync(join(pdir(id), 'audio'), { recursive: true });
+        writeFileAtomic(join(pdir(id), 'audio', 'beats.json'), JSON.stringify({ bpm: r.bpm, source: 'auto', confidence: r.confidence, offset: r.offset, beats, downbeats: beats.filter((_, i) => i % 4 === 0), hits: r.hits }, null, 1));
+        p.audio.bpm = r.bpm; p.audio.beatsPath = 'audio/beats.json'; p.audio.confidence = r.confidence; p.audio.offset = r.offset;
+        return send(res, 200, save(p));
+      }
       if (m === 'PUT' && p.audio) {
         const b = await readJson(req);
         const bpm = Number(b.bpm), offset = Number(b.offset || 0);
@@ -271,7 +284,7 @@ async function api(req, res, url) {
         const beats = []; for (let t = offset; t < dur; t += beat) beats.push(Math.round(t * 1000) / 1000);
         mkdirSync(join(pdir(id), 'audio'), { recursive: true });
         writeFileAtomic(join(pdir(id), 'audio', 'beats.json'), JSON.stringify({ bpm, source: 'manual', beats, downbeats: beats.filter((_, i) => i % 4 === 0), hits: [] }, null, 1));
-        p.audio.bpm = bpm; p.audio.beatsPath = 'audio/beats.json';
+        p.audio.bpm = bpm; p.audio.beatsPath = 'audio/beats.json'; p.audio.confidence = null; p.audio.offset = offset;
         if (b.mixLevelDb !== undefined) p.audio.mixLevelDb = Math.max(-40, Math.min(0, Number(b.mixLevelDb) || 0));
         return send(res, 200, save(p));
       }
@@ -310,7 +323,13 @@ async function api(req, res, url) {
       if (!['animatic', 'final'].includes(b.kind)) return fail(res, 422, 'Choose animatic or final.');
       const ff = preflight().checks.find((c) => c.id === 'ffmpeg');
       if (!ff.ok) return fail(res, 424, 'ffmpeg is not installed. ' + ff.fix);
-      try { return send(res, 202, jobView(startJob(p, b.kind))); } catch (e) { return fail(res, e.status || 500, e.message); }
+      let size = null;
+      if (b.width || b.height) {
+        const ok = (n) => Number.isInteger(n) && n >= 240 && n <= 4096 && n % 2 === 0;
+        if (b.kind !== 'final' || !ok(Number(b.width)) || !ok(Number(b.height))) return fail(res, 422, 'Width and height must be even numbers from 240 to 4096.');
+        size = [Number(b.width), Number(b.height)];
+      }
+      try { return send(res, 202, jobView(startJob(p, b.kind, size))); } catch (e) { return fail(res, e.status || 500, e.message); }
     }
     if (sub === 'job' && m === 'GET') return send(res, 200, jobView(jobs.get(id)) || { state: 'idle' });
     if (sub === 'job' && m === 'DELETE') {

@@ -7,7 +7,7 @@ import { join, resolve, dirname } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
 
-const [dir, kind] = process.argv.slice(2);
+const [dir, kind, sizeArg] = process.argv.slice(2);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const P = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));
 
@@ -41,11 +41,13 @@ if (!chrome) fail('No Chrome or Chromium found. Install Chrome, or set CHROME_PA
 if (!existsSync(join(dir, 'index.html'))) fail('index.html is missing. Approve the plan first.');
 
 const animatic = kind === 'animatic';
-const scale = animatic ? Math.min(1, 540 / Math.min(P.outputWidth, P.outputHeight)) : 1;
-const W = Math.max(2, Math.round((P.outputWidth * scale) / 2) * 2), H = Math.max(2, Math.round((P.outputHeight * scale) / 2) * 2);
+const override = /^(\d+)x(\d+)$/.exec(sizeArg || '');
+const OW = override ? +override[1] : P.outputWidth, OH = override ? +override[2] : P.outputHeight;
+const scale = animatic ? Math.min(1, 540 / Math.min(OW, OH)) : 1;
+const W = Math.max(2, Math.round((OW * scale) / 2) * 2), H = Math.max(2, Math.round((OH * scale) / 2) * 2);
 const FPS = P.fps || 30, total = Math.round(P.durationSeconds * FPS);
 mkdirSync(join(dir, 'out'), { recursive: true });
-const finalName = animatic ? 'animatic.mp4' : 'final.mp4';
+const finalName = animatic ? 'animatic.mp4' : override ? `final-${OW}x${OH}.mp4` : 'final.mp4';
 const tmp = join(dir, 'out', `.${finalName}.part.mp4`);
 rmSync(tmp, { force: true });
 
@@ -60,8 +62,8 @@ const browser = await puppeteer.launch({ executablePath: chrome, headless: true,
 const cleanup = async () => { try { await browser.close(); } catch { /* ignore */ } };
 process.on('SIGTERM', async () => { try { ff.kill('SIGKILL'); } catch { /* ignore */ } rmSync(tmp, { force: true }); await cleanup(); process.exit(143); });
 const page = await browser.newPage();
-await page.setViewport({ width: P.outputWidth, height: P.outputHeight, deviceScaleFactor: 1 });
-await page.goto(pathToFileURL(join(dir, 'index.html')).href + '?manual=1', { waitUntil: 'load' });
+await page.setViewport({ width: OW, height: OH, deviceScaleFactor: 1 });
+await page.goto(pathToFileURL(join(dir, 'index.html')).href + `?manual=1&w=${OW}&h=${OH}`, { waitUntil: 'load' });
 await page.evaluate(() => window.__ready);
 if (!(await page.$('#c'))) fail('index.html has no #c canvas to capture.');
 // Read pixels straight from the canvas (no compositor screenshot): PNG for final, scaled JPEG for the animatic.
@@ -82,9 +84,9 @@ await cleanup();
 if (code !== 0) { rmSync(tmp, { force: true }); fail('ffmpeg exited with code ' + code); }
 let target = join(dir, 'out', finalName);
 if (!animatic && existsSync(target)) { // never overwrite a finished render silently
-  let v = 1; while (existsSync(join(dir, 'out', `final-v${v}.mp4`))) v++;
-  renameSync(target, join(dir, 'out', `final-v${v}.mp4`));
-  console.log(`INFO previous final.mp4 kept as final-v${v}.mp4`);
+  const stem = finalName.replace(/\.mp4$/, ''); let v = 1; while (existsSync(join(dir, 'out', `${stem}-v${v}.mp4`))) v++;
+  renameSync(target, join(dir, 'out', `${stem}-v${v}.mp4`));
+  console.log(`INFO previous ${finalName} kept as ${stem}-v${v}.mp4`);
 }
 renameSync(tmp, target);
 console.log('DONE ' + target);
