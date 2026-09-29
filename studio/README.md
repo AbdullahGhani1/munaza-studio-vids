@@ -3,6 +3,7 @@
 Local-first web UI for the PRD in `docs/PRD.md`, built to `docs/site-contract.md` and `docs/design-standard.md`. It turns five inputs (topic, optional reference, style, length, size) into a reviewable, deterministic, code-rendered video project.
 
 ```bash
+npm test                # 24 tests: plan generation, validation, tempo detection, link safety
 npm run studio          # http://127.0.0.1:4173  (PORT=... to change, STUDIO_HOME=... to move projects)
 ```
 
@@ -14,7 +15,7 @@ No dependencies: a Node http server (`server.mjs`), a vanilla ES-module front en
 |------|--------|
 | Brief form, validation, live aspect preview, draft autosave | Done |
 | Project library (search, filter, duplicate, delete to `.trash`, reveal) | Done |
-| Reference upload, ffprobe metadata, ffmpeg frame extraction (up to 12 frames) | Done |
+| Reference by upload, direct link or local path (`lib/refs.mjs`: http/https only, DNS and redirect checks against private addresses, no video-platform pages, 500 MB cap),  ffprobe metadata, ffmpeg frame extraction (up to 12 frames) | Done |
 | Storyboard generation (MAESTRO-style beats), scene editing, add/duplicate/delete/reorder, rebalance, timing validation | Done. The generator is a deterministic template, not a model call |
 | Undo / redo in the plan editor (100 steps; buttons, or Ctrl/Cmd+Z and Shift+Z outside a text field) | Done |
 | Approve → scaffold (CLAUDE.md, shotlist, style guide, audio plan, seek(t) renderer, render.mjs, copy-ready prompt) | Done |
@@ -31,7 +32,7 @@ No dependencies: a Node http server (`server.mjs`), a vanilla ES-module front en
 - **Rendering needs Chrome.** The studio finds a headless Chrome from HyperFrames, Playwright, Puppeteer or a system install (or `CHROME_PATH`) and uses the repo's `puppeteer-core` (`npm install`). The scaffolded project also has its own Playwright-based `render.mjs` for Claude Code to use; that one has not been run.
 - **Tempo detection is an estimate.** It is not librosa; check it against the track.
 - **No automatic style extraction.** Frames are extracted, but the take/avoid lists are templates for you to edit; Claude Code refines the style guide from `refs/frames`.
-- Voiceover generation, synthesized SFX, URL references and product-site asset capture (FR-16/17/23) are not built.
+- Voiceover generation, synthesized SFX, product-site asset capture (FR-16/17/23) are not built.
 
 ## Layout
 

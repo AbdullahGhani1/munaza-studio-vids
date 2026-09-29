@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { randomInt, randomBytes } from 'node:crypto';
 import { STYLES, STATUSES, slugify, validateBrief, generatePlan, validateScenes, rebalance } from './lib/plan.mjs';
 import { decode, analyze } from './lib/beats.mjs';
+import { fetchMedia, MEDIA_EXT } from './lib/refs.mjs';
 import { scaffold, tree, promptText, writeFileAtomic, shotlistMd, styleGuideMd } from './lib/scaffold.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -52,6 +53,17 @@ function uniqueId(base) {
   let id = base || 'video', i = 2;
   while (existsSync(pdir(id))) id = `${base}-${i++}`;
   return id;
+}
+function finishReference(p, name, sourceKind, sourceRef) {
+  const id = p.id, ext = extname(name).toLowerCase(), isVideo = VIDEO_EXT.includes(ext), isImage = IMAGE_EXT.includes(ext);
+  const rel = `refs/original/${name}`, file = join(pdir(id), rel);
+  const info = probe(file);
+  const ff = preflight().checks.find((c) => c.id === 'ffmpeg').ok;
+  let frames = [];
+  if (ff && info) frames = extractFrames(pdir(id), file, info.duration, isVideo).map((f) => `refs/frames/${f}`);
+  p.reference = { name, path: rel, mediaType: isVideo ? 'video' : 'image', size: statSync(file).size, duration: isVideo && info ? info.duration : null, width: info && info.width, height: info && info.height, frames, thumb: frames[0] || (isImage ? rel : null), sourceKind, sourceRef: sourceRef || null, ffmpeg: ff };
+  if (p.styleGuide) p.styleGuide.take = generatePlan({ ...p, hasReference: true }).styleGuide.take;
+  return save(p);
 }
 const summary = (p) => ({ id: p.id, name: p.name, topic: p.topic, durationSeconds: p.durationSeconds, outputWidth: p.outputWidth, outputHeight: p.outputHeight, status: p.status, stage: p.stage, updatedAt: p.updatedAt, createdAt: p.createdAt, hasPreview: existsSync(join(pdir(p.id), 'data.js')), thumb: p.reference && p.reference.thumb ? `/files/${p.id}/${p.reference.thumb}` : null, palette: p.styleGuide ? p.styleGuide.palette : null });
 
@@ -227,21 +239,33 @@ async function api(req, res, url) {
 
     if (sub === 'reference' && m === 'POST') {
       const name = basename(url.searchParams.get('name') || 'reference').replace(/[^\w.\- ]/g, '_');
-      const ext = extname(name).toLowerCase();
-      const isVideo = VIDEO_EXT.includes(ext), isImage = IMAGE_EXT.includes(ext);
-      if (!isVideo && !isImage) return fail(res, 415, 'Use mp4, mov, webm, m4v, png, jpg or webp.');
+      if (!MEDIA_EXT.includes(extname(name).toLowerCase())) return fail(res, 415, 'Use mp4, mov, webm, m4v, png, jpg or webp.');
       if (Number(req.headers['content-length'] || 0) > MAX_UPLOAD) return fail(res, 413, 'That file is over 500 MB.');
-      const rel = `refs/original/${name}`;
       mkdirSync(join(pdir(id), 'refs', 'original'), { recursive: true });
-      await pipeline(req, createWriteStream(join(pdir(id), rel)));
-      const info = probe(join(pdir(id), rel));
-      const ff = preflight().checks.find((c) => c.id === 'ffmpeg').ok;
-      let frames = [];
-      if (ff && info) frames = extractFrames(pdir(id), join(pdir(id), rel), info.duration, isVideo).map((f) => `refs/frames/${f}`);
-      p.reference = { name, path: rel, mediaType: isVideo ? 'video' : 'image', size: statSync(join(pdir(id), rel)).size, duration: isVideo && info ? info.duration : null, width: info && info.width, height: info && info.height, frames, thumb: frames[0] || (isImage ? rel : null), sourceKind: 'upload', ffmpeg: ff };
-      if (p.style === 'reference' || !p.styleGuide) { /* style choice stays the user's */ }
-      if (p.styleGuide) { p.styleGuide.take = generatePlan({ ...p, hasReference: true }).styleGuide.take; }
-      return send(res, 200, save(p));
+      await pipeline(req, createWriteStream(join(pdir(id), 'refs', 'original', name)));
+      return send(res, 200, finishReference(p, name, 'upload'));
+    }
+    if (sub === 'reference-link' && m === 'POST') {
+      const b = await readJson(req);
+      const kind = b.url ? 'url' : b.path ? 'path' : null;
+      if (!kind) return fail(res, 422, 'Enter a link or a local file path.');
+      mkdirSync(join(pdir(id), 'refs', 'original'), { recursive: true });
+      if (kind === 'url') {
+        try {
+          const got = await fetchMedia(String(b.url).trim(), (n) => join(pdir(id), 'refs', 'original', n));
+          return send(res, 200, finishReference(p, got.name, 'url', String(b.url).trim()));
+        } catch (e) { return fail(res, e.status || 500, e.message); }
+      }
+      const src = resolve(String(b.path).trim().replace(/^~(?=$|\/)/, process.env.HOME || '~'));
+      const ext = extname(src).toLowerCase();
+      if (!MEDIA_EXT.includes(ext)) return fail(res, 415, 'Use mp4, mov, webm, m4v, png, jpg or webp.');
+      let st; try { st = statSync(src); } catch { return fail(res, 422, 'That file was not found on this computer.'); }
+      if (!st.isFile()) return fail(res, 422, 'That path is not a file.');
+      if (st.size > MAX_UPLOAD) return fail(res, 413, 'That file is over 500 MB.');
+      const name = basename(src).replace(/[^\w.\- ]/g, '_');
+      const { copyFileSync } = await import('node:fs');
+      copyFileSync(src, join(pdir(id), 'refs', 'original', name));
+      return send(res, 200, finishReference(p, name, 'path', src));
     }
     if (sub === 'reference' && m === 'DELETE') {
       rmSync(join(pdir(id), 'refs', 'original'), { recursive: true, force: true });

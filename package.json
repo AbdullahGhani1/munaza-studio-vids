@@ -8,7 +8,8 @@
     "render:complete": "npx hyperframes render . -c series/complete/index.html --quality delivery --output renders/munaza-physio-177s.mp4",
     "render:neck": "hyperframes render . -c series/03-neck-pain/index.html --quality delivery --output renders/munaza-neck-pain-177s.mp4",
     "render:neck-short": "hyperframes render . -c series/03-neck-pain/short.html --quality delivery --output renders/munaza-neck-pain-20s.mp4",
-    "studio": "node studio/server.mjs"
+    "studio": "node studio/server.mjs",
+    "test": "node --test studio/test/*.test.mjs"
   },
   "devDependencies": {
     "hyperframes": "0.8.79"
