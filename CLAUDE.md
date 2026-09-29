@@ -21,6 +21,7 @@ npm run render:complete    # series/complete (177 s)
 npm run render:neck        # neck-pain main (~10 min)
 npm run render:neck-short  # neck-pain 20 s short (~1.5 min)
 npm run studio             # Video Studio UI at http://127.0.0.1:4173
+npm test                   # studio tests (40); the API tests start their own server on a random port
 ```
 
 Rendering needs FFmpeg and a Chrome headless shell (`npx hyperframes doctor`). Output goes to `renders/`, which is gitignored along with `*.mp4`.

@@ -6,6 +6,7 @@ import { existsSync, readFileSync, readdirSync, renameSync, rmSync, mkdirSync } 
 import { join, resolve, dirname } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { findChrome } from './chrome.mjs';
+import { buildMix } from './audio.mjs';
 
 const [dir, kind, sizeArg] = process.argv.slice(2);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -30,9 +31,9 @@ const finalName = animatic ? 'animatic.mp4' : override ? `final-${OW}x${OH}.mp4`
 const tmp = join(dir, 'out', `.${finalName}.part.mp4`);
 rmSync(tmp, { force: true });
 
-const audio = existsSync(join(dir, 'audio')) ? readdirSync(join(dir, 'audio')).find((f) => /^track\.(wav|mp3|m4a)$/.test(f)) : null;
+const mix = buildMix(P, dir, { animatic });
 const args = ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-'];
-if (audio) args.push('-i', join(dir, 'audio', audio), '-shortest', '-c:a', 'aac', '-b:a', animatic ? '128k' : '192k', '-af', `loudnorm=I=-14:TP=-1.5:LRA=11,volume=${((P.audio && P.audio.mixLevelDb) || 0)}dB`);
+if (mix) { for (const f of mix.inputs) args.push('-i', f); args.push('-filter_complex', mix.filter, '-map', '0:v', '-map', mix.map, '-c:a', 'aac', '-b:a', mix.bitrate); }
 args.push('-vf', `scale=${W}:${H}:flags=lanczos`, '-c:v', 'libx264', '-crf', animatic ? '23' : '16', '-preset', animatic ? 'veryfast' : 'medium', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', tmp);
 const ff = spawn('ffmpeg', args, { stdio: ['pipe', 'inherit', 'inherit'] });
 ff.on('error', () => fail('ffmpeg not found.'));
@@ -51,7 +52,7 @@ await page.evaluate((W, H, jpeg) => {
   window.__grab = () => { if (jpeg) { ctx.drawImage(src, 0, 0, W, H); return off.toDataURL('image/jpeg', 0.92).slice(23); } return src.toDataURL('image/png').slice(22); };
 }, W, H, animatic);
 console.log(`INFO chrome=${chrome}`);
-console.log(`INFO ${W}x${H} @ ${FPS} fps, ${total} frames${audio ? ', audio ' + audio : ''}`);
+console.log(`INFO ${W}x${H} @ ${FPS} fps, ${total} frames${mix ? ', audio: ' + mix.inputs.length + ' input(s)' : ''}`);
 for (let i = 0; i < total; i++) {
   const buf = Buffer.from(await page.evaluate((t) => { window.seek(t); return window.__grab(); }, i / FPS), 'base64');
   if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));

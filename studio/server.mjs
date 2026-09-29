@@ -10,6 +10,7 @@ import { STYLES, STATUSES, slugify, validateBrief, generatePlan, validateScenes,
 import { decode, analyze } from './lib/beats.mjs';
 import { fetchMedia, MEDIA_EXT } from './lib/refs.mjs';
 import { captureSite } from './lib/capture.mjs';
+import { synthSfx, cuesForScenes, writeWav16, listVoices, speak, toWav, ttsAvailable } from './lib/audio.mjs';
 import { scaffold, tree, promptText, writeFileAtomic, shotlistMd, styleGuideMd } from './lib/scaffold.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -121,7 +122,7 @@ function extractFrames(dir, file, duration, isVideo) {
 
 // ---------- request handling ----------
 const jobs = new Map(); // projectId -> { kind, state, done, total, log[], startedAt, endedAt, error, child }
-const jobView = (j) => j && { kind: j.kind, size: j.size, state: j.state, done: j.done, total: j.total, log: j.log.slice(-200), startedAt: j.startedAt, endedAt: j.endedAt, error: j.error };
+const jobView = (j) => j && { kind: j.kind, size: j.size, cost: j.cost ?? null, state: j.state, done: j.done, total: j.total, log: j.log.slice(-200), startedAt: j.startedAt, endedAt: j.endedAt, error: j.error };
 function startJob(p, kind, size) {
   const old = jobs.get(p.id);
   if (old && old.state === 'running') throw Object.assign(new Error('A render is already running for this project.'), { status: 409 });
@@ -150,6 +151,46 @@ function startJob(p, kind, size) {
   const cur = load(p.id); cur.status = 'Rendering'; save(cur);
   return j;
 }
+
+const CLAUDE_TOOLS = ['Read', 'Write', 'Edit', 'Glob', 'Grep', 'Bash(node:*)', 'Bash(npm:*)', 'Bash(ffmpeg:*)', 'Bash(ffprobe:*)', 'Bash(ls:*)'];
+const claudeBin = () => process.env.STUDIO_CLAUDE_BIN || 'claude';
+function startClaude(p, budget) {
+  const old = jobs.get(p.id);
+  if (old && old.state === 'running') throw Object.assign(new Error('A job is already running for this project.'), { status: 409 });
+  const args = ['-p', '--output-format', 'stream-json', '--verbose', '--permission-mode', 'acceptEdits', '--max-budget-usd', String(budget), '--allowedTools', ...CLAUDE_TOOLS];
+  const child = spawn(claudeBin(), args, { cwd: pdir(p.id), stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env } });
+  const j = { kind: 'claude', size: null, state: 'running', done: 0, total: 0, log: [], startedAt: new Date().toISOString(), endedAt: null, error: null, child, cost: null };
+  jobs.set(p.id, j);
+  const push = (l) => { j.log.push(String(l).replace(/(sk-[A-Za-z0-9_-]{8,}|(key|token|secret)[=:]\S+)/gi, '***').slice(0, 400)); if (j.log.length > 400) j.log.shift(); };
+  let buf = '';
+  child.stdout.on('data', (d) => {
+    buf += d.toString(); const lines = buf.split('\n'); buf = lines.pop();
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      let ev; try { ev = JSON.parse(line); } catch { push(line); continue; }
+      if (ev.type === 'assistant') for (const c of ev.message?.content || []) {
+        if (c.type === 'text' && c.text.trim()) push(c.text.trim().split('\n')[0]);
+        if (c.type === 'tool_use') { push(`→ ${c.name} ${c.input?.file_path || c.input?.command || c.input?.pattern || ''}`.trim()); j.done++; }
+      }
+      if (ev.type === 'result') { j.cost = ev.total_cost_usd ?? null; if (ev.is_error) j.error = String(ev.result || 'Claude Code reported an error.').slice(0, 300); else push('Finished: ' + String(ev.result || '').split('\n')[0].slice(0, 200)); }
+    }
+  });
+  child.stderr.on('data', (d) => d.toString().split('\n').filter(Boolean).forEach(push));
+  child.on('error', () => { j.state = 'failed'; j.error = 'Could not start Claude Code. Is it installed and on your PATH?'; j.endedAt = new Date().toISOString(); });
+  const killer = setTimeout(() => { j.error = 'Stopped after 30 minutes.'; child.kill('SIGTERM'); }, 30 * 60 * 1000);
+  child.on('close', (code) => {
+    clearTimeout(killer); j.endedAt = new Date().toISOString(); j.child = null;
+    const cur = load(p.id);
+    if (j.state === 'cancelled') { cur.status = 'Preview ready'; }
+    else if (code === 0 && !j.error) { j.state = 'done'; cur.status = 'Preview ready'; }
+    else { j.state = 'failed'; j.error = j.error || `Claude Code exited with code ${code}.`; cur.status = 'Needs attention'; }
+    save(cur);
+  });
+  child.stdin.end(promptText(p) + '\n\nWork only inside this project folder. Keep window.seek(t) deterministic. When done, run: node render.mjs --scale 0.5 --out out/animatic.mp4 only if Playwright is installed; otherwise stop and say what remains.');
+  const cur = load(p.id); cur.status = 'Building'; cur.stage = 'build'; save(cur);
+  return j;
+}
+
 
 async function api(req, res, url) {
   const parts = url.pathname.split('/').filter(Boolean).slice(1); // after "api"
@@ -369,6 +410,56 @@ async function api(req, res, url) {
         size = [Number(b.width), Number(b.height)];
       }
       try { return send(res, 202, jobView(startJob(p, b.kind, size))); } catch (e) { return fail(res, e.status || 500, e.message); }
+    }
+    if (sub === 'claude' && m === 'POST') {
+      if (!p.approvedAt) return fail(res, 409, 'Approve the plan before running Claude Code.');
+      const b = await readJson(req);
+      if (b.confirmed !== true) return fail(res, 422, 'Confirm before starting Claude Code.');
+      const budget = Math.min(25, Math.max(0.5, Number(b.budget) || 5));
+      const c = run(claudeBin(), ['--version']);
+      if (c.status !== 0) return fail(res, 424, 'Claude Code is not installed. npm install -g @anthropic-ai/claude-code');
+      try { return send(res, 202, jobView(startClaude(p, budget))); } catch (e) { return fail(res, e.status || 500, e.message); }
+    }
+    if (sub === 'voices' && m === 'GET') return send(res, 200, { available: ttsAvailable(), voices: listVoices() });
+    if (sub === 'vo' && parts[3]) {
+      const sid = parts[3];
+      const scene = (p.scenes || []).find((x) => x.id === sid);
+      if (!scene) return fail(res, 404, 'Scene not found.');
+      const rel = `audio/vo/${sid}.wav`, file = join(pdir(id), rel);
+      if (m === 'DELETE') { rmSync(file, { force: true }); if (p.vo) delete p.vo[sid]; return send(res, 200, save(p)); }
+      if (m === 'POST' && parts[4] === 'generate') {
+        const b = await readJson(req);
+        if (!String(scene.voiceover || '').trim()) return fail(res, 422, 'Write the voiceover text for this scene first (Plan tab).');
+        mkdirSync(join(pdir(id), 'audio', 'vo'), { recursive: true });
+        try { speak(scene.voiceover, b.voice || '', file); } catch (e) { return fail(res, e.status || 500, e.message); }
+        p.vo = { ...(p.vo || {}), [sid]: { file: rel, duration: probe(file)?.duration ?? null, source: 'generated', voice: b.voice || 'system default' } };
+        return send(res, 200, save(p));
+      }
+      if (m === 'POST') {
+        const name = basename(url.searchParams.get('name') || 'vo').replace(/[^\w.\- ]/g, '_');
+        if (!AUDIO_EXT.concat(['.aiff', '.aac', '.ogg']).includes(extname(name).toLowerCase())) return fail(res, 415, 'Use wav, mp3, m4a, aac, aiff or ogg.');
+        if (Number(req.headers['content-length'] || 0) > 100 * 1024 * 1024) return fail(res, 413, 'That file is over 100 MB.');
+        mkdirSync(join(pdir(id), 'audio', 'vo'), { recursive: true });
+        const tmp = join(pdir(id), 'audio', 'vo', `.upload-${name}`);
+        await pipeline(req, createWriteStream(tmp));
+        try { toWav(tmp, file); } catch (e) { rmSync(tmp, { force: true }); return fail(res, e.status || 422, e.message); }
+        rmSync(tmp, { force: true });
+        p.vo = { ...(p.vo || {}), [sid]: { file: rel, duration: probe(file)?.duration ?? null, source: 'uploaded', voice: null, name } };
+        return send(res, 200, save(p));
+      }
+    }
+    if (sub === 'sfx') {
+      if (m === 'DELETE') { rmSync(join(pdir(id), 'audio', 'sfx.wav'), { force: true }); p.sfx = null; return send(res, 200, save(p)); }
+      if (m === 'POST') {
+        if (!p.scenes) return fail(res, 409, 'Build the plan first.');
+        let beats = []; try { beats = JSON.parse(readFileSync(join(pdir(id), 'audio', 'beats.json'), 'utf8')).beats || []; } catch { /* no beat map */ }
+        const cues = cuesForScenes(p.scenes, beats);
+        writeWav16(join(pdir(id), 'audio', 'sfx.wav'), synthSfx(cues, p.durationSeconds));
+        writeFileAtomic(join(pdir(id), 'audio', 'sfx_cues.json'), JSON.stringify(cues, null, 1));
+        p.sfx = { enabled: true, cues: cues.length, snappedToBeats: beats.length > 0 };
+        return send(res, 200, save(p));
+      }
+      if (m === 'PUT') { const b = await readJson(req); if (!p.sfx) return fail(res, 409, 'Generate the effects first.'); p.sfx.enabled = !!b.enabled; return send(res, 200, save(p)); }
     }
     if (sub === 'job' && m === 'GET') return send(res, 200, jobView(jobs.get(id)) || { state: 'idle' });
     if (sub === 'job' && m === 'DELETE') {
