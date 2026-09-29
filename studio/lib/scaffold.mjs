@@ -61,6 +61,7 @@ Workflow, with gates:
 4. Critique loop (at least 3 rounds): render contact.png, strip.png, phone.png, score 1-10 on hook, phone readability, motion, variety, composition, style match, sound sync. Log in docs/review_log.md. Fix the 3 worst problems. Repeat until all are 8+.
 5. Final render: node render.mjs --out out/final.mp4, then poster.png and README.md.
 
+Assets: ${p.capture ? 'assets/manifest.json lists real captures from ' + p.capture.url + '. Use only those pixels, colours and fonts; never redraw the product UI.' : 'none captured. Do not invent product UI, logos or claims.'}
 Originality: ${p.reference ? 'the reference in refs/ lends grammar only; never copy its story, logos, characters or claims.' : 'no reference supplied.'}
 Do not print API keys. Ask before spending money.`;
 }

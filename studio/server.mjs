@@ -9,6 +9,7 @@ import { randomInt, randomBytes } from 'node:crypto';
 import { STYLES, STATUSES, slugify, validateBrief, generatePlan, validateScenes, rebalance } from './lib/plan.mjs';
 import { decode, analyze } from './lib/beats.mjs';
 import { fetchMedia, MEDIA_EXT } from './lib/refs.mjs';
+import { captureSite } from './lib/capture.mjs';
 import { scaffold, tree, promptText, writeFileAtomic, shotlistMd, styleGuideMd } from './lib/scaffold.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -266,6 +267,20 @@ async function api(req, res, url) {
       const { copyFileSync } = await import('node:fs');
       copyFileSync(src, join(pdir(id), 'refs', 'original', name));
       return send(res, 200, finishReference(p, name, 'path', src));
+    }
+    if (sub === 'capture' && m === 'POST') {
+      const b = await readJson(req);
+      if (!b.authorized) return fail(res, 422, 'Confirm you are allowed to capture this site.');
+      if (!b.url) return fail(res, 422, 'Enter the site address.');
+      try {
+        const man = await captureSite(String(b.url).trim(), pdir(id));
+        p.capture = { url: man.source, at: man.capturedAt, files: man.files.filter((f) => f.path).length };
+        return send(res, 200, { project: save(p), manifest: man });
+      } catch (e) { return fail(res, e.status || 500, e.message); }
+    }
+    if (sub === 'manifest' && m === 'GET') {
+      const f = join(pdir(id), 'assets', 'manifest.json');
+      return send(res, 200, existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : null);
     }
     if (sub === 'reference' && m === 'DELETE') {
       rmSync(join(pdir(id), 'refs', 'original'), { recursive: true, force: true });

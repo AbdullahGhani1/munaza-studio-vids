@@ -5,32 +5,11 @@ import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, renameSync, rmSync, mkdirSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
-import { homedir } from 'node:os';
+import { findChrome } from './chrome.mjs';
 
 const [dir, kind, sizeArg] = process.argv.slice(2);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const P = JSON.parse(readFileSync(join(dir, 'project.json'), 'utf8'));
-
-function findChrome() {
-  const env = process.env.CHROME_PATH || process.env.HYPERFRAMES_BROWSER_PATH;
-  if (env && existsSync(env)) return env;
-  const home = homedir();
-  const walk = (base, names, depth = 5) => {
-    if (!existsSync(base) || depth < 0) return null;
-    for (const e of readdirSync(base, { withFileTypes: true })) {
-      const p = join(base, e.name);
-      if (e.isFile() && names.includes(e.name)) return p;
-      if (e.isDirectory()) { const r = walk(p, names, depth - 1); if (r) return r; }
-    }
-    return null;
-  };
-  const shells = ['chrome-headless-shell', 'chrome-headless-shell.exe'];
-  for (const b of [join(home, '.cache/hyperframes/chrome'), join(home, 'Library/Caches/ms-playwright'), join(home, '.cache/ms-playwright'), join(home, '.cache/puppeteer')]) {
-    const r = walk(b, shells); if (r) return r;
-  }
-  for (const p of ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome', 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe']) if (existsSync(p)) return p;
-  return null;
-}
 
 const fail = (m) => { console.error('ERROR ' + m); process.exit(1); };
 let puppeteer;
