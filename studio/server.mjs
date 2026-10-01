@@ -11,6 +11,7 @@ import { decode, analyze } from './lib/beats.mjs';
 import { fetchMedia, MEDIA_EXT } from './lib/refs.mjs';
 import { captureSite } from './lib/capture.mjs';
 import { synthSfx, cuesForScenes, writeWav16, listVoices, speak, toWav, ttsAvailable } from './lib/audio.mjs';
+import { createGifService } from './lib/gif.mjs';
 import { scaffold, tree, promptText, writeFileAtomic, shotlistMd, styleGuideMd } from './lib/scaffold.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -21,7 +22,7 @@ const PORT = Number(process.env.PORT || 4173);
 const MAX_UPLOAD = 500 * 1024 * 1024;
 mkdirSync(HOME, { recursive: true });
 
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm', '.m4v': 'video/mp4', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.m4a': 'audio/mp4', '.md': 'text/plain; charset=utf-8', '.txt': 'text/plain; charset=utf-8' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm', '.m4v': 'video/mp4', '.gif': 'image/gif', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.m4a': 'audio/mp4', '.md': 'text/plain; charset=utf-8', '.txt': 'text/plain; charset=utf-8' };
 const VIDEO_EXT = ['.mp4', '.mov', '.webm', '.m4v'];
 const IMAGE_EXT = ['.png', '.jpg', '.jpeg', '.webp'];
 const AUDIO_EXT = ['.mp3', '.wav', '.m4a'];
@@ -120,6 +121,8 @@ function extractFrames(dir, file, duration, isVideo) {
   return readdirSync(out).sort();
 }
 
+const gif = createGifService({ home: HOME, run });
+
 // ---------- request handling ----------
 const jobs = new Map(); // projectId -> { kind, state, done, total, log[], startedAt, endedAt, error, child }
 const jobView = (j) => j && { kind: j.kind, size: j.size, cost: j.cost ?? null, state: j.state, done: j.done, total: j.total, log: j.log.slice(-200), startedAt: j.startedAt, endedAt: j.endedAt, error: j.error };
@@ -198,6 +201,22 @@ async function api(req, res, url) {
 
   if (parts[0] === 'preflight' && m === 'GET') return send(res, 200, preflight());
   if (parts[0] === 'meta' && m === 'GET') return send(res, 200, { styles: Object.fromEntries(Object.entries(STYLES).map(([k, v]) => [k, { label: v.label, palette: v.palette }])), statuses: STATUSES });
+
+  if (parts[0] === 'gif') {
+    const id = parts[1];
+    if (id === 'status' && m === 'GET') return send(res, 200, gif.status());
+    if (id === 'import' && m === 'POST') { const b = await readJson(req); return send(res, 202, await gif.importLink(b.url)); }
+    if (id === 'sample' && m === 'POST') { const b = await readJson(req); return send(res, 200, gif.makeSample(b.kind)); }
+    if (id === 'upload' && m === 'POST') return send(res, 200, await gif.importStream(req, basename(url.searchParams.get('name') || 'clip.mp4').replace(/[^\w.\- ]/g, '_'), 1024 * 1024 * 1024));
+    if (id && id !== 'status') {
+      const v = gif.get(id);
+      if (!v) return fail(res, 404, 'That video is no longer here. Import it again.');
+      if (!parts[2] && m === 'GET') return send(res, 200, v);
+      if (!parts[2] && m === 'DELETE') { gif.remove(id); return send(res, 200, { ok: true }); }
+      if (parts[2] === 'convert' && m === 'POST') return send(res, 202, gif.convert(id, await readJson(req)));
+      if (parts[2] === 'cancel' && m === 'POST') return send(res, 200, gif.cancel(id));
+    }
+  }
 
   if (parts[0] === 'projects' && parts.length === 1) {
     if (m === 'GET') return send(res, 200, listProjects());
@@ -492,7 +511,7 @@ async function api(req, res, url) {
   return fail(res, 404, 'Not found.');
 }
 
-function serveFile(req, res, file) {
+function serveFile(req, res, file, extra = {}) {
   let st;
   try { st = statSync(file); } catch { return fail(res, 404, 'Not found.'); }
   if (!st.isFile()) return fail(res, 404, 'Not found.');
@@ -502,10 +521,10 @@ function serveFile(req, res, file) {
     let [a, b] = range.replace('bytes=', '').split('-');
     a = a === '' ? Math.max(0, st.size - Number(b)) : Number(a); b = b === '' || range.endsWith('-') ? st.size - 1 : Math.min(Number(b), st.size - 1);
     if (a > b || a >= st.size) { res.writeHead(416, { 'Content-Range': `bytes */${st.size}` }); return res.end(); }
-    res.writeHead(206, { 'Content-Type': type, 'Content-Range': `bytes ${a}-${b}/${st.size}`, 'Accept-Ranges': 'bytes', 'Content-Length': b - a + 1 });
+    res.writeHead(206, { ...extra, 'Content-Type': type, 'Content-Range': `bytes ${a}-${b}/${st.size}`, 'Accept-Ranges': 'bytes', 'Content-Length': b - a + 1 });
     return createReadStream(file, { start: a, end: b }).pipe(res);
   }
-  res.writeHead(200, { 'Content-Type': type, 'Content-Length': st.size, 'Accept-Ranges': 'bytes', 'Cache-Control': 'no-store' });
+  res.writeHead(200, { ...extra, 'Content-Type': type, 'Content-Length': st.size, 'Accept-Ranges': 'bytes', 'Cache-Control': 'no-store' });
   createReadStream(file).pipe(res);
 }
 
@@ -519,6 +538,14 @@ const server = http.createServer(async (req, res) => {
     if (req.method !== 'GET' && req.headers.origin && new URL(req.headers.origin).host !== req.headers.host) return fail(res, 403, 'Cross-origin request blocked.');
     const path = decodeURIComponent(url.pathname);
     if (path.startsWith('/api/')) return await api(req, res, url);
+    if (path.startsWith('/gif/')) {
+      const [, , id, name] = path.split('/');
+      const file = gif.file(id || '', name || '');
+      if (!file || !existsSync(file)) return fail(res, 404, 'Not found.');
+      const dl = name === 'out.gif' && url.searchParams.get('download');
+      const title = gif.title(id).replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '-').slice(0, 60) || 'clip';
+      return serveFile(req, res, file, dl ? { 'Content-Disposition': `attachment; filename="${title}.gif"` } : {});
+    }
     if (path.startsWith('/files/')) {
       const [, , id, ...rest] = path.split('/');
       if (!validId(id)) return fail(res, 404, 'Not found.');
@@ -537,7 +564,7 @@ const server = http.createServer(async (req, res) => {
     if (!existsSync(file)) return serveFile(req, res, join(PUBLIC, 'index.html')); // SPA fallback
     return serveFile(req, res, file);
   } catch (e) {
-    if (!res.headersSent) fail(res, 500, e.message || 'Server error.'); else res.end();
+    if (!res.headersSent) fail(res, e.status >= 400 && e.status < 500 ? e.status : 500, e.message || 'Server error.'); else res.end();
   }
 });
 

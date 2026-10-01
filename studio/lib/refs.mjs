@@ -24,12 +24,12 @@ export function isPrivateIp(ip) {
   return true;
 }
 
-export async function checkUrl(raw) {
+export async function checkUrl(raw, { platforms = false } = {}) {
   let u;
   try { u = new URL(raw); } catch { throw Object.assign(new Error('That does not look like a link.'), { status: 422 }); }
   if (!['http:', 'https:'].includes(u.protocol)) throw Object.assign(new Error('Only http and https links are supported.'), { status: 422 });
   if (u.username || u.password) throw Object.assign(new Error('Links with embedded credentials are not supported.'), { status: 422 });
-  if (PLATFORMS.test(u.hostname)) throw Object.assign(new Error('Video platform pages cannot be downloaded here. Download the file yourself if you are allowed to, then upload it.'), { status: 422 });
+  if (!platforms && PLATFORMS.test(u.hostname)) throw Object.assign(new Error('Video platform pages cannot be downloaded here. Download the file yourself if you are allowed to, then upload it.'), { status: 422 });
   const host = u.hostname.replace(/^\[|\]$/g, '');
   const addrs = net.isIP(host) ? [{ address: host }] : await dns.lookup(host, { all: true }).catch(() => { throw Object.assign(new Error('We couldn’t open that link. Upload the file instead.'), { status: 422 }); });
   if (!addrs.length || addrs.some((a) => isPrivateIp(a.address))) throw Object.assign(new Error('That address is not a public site. Upload the file instead.'), { status: 422 });

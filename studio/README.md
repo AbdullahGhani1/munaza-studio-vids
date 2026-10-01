@@ -16,6 +16,7 @@ No dependencies: a Node http server (`server.mjs`), a vanilla ES-module front en
 | Brief form, validation, live aspect preview, draft autosave | Done |
 | Project library (search, filter, duplicate, delete to `.trash`, reveal) | Done |
 | Reference by upload, direct link or local path (`lib/refs.mjs`: http/https only, DNS and redirect checks against private addresses, no video-platform pages, 500 MB cap),  ffprobe metadata, ffmpeg frame extraction (up to 12 frames) | Done |
+| Video to GIF (`#/gif`, `lib/gif.mjs`): import by video link (yt-dlp; public http/https only), upload, samples or tab recording, up to 10 min; trim with frame stepping and a draggable timeline; 10 to 60 fps (encoded at up to 50, the fastest a GIF plays true), 240p to 1080p, speed 0.25x to 3x, four dither modes, 64/128/256 colours, caption, boomerang, reverse; 2-pass palettegen/paletteuse; download | Done. Needs `yt-dlp` for links only |
 | Storyboard generation (MAESTRO-style beats), scene editing, add/duplicate/delete/reorder, rebalance, timing validation | Done. The generator is a deterministic template, not a model call |
 | Undo / redo in the plan editor (100 steps; buttons, or Ctrl/Cmd+Z and Shift+Z outside a text field) | Done |
 | Approve → scaffold (CLAUDE.md, shotlist, style guide, audio plan, seek(t) renderer, render.mjs, copy-ready prompt) | Done |

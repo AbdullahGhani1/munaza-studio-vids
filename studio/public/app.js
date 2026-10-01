@@ -1,4 +1,5 @@
 // Video Studio UI: vanilla ES modules, hash router, no build step.
+import { viewGif } from '/gif.js';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -64,7 +65,7 @@ function banner() {
   return `<div class="banner" role="status"><div style="flex:1;min-width:260px">${bad.map((c) => `<p><strong>${esc(c.label)} not found.</strong> <span class="muted">${esc(c.fix)}</span> <code>${esc(c.fix)}</code></p>`).join('')}</div><button class="btn secondary compact" data-act="recheck">Check again</button></div>`;
 }
 function shell(inner, { crumb, action } = {}) {
-  app.innerHTML = `<header class="topbar"><a class="brand" href="#/"><i></i>Video Studio</a><nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Projects</a>${crumb ? `<span>/</span><span class="cur" title="${esc(crumb)}">${esc(crumb)}</span>` : ''}</nav><div class="spacer"></div>${action || ''}<label class="row small muted" style="gap:6px;cursor:pointer"><input type="checkbox" id="reduce" ${document.documentElement.dataset.reduce === '1' ? 'checked' : ''}> Reduce motion</label></header>${banner()}<main id="main" class="route" tabindex="-1">${inner}</main>`;
+  app.innerHTML = `<header class="topbar"><a class="brand" href="#/"><i></i>Video Studio</a><a class="navlink" href="#/gif">Video to GIF</a><nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Projects</a>${crumb ? `<span>/</span><span class="cur" title="${esc(crumb)}">${esc(crumb)}</span>` : ''}</nav><div class="spacer"></div>${action || ''}<label class="row small muted" style="gap:6px;cursor:pointer"><input type="checkbox" id="reduce" ${document.documentElement.dataset.reduce === '1' ? 'checked' : ''}> Reduce motion</label></header>${banner()}<main id="main" class="route" tabindex="-1">${inner}</main>`;
 }
 
 // ---------- state ----------
@@ -83,6 +84,7 @@ async function route() {
   try {
     if (!parts.length) return await viewProjects();
     if (parts[0] === 'new') return viewNew();
+    if (parts[0] === 'gif') return await viewGif({ shell, api, toast, esc, $, $$, onCleanup: (f) => cleanups.push(f) });
     if (parts[0] === 'p' && parts[1]) return await viewProject(parts[1], parts[2] || null);
     location.hash = '#/';
   } catch (e) {
