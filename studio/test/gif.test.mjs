@@ -55,3 +55,30 @@ test('sample → trim → 2-pass GIF → download', { skip: !hasFfmpeg }, async 
   const del = await fetch(BASE + '/api/gif/' + id, { method: 'DELETE' }); assert.equal(del.status, 200);
   assert.equal((await get(`/${id}`)).status, 404);
 });
+
+test('frames uploaded by the character-replace step are encoded as a GIF', { skip: !hasFfmpeg }, async () => {
+  const s = await post('/sample', { kind: 'smpte' });
+  const id = s.body.id;
+  // six small JPEG frames, as the browser would send them
+  const dir = mkdtempSync(join(tmpdir(), 'frames-'));
+  assert.equal(spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'lavfi', '-i', 'testsrc2=size=320x180:rate=10:duration=0.6', join(dir, 'f%d.jpg')]).status, 0);
+  assert.equal((await fetch(`${BASE}/api/gif/${id}/frames`, { method: 'DELETE' })).status, 200);
+  const { readFileSync } = await import('node:fs');
+  for (let n = 1; n <= 6; n++) assert.equal((await fetch(`${BASE}/api/gif/${id}/frame/${n}`, { method: 'POST', body: readFileSync(join(dir, `f${n}.jpg`)) })).status, 200);
+  assert.equal((await fetch(`${BASE}/api/gif/${id}/frame/0`, { method: 'POST', body: 'x' })).status, 422);
+  assert.equal((await fetch(`${BASE}/api/gif/${id}/frame/9999`, { method: 'POST', body: 'x' })).status, 422);
+  const c = await post(`/${id}/convert`, { fromFrames: true, fps: 10, height: 180, colors: 64 });
+  assert.equal(c.status, 202);
+  const done = await until(async () => { const v = (await get(`/${id}`)).body; if (v.convert.state === 'error') throw new Error(v.convert.error); return v.convert.state === 'done' ? v : null; });
+  assert.equal(done.convert.frames, 6); assert.equal(done.convert.fps, 10); assert.ok(done.convert.size > 500);
+  // asking for frames when none were sent is a clean 422
+  const s2 = await post('/sample', { kind: 'smpte' });
+  assert.equal((await post(`/${s2.body.id}/convert`, { fromFrames: true, fps: 10 })).status, 422);
+});
+test('vision files and the character image are served, and nothing else under /vendor', async () => {
+  const w = await fetch(BASE + '/vendor/mediapipe/wasm/vision_wasm_internal.wasm', { method: 'HEAD' });
+  assert.equal(w.status, 200); assert.equal(w.headers.get('content-type'), 'application/wasm');
+  assert.ok(!/GreenSock/i.test(await (await fetch(BASE + '/vendor/mediapipe/%2e%2e/gsap.min.js')).text()));
+  assert.ok((await fetch(BASE + '/vendor/gsap.min.js')).headers.get('content-type').startsWith('text/html')); // not served: falls to the app shell
+  assert.equal((await fetch(BASE + '/munaza-character.webp', { method: 'HEAD' })).status, 200);
+});

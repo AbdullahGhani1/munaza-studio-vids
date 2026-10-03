@@ -1,0 +1,21 @@
+{
+  "status": "pending-clinical-review",
+  "reviewer": null,
+  "reviewDate": null,
+  "category": null,
+  "exercise": null,
+  "side": null,
+  "variant": null,
+  "actionNaming": "Category_Exercise_Side_Variant",
+  "startingPosition": null,
+  "movementSequence": [],
+  "permittedRange": null,
+  "supportRequirements": null,
+  "tempo": null,
+  "breathingCues": null,
+  "repetitions": null,
+  "restrictions": null,
+  "approvedMovementReference": null,
+  "stages": ["preparation", "movement", "optional-hold", "controlled-return", "completion"],
+  "note": "Planning template only; not an exercise prescription or approved animation."
+}

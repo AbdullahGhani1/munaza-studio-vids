@@ -1,0 +1,125 @@
+{
+  "reference": "/Users/abdullahghani/Downloads/Doctor_munaza_ghani.png",
+  "seed": null,
+  "assets": [
+    {
+      "name": "00-character-sheet",
+      "pose": "One wide character model sheet, 8 full-body standing views evenly spaced in ONE row: front, front three-quarter left, strict side facing left, back three-quarter left, back, back three-quarter right, strict side facing right, front three-quarter right. Arms relaxed at sides. Same height and scale, shared foot baseline, nothing cropped. Flat pure green #00B140 background with no background shadows. Wide canvas.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. One wide character model sheet, 8 full-body standing views evenly spaced in ONE row: front, front three-quarter left, strict side facing left, back three-quarter left, back, back three-quarter right, strict side facing right, front three-quarter right. Arms relaxed at sides. Same height and scale, shared foot baseline, nothing cropped. Flat pure green #00B140 background with no background shadows. Wide canvas.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-97351f36-3c1e-4f1a-96b5-ac63ba384b61.png",
+      "file": "00-character-sheet.png"
+    },
+    {
+      "name": "01-arms-crossed",
+      "pose": "Front view, arms crossed, confident neutral eyes.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Front view, arms crossed, confident neutral eyes. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-a6c41532-9a0f-4179-977d-6dfc390f2314.png",
+      "file": "01-arms-crossed.png"
+    },
+    {
+      "name": "02-neutral",
+      "pose": "Front view, arms relaxed at sides.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Front view, arms relaxed at sides. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-4aea5985-55d4-4f6c-ac5d-887877770368.png",
+      "file": "02-neutral.png"
+    },
+    {
+      "name": "03-walk-left-a",
+      "pose": "Strict side view facing image LEFT, mid-stride walking, anatomical left foot forward, right foot behind.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Strict side view facing image LEFT, mid-stride walking, anatomical left foot forward, right foot behind. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-9b125c1c-c45a-4e53-9162-b6602f152fae.png",
+      "file": "03-walk-left-a.png"
+    },
+    {
+      "name": "03-walk-left-b",
+      "pose": "Strict side view facing image LEFT, mid-stride walking, anatomical right foot forward, left foot behind.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Strict side view facing image LEFT, mid-stride walking, anatomical right foot forward, left foot behind. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-fbf79c32-1ab7-42bd-b18c-a205e5205a9c.png",
+      "file": "03-walk-left-b.png"
+    },
+    {
+      "name": "04-walk-right-a",
+      "pose": "Strict side view facing image RIGHT, mid-stride walking, anatomical left foot forward, right foot behind.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Strict side view facing image RIGHT, mid-stride walking, anatomical left foot forward, right foot behind. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-0ddea34f-ca4f-4ff9-81e3-86658c9a5c87.png",
+      "file": "04-walk-right-a.png"
+    },
+    {
+      "name": "04-walk-right-b",
+      "pose": "Strict side view facing image RIGHT, mid-stride walking, anatomical right foot forward, left foot behind.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Strict side view facing image RIGHT, mid-stride walking, anatomical right foot forward, left foot behind. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-95d78823-4c62-45a4-9385-c16494b103e5.png",
+      "file": "04-walk-right-b.png"
+    },
+    {
+      "name": "05-walk-front-a",
+      "pose": "Walking toward camera, front view, mid-stride, anatomical left foot forward, right foot behind.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Walking toward camera, front view, mid-stride, anatomical left foot forward, right foot behind. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-b8bf3333-779e-4ddf-baed-8b6a6c54cf47.png",
+      "file": "05-walk-front-a.png"
+    },
+    {
+      "name": "05-walk-front-b",
+      "pose": "Walking toward camera, front view, mid-stride, anatomical right foot forward, left foot behind.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Walking toward camera, front view, mid-stride, anatomical right foot forward, left foot behind. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-0789bef2-c016-430e-9f81-14ae51f5bc72.png",
+      "file": "05-walk-front-b.png"
+    },
+    {
+      "name": "06-walk-back-a",
+      "pose": "Walking away from camera, strict back view, mid-stride, anatomical left foot forward, right foot behind. Face not visible.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Walking away from camera, strict back view, mid-stride, anatomical left foot forward, right foot behind. Face not visible. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-50840898-6b50-4f1d-abe7-5ef34ec33a98.png",
+      "file": "06-walk-back-a.png"
+    },
+    {
+      "name": "06-walk-back-b",
+      "pose": "Walking away from camera, strict back view, mid-stride, anatomical right foot forward, left foot behind. Face not visible.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Walking away from camera, strict back view, mid-stride, anatomical right foot forward, left foot behind. Face not visible. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-378d9ea8-03f0-4e01-b729-9f2ee2b8074b.png",
+      "file": "06-walk-back-b.png"
+    },
+    {
+      "name": "07-wave",
+      "pose": "Front three-quarter view, anatomical right hand raised in a friendly wave, other hand relaxed.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Front three-quarter view, anatomical right hand raised in a friendly wave, other hand relaxed. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-76071f7c-4559-4bad-a4bf-e0ae7e819901.png",
+      "file": "07-wave.png"
+    },
+    {
+      "name": "08-explain",
+      "pose": "Front three-quarter view, one hand open, gently gesturing as if explaining.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Front three-quarter view, one hand open, gently gesturing as if explaining. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-0e4964f0-6781-49b4-8272-1fde1327a815.png",
+      "file": "08-explain.png"
+    },
+    {
+      "name": "09-point",
+      "pose": "Front view, pointing toward her anatomical left (image right) with her anatomical right hand.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Front view, pointing toward her anatomical left (image right) with her anatomical right hand. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-8366fa6f-f38c-456f-97f3-cff1174527c0.png",
+      "file": "09-point.png"
+    },
+    {
+      "name": "10-clipboard",
+      "pose": "Front view, one hand resting on lower back, other hand holding a plain clipboard.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Front view, one hand resting on lower back, other hand holding a plain clipboard. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-8bec6e68-cb40-42f6-836a-be5cffac3c4d.png",
+      "file": "10-clipboard.png"
+    },
+    {
+      "name": "11-seated",
+      "pose": "Side view facing image LEFT, seated on a plain stool, both hands on knees, feet resting naturally on same baseline. Include whole stool.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Side view facing image LEFT, seated on a plain stool, both hands on knees, feet resting naturally on same baseline. Include whole stool. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-086beb06-0d37-43d6-9a87-b0534b86861b.png",
+      "file": "11-seated.png"
+    },
+    {
+      "name": "12-neck-stretch",
+      "pose": "Front three-quarter view, demonstrating a gentle neck stretch by slightly tilting head to one side, shoulders relaxed, arms by sides, hijab and mask remain fully covering.",
+      "prompt": "Use case: identity-preserve. Reference image is Dr. Munaza Ghani; preserve the same face shape, eyes, eyebrows, skin tone, body proportions and outfit. Photorealistic, soft even studio lighting, sharp focus, natural fabric folds. Navy blue jersey hijab fully covering hair, ears, neck and chest and draped over shoulders; light-blue surgical mask fully covering nose and mouth, no mouth visible; white knee-length lab coat with two pockets, buttons and long sleeves over navy knee-length kurta; opaque loose full-length navy shalwar trousers; clean white sneakers. No labels, text or watermark. Front three-quarter view, demonstrating a gentle neck stretch by slightly tilting head to one side, shoulders relaxed, arms by sides, hijab and mask remain fully covering. One figure only, transparent PNG, 1024x1536 portrait. Full body and both feet entirely visible, generous clear margin. Same eye-level camera, figure top at y=90 and foot baseline y=1440, centered, identical scale for swap animation. Transparent background, no floor, no cast shadow. Preserve actual transparent alpha.",
+      "source": "/Users/abdullahghani/.codex/generated_images/01a042d1-571d-7f41-8b14-6295164ae3b7/exec-0b5fcc7e-849e-482a-9c30-25c9bf21d87d.png",
+      "file": "12-neck-stretch.png"
+    }
+  ]
+}

@@ -22,7 +22,7 @@ const PORT = Number(process.env.PORT || 4173);
 const MAX_UPLOAD = 500 * 1024 * 1024;
 mkdirSync(HOME, { recursive: true });
 
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm', '.m4v': 'video/mp4', '.gif': 'image/gif', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.m4a': 'audio/mp4', '.md': 'text/plain; charset=utf-8', '.txt': 'text/plain; charset=utf-8' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm', '.m4v': 'video/mp4', '.gif': 'image/gif', '.wasm': 'application/wasm', '.tflite': 'application/octet-stream', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.m4a': 'audio/mp4', '.md': 'text/plain; charset=utf-8', '.txt': 'text/plain; charset=utf-8' };
 const VIDEO_EXT = ['.mp4', '.mov', '.webm', '.m4v'];
 const IMAGE_EXT = ['.png', '.jpg', '.jpeg', '.webp'];
 const AUDIO_EXT = ['.mp3', '.wav', '.m4a'];
@@ -215,6 +215,8 @@ async function api(req, res, url) {
       if (!parts[2] && m === 'DELETE') { gif.remove(id); return send(res, 200, { ok: true }); }
       if (parts[2] === 'convert' && m === 'POST') return send(res, 202, gif.convert(id, await readJson(req)));
       if (parts[2] === 'cancel' && m === 'POST') return send(res, 200, gif.cancel(id));
+      if (parts[2] === 'frames' && m === 'DELETE') { gif.resetFrames(id); return send(res, 200, { ok: true }); }
+      if (parts[2] === 'frame' && m === 'POST') return send(res, 200, await gif.saveFrame(id, Number(parts[3]), req));
     }
   }
 
@@ -552,6 +554,12 @@ const server = http.createServer(async (req, res) => {
       const file = normalize(join(pdir(id), ...rest));
       if (!inside(pdir(id), file) || rest.some((s) => s.startsWith('.'))) return fail(res, 403, 'Forbidden.');
       return serveFile(req, res, file);
+    }
+    if (path.startsWith('/vendor/mediapipe/')) {
+      const base = join(REPO, 'vendor', 'mediapipe');
+      const file = normalize(join(REPO, path));
+      if (!inside(base, file)) return fail(res, 403, 'Forbidden.');
+      return serveFile(req, res, file, { 'Cache-Control': 'public, max-age=86400' });
     }
     if (path.startsWith('/fonts/') || path === '/paper-grain.png') {
       const base = join(REPO, 'assets');

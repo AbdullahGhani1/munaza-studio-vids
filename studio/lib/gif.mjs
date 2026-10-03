@@ -10,7 +10,7 @@ export const MAX_SECONDS = 600;
 export const GIF_MAX_FPS = 50; // a GIF frame delay is a whole number of 10 ms ticks, and browsers play 10 ms delays slowly
 export const HEIGHTS = [240, 360, 480, 720, 1080];
 export const DITHERS = { bayer: 'bayer', floyd: 'floyd_steinberg', sierra: 'sierra2_4a', none: 'none' };
-const SOURCE_EXT = ['.mp4', '.mov', '.webm', '.m4v', '.mkv'];
+const SOURCE_EXT = ['.mp4', '.mov', '.webm', '.m4v', '.mkv', '.gif'];
 const BROWSER_CODECS = ['h264', 'vp8', 'vp9', 'av1'];
 const num = (v, lo, hi, d) => { const n = Number(v); return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : d; };
 const bad = (message, status = 422) => Object.assign(new Error(message), { status });
@@ -139,12 +139,19 @@ export function createGifService({ home, run }) {
     const { pipeline } = await import('node:stream/promises');
     const { createWriteStream } = await import('node:fs');
     const ext = extname(name).toLowerCase();
-    if (!SOURCE_EXT.includes(ext)) throw bad('Use mp4, mov, webm, m4v or mkv.', 415);
+    if (!SOURCE_EXT.includes(ext)) throw bad('Use mp4, mov, webm, m4v, mkv or gif.', 415);
     if (Number(req.headers['content-length'] || 0) > maxBytes) throw bad('That file is over 1 GB.', 413);
     const it = fresh('upload', name.replace(/\.[^.]+$/, '').slice(0, 80));
-    const file = join(dir(it.id), `upload${ext}`);
+    let file = join(dir(it.id), `upload${ext}`);
     it.stage = 'Reading file';
     try { await pipeline(req, createWriteStream(file)); } catch { rmSync(dir(it.id), { recursive: true, force: true }); items.delete(it.id); throw bad('The upload was interrupted.', 400); }
+    if (ext === '.gif') { // a GIF cannot play in a <video>: re-encode it to mp4 first
+      it.stage = 'Reading GIF';
+      const mp4 = join(dir(it.id), 'upload.mp4');
+      const r = run('ffmpeg', ['-y', '-i', file, '-an', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '14', '-pix_fmt', 'yuv420p', '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2', '-movflags', '+faststart', mp4], { timeout: 600000 });
+      if (r.status !== 0) { fail(it, 'We could not read that GIF.'); return view(it); }
+      file = mp4;
+    }
     finalize(it, file);
     return view(it);
   }
@@ -183,9 +190,16 @@ export function createGifService({ home, run }) {
     if (it.state !== 'ready') throw bad('The video is not ready yet.', 409);
     if (it.convert && it.convert.state === 'running') throw bad('A conversion is already running for this video.', 409);
     const o = options(b, it.info);
+    let nFrames = 0;
+    if (b.fromFrames) {
+      const fdir = join(dir(id), 'frames');
+      nFrames = existsSync(fdir) ? readdirSync(fdir).filter((f) => /^\d{5}\.jpg$/.test(f)).length : 0;
+      if (nFrames < 2) throw bad('No frames were received.');
+      o.length = nFrames / o.fps; o.speed = 1;
+    }
     const outLen = o.length / o.speed;
     const outFps = o.fps, h = Math.min(o.height, it.info.height), w = Math.round(h * it.info.width / it.info.height / 2) * 2;
-    const frames = Math.round(outLen * outFps);
+    const frames = b.fromFrames ? nFrames : Math.round(outLen * outFps);
     if ((o.reverse || o.boomerang) && frames * w * h * 1.5 > 1.5e9) throw bad('Reverse and boomerang hold every frame in memory. Use a shorter clip, a lower frame rate or a smaller size.');
     if (frames * (o.boomerang ? 2 : 1) > 6000) throw bad('That would be over 6000 frames. Shorten the clip or lower the frame rate.');
     let overlay = null;
@@ -198,10 +212,10 @@ export function createGifService({ home, run }) {
     const c = { n, state: 'running', stage: 'Analysing colours', progress: 0, frames: frames * (o.boomerang ? 2 : 1), width: w, height: h, fps: outFps, seconds: outLen * (o.boomerang ? 2 : 1), size: null, error: null, options: o };
     it.convert = c;
     // input-side seek, then speed → fps → scale → reverse/boomerang → caption, built as one filter graph
-    const head = ['[0:v]' + [`setpts=PTS/${o.speed}`, `fps=${outFps}`, `scale=-2:${h}:flags=lanczos`, ...(o.reverse ? ['reverse'] : [])].join(',') + '[v0]'];
+    const head = ['[0:v]' + [...(b.fromFrames ? [] : [`setpts=PTS/${o.speed}`, `fps=${outFps}`]), `scale=-2:${h}:flags=lanczos`, ...(o.reverse ? ['reverse'] : [])].join(',') + '[v0]'];
     let last = '[v0]';
     if (o.boomerang) { head.push('[v0]split[fa][fb]', '[fb]reverse[fr]', '[fa][fr]concat=n=2:v=1:a=0[v1]'); last = '[v1]'; }
-    let inputs = ['-ss', String(o.start), '-t', String(o.length), '-i', it.srcFile];
+    let inputs = b.fromFrames ? ['-framerate', String(outFps), '-i', join(dir(id), 'frames', '%05d.jpg')] : ['-ss', String(o.start), '-t', String(o.length), '-i', it.srcFile];
     if (overlay) {
       inputs.push('-i', overlay);
       const y = o.captionPos === 'top' ? '0' : 'H-h';
@@ -229,6 +243,23 @@ export function createGifService({ home, run }) {
     return { ...view(it) };
   }
 
+  const MAX_FRAMES = 5000;
+  function resetFrames(id) {
+    if (!valid(id)) throw bad('Not found.', 404);
+    rmSync(join(dir(id), 'frames'), { recursive: true, force: true });
+    mkdirSync(join(dir(id), 'frames'), { recursive: true });
+  }
+  async function saveFrame(id, n, req) {
+    if (!valid(id)) throw bad('Not found.', 404);
+    if (!Number.isInteger(n) || n < 1 || n > MAX_FRAMES) throw bad('Bad frame number.');
+    if (Number(req.headers['content-length'] || 0) > 12e6) throw bad('Frame too large.', 413);
+    const { pipeline } = await import('node:stream/promises');
+    const { createWriteStream } = await import('node:fs');
+    mkdirSync(join(dir(id), 'frames'), { recursive: true });
+    await pipeline(req, createWriteStream(join(dir(id), 'frames', `${String(n).padStart(5, '0')}.jpg`)));
+    return { ok: true };
+  }
+
   function cancel(id) {
     if (!valid(id)) throw bad('Not found.', 404);
     const it = items.get(id);
@@ -242,7 +273,7 @@ export function createGifService({ home, run }) {
     get: (id) => (valid(id) ? view(items.get(id)) : null),
     file: (id, name) => (valid(id) && /^[\w.-]+$/.test(name) ? join(dir(id), name) : null),
     title: (id) => items.get(id)?.title || 'clip',
-    importLink, importStream, makeSample, convert, cancel,
+    importLink, importStream, makeSample, convert, cancel, resetFrames, saveFrame,
     remove: (id) => { if (valid(id)) { cancel(id); rmSync(dir(id), { recursive: true, force: true }); items.delete(id); } },
   };
 }

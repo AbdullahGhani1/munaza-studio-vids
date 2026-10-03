@@ -21,7 +21,7 @@ const sz = (n) => (n > 1e6 ? (n / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.rou
 
 export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
   const st = await api('/gif/status').catch(() => ({ ytdlp: false, ffmpeg: false, maxFps: 50 }));
-  const S = { tab: 'link', item: null, start: 0, len: 3.5, fps: 60, height: 360, speed: 1, dither: 'bayer', bayer: 5, colors: 256, caption: '', capPos: 'bottom', boom: false, rev: false, loop: true, converting: false };
+  const S = { tab: 'link', item: null, start: 0, len: 3.5, fps: 60, height: 360, speed: 1, dither: 'bayer', bayer: 5, colors: 256, fill: 'plate', pose: 'auto', how: 'reenact', munScale: 100, signal: null, caption: '', capPos: 'bottom', boom: false, rev: false, loop: true, converting: false };
   const timers = [];
   onCleanup(() => { timers.forEach(clearInterval); $('#rec-modal')?.remove(); });
   const dur = () => S.item?.info?.duration || 0;
@@ -38,7 +38,8 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
     <div class="gif-tabs" role="tablist" aria-label="Import method">${[['link', I.link, 'Video Link'], ['upload', I.up, 'Upload File'], ['samples', I.spark, 'Samples']].map(([k, ic, l]) => `<button role="tab" data-gtab="${k}" aria-selected="${k === 'link'}">${ic}${l}</button>`).join('')}<button data-gact="record" class="gif-rec">${I.rec}Record tab</button></div></div>
     <div id="gif-pane"></div><div id="gif-media"></div></section>
   <section class="card gif-card" id="gif-trim" aria-labelledby="g2" hidden></section>
-  <section class="card gif-card" id="gif-engine" aria-labelledby="g3" hidden></section>`, { crumb: 'Video to GIF' });
+  <section class="card gif-card" id="gif-engine" aria-labelledby="g3" hidden></section>
+  <section class="card gif-card" id="gif-munaza" aria-labelledby="g4" hidden></section>`, { crumb: 'Video to GIF' });
 
   if (!st.ffmpeg) $('#gif-warn').innerHTML = '<div class="banner"><p><strong>ffmpeg not found.</strong> <span class="muted">Install it with</span> <code>brew install ffmpeg</code></p></div>';
   else if (!st.ytdlp) $('#gif-warn').innerHTML = '<div class="banner"><p><strong>Links need yt-dlp.</strong> <span class="muted">Install it with</span> <code>brew install yt-dlp</code> <span class="muted">then reload. Uploads and samples work without it.</span></p></div>';
@@ -51,7 +52,7 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
       p.innerHTML = `<form id="gif-link" class="gif-linkrow"><input id="gif-url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste YouTube, Vimeo, TikTok, Reddit, X or a direct MP4 / WebM link" aria-label="Video link"><button class="btn primary" id="gif-load" type="submit">${I.link}Load video</button></form><p class="small faint" style="margin-top:12px">Works with the sites yt-dlp supports, plus direct MP4 / WebM links. Only convert videos you own or have permission to use.</p>`;
       $('#gif-url').focus({ preventScroll: true });
     } else if (S.tab === 'upload') {
-      p.innerHTML = `<div class="dropzone" id="gif-dz" tabindex="0" role="button">Drop a video here, or choose a file<br><span class="small faint">mp4, mov, webm, m4v, mkv · up to 1 GB · 10 minutes</span></div><input id="gif-file" type="file" accept="video/*,.mkv" hidden>`;
+      p.innerHTML = `<div class="dropzone" id="gif-dz" tabindex="0" role="button">Drop a video here, or choose a file<br><span class="small faint">mp4, mov, webm, m4v, mkv, gif · up to 1 GB · 10 minutes</span></div><input id="gif-file" type="file" accept="video/*,.mkv,.gif" hidden>`;
     } else {
       p.innerHTML = `<div class="gif-samples">${SAMPLES.map(([k, t, d]) => `<button class="gif-sample" data-sample="${k}">${I.film}<span><strong>${esc(t)}</strong><small>${esc(d)} · 640×360 · 60 fps</small></span></button>`).join('')}</div>`;
     }
@@ -69,7 +70,7 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
     const prev = S.item;
     try { S.item = await fn(); } catch (e) { toast(e.message, 'error'); return; }
     if (prev) api(`/gif/${prev.id}`, { method: 'DELETE' }).catch(() => {});
-    S.start = 0; drawMedia(); $('#gif-trim').hidden = true; $('#gif-engine').hidden = true;
+    S.start = 0; drawMedia(); $('#gif-trim').hidden = true; $('#gif-engine').hidden = true; $('#gif-munaza').hidden = true;
     if (S.item.state === 'working') poll(); else if (S.item.state === 'ready') ready();
   }
   function poll() {
@@ -84,7 +85,7 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
   // ---------- 2 & 3. trim + engine ----------
   function ready() {
     S.len = Math.min(3.5, dur()); S.start = 0;
-    $('#gif-trim').hidden = false; $('#gif-engine').hidden = false;
+    $('#gif-trim').hidden = false; $('#gif-engine').hidden = false; $('#gif-munaza').hidden = false; drawMunaza();
     $('#gif-trim').innerHTML = `<div class="gif-card-head"><div><h2 id="g2">2. Trim the clip</h2><p class="small muted">Scrub, step by frame, then mark the start and end. The loop button previews just the selection.</p></div></div>
       <div class="gif-stage"><video id="gif-v" src="${S.item.video}" muted playsinline preload="auto"></video></div>
       <div class="gif-ctrl"><button class="btn secondary icon-btn" id="gif-play" data-gact="play" aria-label="Play">${I.play}</button><span class="gif-sep"></span>${[['−1f', 'step', -1], ['+1f', 'step', 1], ['−0.5s', 'nudge', -.5], ['+0.5s', 'nudge', .5]].map(([l, a, v]) => `<button class="btn secondary compact" data-gact="${a}" data-v="${v}">${l}</button>`).join('')}<span class="grow"></span><button class="btn secondary compact mono" data-gact="set-start" id="gif-ss"></button><button class="btn secondary compact mono" data-gact="set-end" id="gif-se"></button><button class="btn secondary icon-btn" id="gif-loop" data-gact="loop" aria-pressed="${S.loop}" aria-label="Loop the selection" title="Loop the selection">${I.loop}</button></div>
@@ -116,6 +117,16 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
       <div class="gif-stats mono" id="gif-stats"></div><div id="gif-result"></div>`;
     syncEngine();
   }
+  const MUN_POSES = [['auto', 'Auto: all poses, matched to the movement'], ['02-neutral', 'Neutral'], ['01-arms-crossed', 'Arms crossed'], ['03-walk-left-a', 'Walk left'], ['04-walk-right-a', 'Walk right'], ['05-walk-front-a', 'Walk toward camera'], ['06-walk-back-a', 'Walk away'], ['07-wave', 'Wave'], ['08-explain', 'Explain'], ['09-point', 'Point'], ['10-clipboard', 'Clipboard'], ['11-seated', 'Seated (side view)'], ['13-seated-hold-upper-arm', 'Seated, hand on upper arm'], ['14-seated-hands-clasped-chair-left', 'Seated, hands clasped (chair left)'], ['15-seated-hands-clasped-chair-right', 'Seated, hands clasped (chair right)'], ['12-neck-stretch', 'Neck stretch']];
+  function drawMunaza() {
+    $('#gif-munaza').innerHTML = `<div class="gif-card-head"><div><h2 id="g4">4. Replace the character with Munaza Ghani</h2><p class="small muted">The main person in your clip is detected frame by frame, painted out, and replaced by Dr. Munaza Ghani. It uses the trim and the GIF engine settings above. Best with a full-body person and a steady camera.</p></div><button class="btn primary gif-go" id="gif-go-m" data-gact="generate-munaza">${I.spark}Generate GIF with Munaza</button></div>
+      <div class="gif-mun"><div class="gif-poses" aria-label="Munaza poses">${MUN_POSES.slice(1).map(([k, l]) => `<img src="/munaza-poses/${k}.png" alt="${l}" title="${l}" loading="lazy" height="96">`).join('')}</div><div class="gif-mun-opts">
+        <div class="gif-opt"><span class="label">What Munaza does</span><div class="gif-seg" data-seg="how">${[['reenact', 'Copy the movement (she does the exercise)'], ['replace', 'Put a pose where the person is']].map(([k, l]) => `<button data-s="${k}" aria-pressed="${k === S.how}">${l}</button>`).join('')}</div><p class="small faint">Copy the movement reads the body of the person in your clip (lean, head tilt, both arms) and moves Munaza the same way on a cleaned-up background. Best with one person facing the camera, seated or standing, and a steady camera. It is a 2D puppet, so it cannot turn her around.</p></div>
+        <div class="gif-opt"><label class="label" for="gif-pose">Pose</label><select id="gif-pose">${MUN_POSES.map(([k, l]) => `<option value="${k}"${k === S.pose ? ' selected' : ''}>${l}</option>`).join('')}</select><p class="small faint">Auto uses every pose: walking left, right, toward or away from the camera (alternating steps), seated poses when she sits, and gestures (explain, point, wave, clipboard, arms crossed, neck stretch) while she stands still.</p></div>
+        <div class="gif-opt"><span class="label">Fill behind the person</span><div class="gif-seg" data-seg="fill">${[['plate', 'Clean background'], ['blur', 'Soft blur']].map(([k, l]) => `<button data-s="${k}" aria-pressed="${k === S.fill}">${l}</button>`).join('')}</div><p class="small faint">Clean background rebuilds the scene from frames where the person has moved away, so it needs a steady camera. Soft blur works with any shot.</p></div>
+        <div class="gif-opt"><div class="row" style="justify-content:space-between"><span class="label">Munaza's size</span><b class="num" id="gif-o-ms">${S.munScale}%</b></div><input id="gif-mscale" type="range" min="70" max="130" step="5" value="${S.munScale}"><div class="row small faint" style="justify-content:space-between"><span>Smaller</span><span>Same height as the person</span><span>Larger</span></div></div>
+      </div></div>`;
+  }
   function syncEngine() {
     if (!$('#gif-stats')) return;
     $('#gif-o-fps').textContent = `${S.fps} fps`;
@@ -124,7 +135,7 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
     $('#gif-o-col').textContent = `${S.colors} colours`;
     $('#gif-fps-note').textContent = S.fps > effFps() ? `A GIF stores frame delays in 10 ms steps, so ${S.fps} fps is encoded at ${effFps()} fps, the fastest that plays true.` : `${S.fps} fps ${S.fps >= 30 ? 'looks fluid.' : 'keeps the file small.'}`;
     $('#gif-bayer').style.display = S.dither === 'bayer' ? '' : 'none';
-    $$('[data-seg]').forEach((g) => { const key = g.dataset.seg; if (g.classList.contains('gif-seg')) $$('button', g).forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.v === S[key]))); else g.setAttribute('aria-pressed', String(+g.dataset.v === S[key])); });
+    $$('#gif-engine [data-seg]').forEach((g) => { const key = g.dataset.seg; if (g.classList.contains('gif-seg')) $$('button', g).forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.v === S[key]))); else g.setAttribute('aria-pressed', String(+g.dataset.v === S[key])); });
     const f = frames(), d = (S.len / S.speed) * (S.boom ? 2 : 1), big = estBytes() > 50e6;
     $('#gif-stats').innerHTML = `<span>Duration: <b>${d.toFixed(2)}s</b></span><span>Frames: <b class="acc">${f}</b></span><span>Rate: <b>${effFps()} fps</b></span><span>Est. size: <b>~${sz(estBytes())}</b>${big ? ' <span class="gif-warn">large</span>' : ''}</span><span class="grow faint end">2-pass palette, ${S.colors} colours</span>`;
   }
@@ -189,30 +200,42 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
     g.lineJoin = 'round'; g.lineWidth = Math.max(2, fs / 7); g.strokeStyle = '#000'; g.strokeText(text, w / 2, c.height / 2 + 1); g.fillStyle = '#fff'; g.fillText(text, w / 2, c.height / 2 + 1);
     return c.toDataURL('image/png');
   }
-  async function generate() {
+  async function generate(mode) {
     if (S.converting) return; S.converting = true;
-    const go = $('#gif-go'); go.setAttribute('aria-disabled', 'true'); v()?.pause();
+    $$('#gif-go, #gif-go-m').forEach((b) => b.setAttribute('aria-disabled', 'true')); v()?.pause();
     $('#gif-result').innerHTML = `<div class="gif-prog" role="status"><div class="row small" style="justify-content:space-between"><span id="gif-ps">Starting</span><span class="num" id="gif-pp">0%</span></div><div class="gif-bar"><i id="gif-pb" style="width:2%"></i></div><button class="btn ghost compact" data-gact="cancel-convert" style="margin-top:8px">Cancel</button></div>`;
+    const setProg = (text, f) => { $('#gif-ps') && ($('#gif-ps').textContent = text); $('#gif-pp') && ($('#gif-pp').textContent = `${Math.round(f * 100)}%`); $('#gif-pb') && ($('#gif-pb').style.width = `${Math.max(2, f * 100)}%`); };
     try {
-      const body = { start: S.start, duration: S.len, fps: S.fps, height: S.height, speed: S.speed, dither: S.dither, bayerScale: S.bayer, colors: S.colors, boomerang: S.boom, reverse: S.rev, captionPos: S.capPos, captionPng: await captionPng() };
+      let fromFrames = false;
+      if (mode === 'munaza') {
+        S.signal = { cancelled: false };
+        const common = { video: v(), start: S.start, len: S.len, fps: effFps(), speed: S.speed, workH: Math.min(S.height, 720), scale: S.munScale / 100, onStage: setProg, upload: (n, blob) => api(`/gif/${S.item.id}/frame/${n}`, { method: 'POST', body: blob }), signal: S.signal };
+        const { replaceCharacter } = await import('/replace.js');
+        const id = S.item.id;
+        await api(`/gif/${id}/frames`, { method: 'DELETE' });
+        if (S.how === 'reenact') { const { reenactExercise } = await import('/exercise.js'); await reenactExercise(common); }
+        else await replaceCharacter({ ...common, fill: S.fill, pose: S.pose });
+        fromFrames = true;
+      }
+      const body = { fromFrames, start: S.start, duration: S.len, fps: effFps(), height: S.height, speed: S.speed, dither: S.dither, bayerScale: S.bayer, colors: S.colors, boomerang: S.boom, reverse: S.rev, captionPos: S.capPos, captionPng: await captionPng() };
       S.item = await api(`/gif/${S.item.id}/convert`, { method: 'POST', json: body });
       await new Promise((resolve, reject) => {
         const t = setInterval(async () => {
           try {
             S.item = await api(`/gif/${S.item.id}`); const c = S.item.convert;
-            $('#gif-ps') && ($('#gif-ps').textContent = c.stage); $('#gif-pp') && ($('#gif-pp').textContent = `${Math.round(c.progress * 100)}%`); $('#gif-pb') && ($('#gif-pb').style.width = `${Math.max(2, c.progress * 100)}%`);
+            setProg(c.stage, fromFrames ? 0.88 + 0.12 * c.progress : c.progress);
             if (c.state === 'done') { clearInterval(t); resolve(); } else if (c.state === 'error') { clearInterval(t); reject(new Error(c.error)); } else if (c.state === 'cancelled') { clearInterval(t); reject(Object.assign(new Error('Cancelled.'), { quiet: true })); }
           } catch (e) { clearInterval(t); reject(e); }
         }, 400);
         timers.push(t);
       });
       const c = S.item.convert;
-      $('#gif-result').innerHTML = `<div class="gif-out"><img src="${c.url}" alt="Generated GIF preview" width="${c.width}" height="${c.height}"><div class="gif-out-side"><h3>Your GIF is ready</h3><p class="mono muted">${c.width}×${c.height} · ${c.frames} frames · ${c.seconds.toFixed(2)} s · ${c.fps} fps</p><p class="gif-size">${sz(c.size)}</p><div class="row"><a class="btn primary" href="${c.url}&download=1" download>${I.dl}Download GIF</a><button class="btn secondary" data-gact="generate">Re-generate</button></div><p class="small faint">Too big? Lower the size, frame rate or colours and generate again.</p></div></div>`;
+      $('#gif-result').innerHTML = `<div class="gif-out"><img src="${c.url}" alt="Generated GIF preview" width="${c.width}" height="${c.height}"><div class="gif-out-side"><h3>${fromFrames ? 'Your GIF with Munaza is ready' : 'Your GIF is ready'}</h3><p class="mono muted">${c.width}×${c.height} · ${c.frames} frames · ${c.seconds.toFixed(2)} s · ${c.fps} fps</p><p class="gif-size">${sz(c.size)}</p><div class="row"><a class="btn primary" href="${c.url}&download=1" download>${I.dl}Download GIF</a><button class="btn secondary" data-gact="${fromFrames ? 'generate-munaza' : 'generate'}">Re-generate</button></div><p class="small faint">Too big? Lower the size, frame rate or colours and generate again.</p></div></div>`;
       toast(`GIF ready: ${sz(c.size)}.`);
     } catch (e) {
       $('#gif-result').innerHTML = e.quiet ? '' : `<p class="gif-bad" role="alert" style="margin-top:16px">${esc(e.message)}</p>`;
       if (!e.quiet) toast(e.message, 'error');
-    } finally { S.converting = false; $('#gif-go')?.removeAttribute('aria-disabled'); }
+    } finally { S.converting = false; S.signal = null; $$('#gif-go, #gif-go-m').forEach((b) => b.removeAttribute('aria-disabled')); }
   }
 
   // ---------- screen recording ----------
@@ -264,6 +287,8 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
     if (t.id === 'gif-r-s') { const e2 = end(); S.start = +t.value; S.len = Math.min(S.len, dur() - S.start); if (e2 > dur()) S.len = dur() - S.start; v().currentTime = S.start; syncAll(); }
     if (t.id === 'gif-r-d') { S.len = +t.value; syncAll(); }
     if (t.id === 'gif-speed') { S.speed = +t.value; syncEngine(); }
+    if (t.id === 'gif-pose') S.pose = t.value;
+    if (t.id === 'gif-mscale') { S.munScale = +t.value; $('#gif-o-ms').textContent = `${S.munScale}%`; }
     if (t.id === 'gif-cap') { S.caption = t.value; }
   });
   root.addEventListener('dragover', (e) => { if (e.target.closest('#gif-dz')) { e.preventDefault(); e.target.closest('#gif-dz').classList.add('over'); } });
@@ -274,12 +299,12 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
     if (e.target.closest('#gif-dz')) { $('#gif-file').click(); return; }
     const sm = e.target.closest('[data-sample]'); if (sm) { begin(() => api('/gif/sample', { method: 'POST', json: { kind: sm.dataset.sample } })); return; }
     const seg = e.target.closest('[data-seg] button, button[data-seg]');
-    if (seg) { const key = (seg.closest('.gif-seg') || seg).dataset.seg; S[key] = +seg.dataset.v; syncEngine(); return; }
+    if (seg) { const key = (seg.closest('.gif-seg') || seg).dataset.seg; if (key === 'fill' || key === 'how') { S[key] = seg.dataset.s; $$(`[data-seg=${key}] button`).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === S[key]))); return; } S[key] = +seg.dataset.v; syncEngine(); return; }
     const b = e.target.closest('[data-gact]'); if (!b || b.getAttribute('aria-disabled') === 'true') return;
     const el = v(), a = b.dataset.gact, val = +b.dataset.v, fr = 1 / (S.item?.info?.fps || 30);
     if (a === 'record') return record();
     if (a === 'cancel-import') return api(`/gif/${S.item.id}/cancel`, { method: 'POST' }).then((x) => { S.item = x; drawMedia(); });
-    if (a === 'cancel-convert') return api(`/gif/${S.item.id}/cancel`, { method: 'POST' });
+    if (a === 'cancel-convert') { if (S.signal) S.signal.cancelled = true; return api(`/gif/${S.item.id}/cancel`, { method: 'POST' }); }
     if (a === 'play') return el.paused ? el.play() : el.pause();
     if (a === 'step') { el.pause(); el.currentTime = clamp(el.currentTime + val * fr, 0, dur()); }
     if (a === 'nudge') el.currentTime = clamp(el.currentTime + val, 0, dur());
@@ -288,6 +313,7 @@ export async function viewGif({ shell, api, toast, esc, $, $$, onCleanup }) {
     if (a === 'loop') { S.loop = !S.loop; b.setAttribute('aria-pressed', String(S.loop)); }
     if (a === 'preset') { S.len = Math.min(val, dur() - S.start); if (val === Infinity) { S.start = 0; S.len = Math.min(dur(), 600); } el.currentTime = S.start; syncAll(); }
     if (a === 'generate') generate();
+    if (a === 'generate-munaza') generate('munaza');
   });
   drawPane();
 }
